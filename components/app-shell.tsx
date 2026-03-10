@@ -12,7 +12,6 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   const {
     clients,
     receipts,
-    previewCompany,
     selectionLabel,
     nextReceiptSuggestion,
     feedback,
@@ -48,7 +47,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           <div className="grid gap-4">
             <div className="panel-card rounded-[26px] p-4">
               <div className="flex items-start gap-3">
-                <BrandMark compact imageDataUrl={previewCompany.companyLogoDataUrl} />
+                <BrandMark compact />
                 <div className="min-w-0">
                   <h1 className="text-lg leading-5 text-[color:var(--ink)]">
                     Recibos Alfombra Studio
@@ -122,7 +121,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         <aside className="app-sidebar panel-card hidden h-fit overflow-hidden rounded-[28px] p-4 xl:sticky xl:top-6 xl:block">
           <div className="rounded-[22px] border border-[color:var(--line)] bg-white px-4 py-4">
             <div>
-              <BrandMark imageDataUrl={previewCompany.companyLogoDataUrl} />
+              <BrandMark />
             </div>
             <div className="mt-4 rounded-[20px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.94))] px-4 py-4">
               <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.22em] text-[color:var(--brand)]">
