@@ -204,6 +204,8 @@ Object.assign(translations.es, {
   "receipts.previewPageDescription":
     "Aqui ves la hoja A4 completa antes de descargar el PDF o abrirlo en una nueva pestana.",
   "receipts.backToEditor": "Volver al editor",
+  "receipts.previewScrollHint":
+    "Desliza dentro de la hoja para revisar todo el contenido del A4 antes de exportarlo.",
   "receipts.context": "Contexto",
   "receipts.linkedClient": "Cliente vinculado al recibo",
   "receipts.current": "Actual",
@@ -280,6 +282,8 @@ Object.assign(translations.es, {
   "delivery.previewPageDescription":
     "Aqui revisas la hoja A4 final antes de descargar el comprobante de entrega o abrirlo en una nueva pestana.",
   "delivery.backToEditor": "Volver a entrega",
+  "delivery.previewScrollHint":
+    "Desliza dentro de la hoja para revisar todo el comprobante de entrega antes de exportarlo.",
   "delivery.context": "Contexto",
   "delivery.linkedClient": "Cliente vinculado a la entrega",
   "delivery.noClientMessage":

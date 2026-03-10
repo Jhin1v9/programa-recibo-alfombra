@@ -113,7 +113,11 @@ export function ReceiptPreview({
         mode === "export" ? "receipt-sheet-export" : "receipt-sheet-screen"
       }`}
     >
-      <div className="receipt-document-root flex h-full flex-col gap-3 p-4 sm:gap-4 sm:p-6">
+      <div
+        className={`receipt-document-root ${
+          mode === "export" ? "receipt-document-root-export" : "receipt-document-root-screen"
+        } flex min-h-full flex-col gap-3 p-4 sm:gap-4 sm:p-6`}
+      >
         <section className="receipt-surface receipt-surface-strong overflow-hidden rounded-[22px]">
           <div className="receipt-brand-band receipt-brand-band-surface grid gap-4 px-5 py-4">
             <div>

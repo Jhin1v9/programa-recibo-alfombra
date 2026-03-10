@@ -115,6 +115,9 @@ export function DeliveryPdfPage({
 
       <div className="grid gap-6 pb-28 md:pb-0">
         <SectionCard eyebrow={t("delivery.eyebrow")} title={t("delivery.printNote")}>
+          <p className="mb-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+            {t("delivery.previewScrollHint")}
+          </p>
           <div className="rounded-[26px] border border-[color:var(--line)] bg-[rgba(16,24,38,0.04)] p-3 md:p-6">
             <div className="mx-auto max-w-[860px]">
               <ReceiptPreview company={previewCompany} receipt={previewDraft} variant="delivery" />
