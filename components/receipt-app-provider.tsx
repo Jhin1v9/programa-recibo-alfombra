@@ -98,7 +98,7 @@ type ReceiptAppContextValue = {
   deleteReceipt: (receiptId: string) => void;
   deleteSelectedReceipt: () => void;
   assignNextReceiptNumber: () => void;
-  loadReceipt: (receiptId: string) => void;
+  loadReceipt: (receiptId: string, silent?: boolean) => void;
   duplicateReceipt: (receiptId: string) => void;
   importContacts: (files: File[]) => Promise<void>;
 };
@@ -614,7 +614,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     flash(t("feedback.receiptNumberUpdated"));
   }
 
-  function loadReceipt(receiptId: string) {
+  function loadReceipt(receiptId: string, silent = false) {
     const receipt = receipts.find((item) => item.id === receiptId);
     if (!receipt) {
       return;
@@ -629,11 +629,13 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setDraft(normalizeReceiptDraft(receipt));
     window.localStorage.setItem(STORAGE_KEYS.company, JSON.stringify(receiptCompany));
 
-    flash(
-      t("feedback.receiptLoaded", {
-        number: receipt.receiptNumber || t("dashboard.noNumber")
-      })
-    );
+    if (!silent) {
+      flash(
+        t("feedback.receiptLoaded", {
+          number: receipt.receiptNumber || t("dashboard.noNumber")
+        })
+      );
+    }
   }
 
   function duplicateReceipt(receiptId: string) {

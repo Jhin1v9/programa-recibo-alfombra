@@ -199,7 +199,7 @@ export function RegistryCard({
   body: React.ReactNode;
   actions: Array<{
     label: string;
-    variant: Exclude<ButtonVariant, "danger">;
+    variant: ButtonVariant;
     onClick: () => void;
   }>;
   onOpen: () => void;

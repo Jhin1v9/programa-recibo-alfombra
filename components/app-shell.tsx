@@ -18,11 +18,11 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
     t
   } = useReceiptApp();
   const navItems: ReadonlyArray<{ href: Route; label: string; note: string }> = [
-    { href: "/", label: t("nav.home"), note: t("nav.homeNote") },
-    { href: "/empresa", label: t("nav.company"), note: t("nav.companyNote") },
-    { href: "/clientes", label: t("nav.clients"), note: t("nav.clientsNote") },
-    { href: "/recibos", label: t("nav.receipts"), note: t("nav.receiptsNote") },
-    { href: "/configuracion", label: t("nav.settings"), note: t("nav.settingsNote") }
+    { href: "/" as Route, label: t("nav.home"), note: t("nav.homeNote") },
+    { href: "/empresa" as Route, label: t("nav.company"), note: t("nav.companyNote") },
+    { href: "/clientes" as Route, label: t("nav.clients"), note: t("nav.clientsNote") },
+    { href: "/recibos" as Route, label: t("nav.receipts"), note: t("nav.receiptsNote") },
+    { href: "/configuracion" as Route, label: t("nav.settings"), note: t("nav.settingsNote") }
   ];
 
   return (

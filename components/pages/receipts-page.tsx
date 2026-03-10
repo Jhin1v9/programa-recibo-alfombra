@@ -1,26 +1,24 @@
 "use client";
 
-import { useRef, useState } from "react";
+import type { Route } from "next";
+import { useRouter } from "next/navigation";
 
-import { ReceiptPreview } from "@/components/receipt-preview";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   ActionButton,
   EditableField,
   EmptyState,
+  LinkButton,
   PageIntro,
   RegistryCard,
   SectionCard
 } from "@/components/workspace-ui";
 import { formatClientName, formatDate } from "@/lib/receipt-core";
-import { exportReceiptPdf } from "@/lib/receipt-pdf";
 import type { ReceiptDraft, ServicePreset } from "@/lib/types";
 
 export function ReceiptsPage() {
   const {
     draft,
-    previewCompany,
-    previewDraft,
     receipts,
     selectedClient,
     selectedReceiptId,
@@ -35,8 +33,7 @@ export function ReceiptsPage() {
     duplicateReceipt,
     t
   } = useReceiptApp();
-  const exportPreviewRef = useRef<HTMLDivElement | null>(null);
-  const [pdfAction, setPdfAction] = useState<"download" | "open" | null>(null);
+  const router = useRouter();
   const rugInputs = [
     { name: "rugType", label: t("receipts.rugType"), placeholder: t("receipts.rugTypePlaceholder") },
     { name: "rugSize", label: t("receipts.rugSize"), placeholder: t("receipts.rugSizePlaceholder") },
@@ -86,49 +83,6 @@ export function ReceiptsPage() {
     (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
   );
 
-  async function handlePdfExport(action: "download" | "open") {
-    if (!exportPreviewRef.current) {
-      return;
-    }
-
-    const fileLabel = [previewDraft.receiptNumber || nextReceiptSuggestion, formatClientName(previewDraft)]
-      .filter(Boolean)
-      .join("-");
-    const fileName = `${fileLabel || "recibo-alfombra"}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "recibo-alfombra";
-    const targetWindow =
-      action === "open" ? window.open("", "_blank", "noopener,noreferrer") : null;
-
-    if (targetWindow) {
-      targetWindow.document.write(
-        `<title>${t("receipts.generatingPdf")}</title><p style="font-family:sans-serif;padding:24px">${t(
-          "receipts.generatingPdf"
-        )}</p>`
-      );
-    }
-
-    setPdfAction(action);
-
-    try {
-      await exportReceiptPdf({
-        action,
-        fileName: `${fileName}.pdf`,
-        sourceElement: exportPreviewRef.current,
-        targetWindow
-      });
-    } catch (error) {
-      if (targetWindow && !targetWindow.closed) {
-        targetWindow.close();
-      }
-      window.alert(t("receipts.pdfError"));
-      console.error(error);
-    } finally {
-      setPdfAction(null);
-    }
-  }
-
   return (
     <>
       <PageIntro
@@ -138,37 +92,26 @@ export function ReceiptsPage() {
         actions={
           <div className="flex flex-wrap gap-3">
             <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
-            <ActionButton
-              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.downloadPdf")}
-              variant="secondary"
-              onClick={() => void handlePdfExport("download")}
-              disabled={pdfAction !== null}
-            />
-            <ActionButton
-              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.openPdf")}
-              variant="ghost"
-              onClick={() => void handlePdfExport("open")}
-              disabled={pdfAction !== null}
-            />
+            <LinkButton href={"/recibos/pdf" as Route} label={t("receipts.viewPdf")} variant="secondary" />
           </div>
         }
       />
 
-      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="workspace-panel min-w-0 grid gap-6">
-          <SectionCard eyebrow={t("receipts.context")} title={t("receipts.linkedClient")} chip={t("receipts.current")}>
-            {selectedClient ? (
-              <div className="grid gap-3 md:grid-cols-2">
-                <SummaryItem label={t("clients.firstName")} value={formatClientName(selectedClient) || t("dashboard.clientNoName")} />
-                <SummaryItem label={t("clients.phone")} value={selectedClient.clientPhone || t("dashboard.noPhone")} />
-                <SummaryItem label={t("clients.email")} value={selectedClient.clientEmail || t("dashboard.noEmail")} />
-                <SummaryItem label={t("clients.address")} value={selectedClient.clientAddress || t("clients.noAddress")} />
-              </div>
-            ) : (
-              <EmptyState message={t("receipts.noClientMessage")} />
-            )}
-          </SectionCard>
+      <div className="workspace-panel min-w-0 grid gap-6">
+        <SectionCard eyebrow={t("receipts.context")} title={t("receipts.linkedClient")} chip={t("receipts.current")}>
+          {selectedClient ? (
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              <SummaryItem label={t("clients.firstName")} value={formatClientName(selectedClient) || t("dashboard.clientNoName")} />
+              <SummaryItem label={t("clients.phone")} value={selectedClient.clientPhone || t("dashboard.noPhone")} />
+              <SummaryItem label={t("clients.email")} value={selectedClient.clientEmail || t("dashboard.noEmail")} />
+              <SummaryItem label={t("clients.address")} value={selectedClient.clientAddress || t("clients.noAddress")} />
+            </div>
+          ) : (
+            <EmptyState message={t("receipts.noClientMessage")} />
+          )}
+        </SectionCard>
 
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
           <SectionCard eyebrow={t("receipts.rugDetails")} title={t("receipts.rugTitle")} chip={t("receipts.serviceChip")}>
             <div className="grid gap-4 md:grid-cols-2">
               {rugInputs.map((field) => (
@@ -197,6 +140,11 @@ export function ReceiptsPage() {
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
               <ActionButton label={t("receipts.newNumber")} variant="secondary" onClick={assignNextReceiptNumber} />
+              <ActionButton
+                label={t("receipts.viewPdf")}
+                variant="ghost"
+                onClick={() => router.push("/recibos/pdf" as Route)}
+              />
               <ActionButton label={t("receipts.newBlank")} variant="ghost" onClick={() => prepareFreshReceipt()} />
               <ActionButton
                 label={t("clients.removeSelected")}
@@ -211,63 +159,50 @@ export function ReceiptsPage() {
               <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
             </div>
           </SectionCard>
+        </div>
 
-          <SectionCard eyebrow={t("receipts.history")} title={t("receipts.savedTitle")}>
-            <div className="flex flex-col gap-3">
-              {sortedReceipts.length === 0 ? (
-                <EmptyState message={t("receipts.empty")} />
-              ) : (
-                sortedReceipts.map((receipt) => (
-                  <RegistryCard
-                    key={receipt.id}
-                    active={receipt.id === selectedReceiptId}
-                    title={receipt.receiptNumber || t("dashboard.noNumber")}
-                    chips={[receipt.rugType, receipt.estimatedValue].filter(Boolean)}
-                    body={
-                      <>
-                        <p>{formatClientName(receipt) || t("dashboard.clientUndefined")}</p>
-                        <p>{t("receipts.pickup")}: {formatDate(receipt.pickupDate) || "--/--/----"}</p>
-                        <p>{receipt.rugSize || t("receipts.noMeasure")}</p>
-                      </>
+        <SectionCard eyebrow={t("receipts.history")} title={t("receipts.savedTitle")}>
+          <div className="flex flex-col gap-3">
+            {sortedReceipts.length === 0 ? (
+              <EmptyState message={t("receipts.empty")} />
+            ) : (
+              sortedReceipts.map((receipt) => (
+                <RegistryCard
+                  key={receipt.id}
+                  active={receipt.id === selectedReceiptId}
+                  title={receipt.receiptNumber || t("dashboard.noNumber")}
+                  chips={[receipt.rugType, receipt.estimatedValue].filter(Boolean)}
+                  body={
+                    <>
+                      <p>{formatClientName(receipt) || t("dashboard.clientUndefined")}</p>
+                      <p>{t("receipts.pickup")}: {formatDate(receipt.pickupDate) || "--/--/----"}</p>
+                      <p>{receipt.rugSize || t("receipts.noMeasure")}</p>
+                    </>
+                  }
+                  onOpen={() => loadReceipt(receipt.id)}
+                  actions={[
+                    {
+                      label: t("receipts.viewPdf"),
+                      variant: "secondary",
+                      onClick: () =>
+                        router.push(`/recibos/pdf?receiptId=${receipt.id}` as Route)
+                    },
+                    {
+                      label: t("receipts.duplicate"),
+                      variant: "ghost",
+                      onClick: () => duplicateReceipt(receipt.id)
+                    },
+                    {
+                      label: t("receipts.delete"),
+                      variant: "danger",
+                      onClick: () => deleteReceipt(receipt.id)
                     }
-                    onOpen={() => loadReceipt(receipt.id)}
-                    actions={[
-                      {
-                        label: t("receipts.open"),
-                        variant: "primary",
-                        onClick: () => loadReceipt(receipt.id)
-                      },
-                      {
-                        label: t("receipts.duplicate"),
-                        variant: "secondary",
-                        onClick: () => duplicateReceipt(receipt.id)
-                      },
-                      {
-                        label: t("receipts.delete"),
-                        variant: "ghost",
-                        onClick: () => deleteReceipt(receipt.id)
-                      }
-                    ]}
-                  />
-                ))
-              )}
-            </div>
-          </SectionCard>
-        </div>
-
-        <div className="preview-panel min-w-0 flex flex-col gap-4 2xl:sticky 2xl:top-6 2xl:self-start">
-          <div className="print-note panel-card rounded-[24px] px-5 py-4 text-sm font-extrabold text-[color:var(--ink)]">
-            {t("receipts.printNote")}
+                  ]}
+                />
+              ))
+            )}
           </div>
-
-          <ReceiptPreview company={previewCompany} receipt={previewDraft} />
-        </div>
-      </div>
-
-      <div className="receipt-export-host" aria-hidden="true">
-        <div ref={exportPreviewRef}>
-          <ReceiptPreview company={previewCompany} receipt={previewDraft} mode="export" />
-        </div>
+        </SectionCard>
       </div>
     </>
   );
