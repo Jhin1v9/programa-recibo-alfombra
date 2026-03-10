@@ -45,19 +45,23 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                 </div>
               </div>
 
-              <div className="mt-4 rounded-[24px] bg-[linear-gradient(135deg,#0f172a_0%,#13233d_58%,#173a35_100%)] px-4 py-4 text-white">
+              <div className="mt-4 rounded-[24px] border border-[color:var(--line)] bg-white px-4 py-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-amber-200/78">
+                    <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-[color:var(--brand)]">
                       {t("sidebar.workspace")}
                     </p>
-                    <h1 className="mt-2 text-[1.8rem] leading-[0.95]">Recibos Alfombra Studio</h1>
+                    <h1 className="mt-2 text-[1.65rem] leading-[0.98] text-[color:var(--ink)]">
+                      Recibos Alfombra Studio
+                    </h1>
                   </div>
-                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/76">
-                    App
+                  <span className="rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
+                    {activeNavItem.tag}
                   </span>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-white/76">{t("sidebar.description")}</p>
+                <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  {t("sidebar.description")}
+                </p>
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   <SidebarMetric label={t("sidebar.clients")} value={String(clients.length)} compact />
                   <SidebarMetric label={t("sidebar.receipts")} value={String(receipts.length)} compact />
@@ -108,28 +112,30 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         </section>
 
         <aside className="app-sidebar panel-card hidden h-fit overflow-hidden rounded-[30px] p-5 xl:sticky xl:top-6 xl:block">
-          <div className="hero-card rounded-[26px] p-5 text-white">
+          <div className="rounded-[24px] border border-[color:var(--line)] bg-white px-4 py-4">
             <div className="flex items-start justify-between gap-4">
-              <BrandMark light />
-              <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-white/76">
+              <BrandMark />
+              <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
                 {t("sidebar.workspace")}
               </span>
             </div>
-            <h1 className="mt-5 max-w-[12ch] text-3xl leading-none">Recibos Alfombra Studio</h1>
-            <p className="mt-3 text-sm leading-7 text-white/76">
-              {t("sidebar.description")}
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-2 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-white/70">
-              <div className="rounded-2xl border border-white/10 bg-white/7 px-3 py-3">
-                A4 PDF
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/7 px-3 py-3">
-                VCF CSV
+            <div className="mt-4 rounded-[20px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.94))] px-4 py-4">
+              <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.22em] text-[color:var(--brand)]">
+                {activeNavItem.label}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{activeNavItem.note}</p>
+              <div className="mt-4 grid grid-cols-2 gap-2 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
+                <div className="rounded-2xl border border-[color:var(--line)] bg-white px-3 py-3 text-center">
+                  A4 PDF
+                </div>
+                <div className="rounded-2xl border border-[color:var(--line)] bg-white px-3 py-3 text-center">
+                  VCF CSV
+                </div>
               </div>
             </div>
           </div>
 
-          <nav className="mt-5 grid grid-cols-2 gap-2 xl:flex xl:grid-cols-1 xl:flex-col">
+          <nav className="mt-5 grid gap-2">
             {navItems.map((item) => {
               const active = isActiveRoute(item.href);
 
@@ -139,12 +145,21 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                   href={item.href}
                   className={`rounded-[22px] border px-4 py-3 transition ${
                     active
-                      ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(191,95,52,0.12),rgba(255,255,255,0.92))] shadow-[inset_0_0_0_1px_rgba(191,95,52,0.12)]"
-                      : "border-transparent hover:border-[color:var(--line)] hover:bg-white"
+                      ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(255,246,240,0.98),rgba(255,255,255,0.96))] shadow-[0_12px_24px_rgba(191,95,52,0.08)]"
+                      : "border-[color:var(--line)] bg-white/72 hover:border-[rgba(15,23,42,0.14)] hover:bg-white"
                   }`}
                 >
-                  <strong className="block text-sm text-[color:var(--ink)]">{item.label}</strong>
-                  <span className="mt-1 block text-sm text-[color:var(--ink-soft)]">{item.note}</span>
+                  <div className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] text-[0.72rem] font-extrabold uppercase tracking-[0.12em] text-[color:var(--ink-soft)]">
+                      {item.tag}
+                    </span>
+                    <div className="min-w-0">
+                      <strong className="block text-sm text-[color:var(--ink)]">{item.label}</strong>
+                      <span className="mt-1 block text-sm text-[color:var(--ink-soft)]">
+                        {item.note}
+                      </span>
+                    </div>
+                  </div>
                 </Link>
               );
             })}
@@ -154,7 +169,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.22em] text-[color:var(--brand)]">
               {t("sidebar.state")}
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+            <div className="mt-4 grid gap-3 xl:grid-cols-1">
               <SidebarMetric label={t("sidebar.clients")} value={String(clients.length)} />
               <SidebarMetric label={t("sidebar.receipts")} value={String(receipts.length)} />
               <SidebarMetric label={t("sidebar.selected")} value={selectionLabel} />

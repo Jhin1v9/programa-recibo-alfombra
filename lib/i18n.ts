@@ -19,8 +19,8 @@ Object.assign(translations.es, {
   "nav.receiptsNote": "Servicio y vista previa",
   "nav.settings": "Configuracion",
   "nav.settingsNote": "Idioma y preferencias",
-  "sidebar.workspace": "Workspace",
-  "sidebar.description": "Navegacion limpia por contexto: empresa, clientes, recibos y ajustes.",
+  "sidebar.workspace": "App",
+  "sidebar.description": "Acceso rapido a empresa, clientes, recibos y configuracion.",
   "sidebar.state": "Estado",
   "sidebar.clients": "clientes",
   "sidebar.receipts": "recibos",
@@ -28,9 +28,9 @@ Object.assign(translations.es, {
   "sidebar.nextNumber": "Proximo numero",
   "sidebar.idle": "sin actividad",
   "dashboard.eyebrow": "Panel principal",
-  "dashboard.title": "Contexto rapido y siguientes acciones",
+  "dashboard.title": "Panel de trabajo",
   "dashboard.description":
-    "La portada se mantiene ligera: muestra el estado actual, accesos rapidos y actividad reciente.",
+    "Resumen del estado, accesos directos y actividad reciente del sistema.",
   "dashboard.manageClients": "Gestionar clientes",
   "dashboard.openReceipts": "Abrir recibos",
   "dashboard.clientsSaved": "clientes guardados",
@@ -87,9 +87,9 @@ Object.assign(translations.es, {
   "dashboard.emptyReceiptsText": "Todavia no hay recibos guardados.",
   "dashboard.clientUndefined": "Cliente no definido",
   "company.eyebrow": "Empresa",
-  "company.title": "Identidad de la empresa en su propia pagina",
+  "company.title": "Empresa",
   "company.description":
-    "Aqui se guardan los datos institucionales usados en los recibos: contacto, direccion, responsable y sello.",
+    "Gestiona los datos oficiales, la firma y el sello usados en los recibos.",
   "company.save": "Guardar empresa",
   "company.form": "Formulario",
   "company.officialData": "Datos oficiales",
@@ -126,9 +126,9 @@ Object.assign(translations.es, {
 
 Object.assign(translations.es, {
   "clients.eyebrow": "Clientes",
-  "clients.title": "Agenda organizada y lista para recurrencia",
+  "clients.title": "Clientes",
   "clients.description":
-    "La pagina de clientes concentra importacion, alta manual, busqueda, plantillas y repeticion del ultimo servicio.",
+    "Importa contactos, guarda fichas y lanza nuevos recibos desde la agenda.",
   "clients.import": "Importacion",
   "clients.importTitle": "Contactos del movil",
   "clients.importChip": "VCF / CSV / TSV",
@@ -178,9 +178,9 @@ Object.assign(translations.es, {
   "clients.city": "Ciudad",
   "clients.postalCode": "Codigo postal",
   "receipts.eyebrow": "Recibos",
-  "receipts.title": "Edicion del servicio, historial y vista A4",
+  "receipts.title": "Recibos",
   "receipts.description":
-    "La pagina de recibos queda centrada en la operacion: articulo, fechas, valor, duplicacion e impresion.",
+    "Edita el servicio, captura firmas y genera el PDF final.",
   "receipts.save": "Guardar recibo",
   "receipts.viewPdf": "Ver PDF",
   "receipts.print": "Imprimir / PDF",
@@ -254,9 +254,9 @@ Object.assign(translations.es, {
 
 Object.assign(translations.es, {
   "settings.eyebrow": "Configuracion",
-  "settings.title": "Preferencias del espacio de trabajo",
+  "settings.title": "Configuracion",
   "settings.description":
-    "Ajusta el idioma de la interfaz y deja la aplicacion lista para trabajar en Espana o con otros equipos.",
+    "Idioma y preferencias del espacio de trabajo.",
   "settings.language": "Idioma",
   "settings.languageTitle": "Idioma de la interfaz",
   "settings.languageText":

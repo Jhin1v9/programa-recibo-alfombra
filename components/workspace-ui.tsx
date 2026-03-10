@@ -46,20 +46,26 @@ export function PageIntro({
   actions?: React.ReactNode;
 }>) {
   return (
-    <section className="hero-card fade-up overflow-hidden rounded-[26px] border border-white/10 p-5 text-white shadow-[0_24px_56px_rgba(15,23,42,0.14)] md:rounded-[32px] md:p-6 md:shadow-[0_32px_80px_rgba(15,23,42,0.16)]">
-      <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.28em] text-amber-200/80">
-        {eyebrow}
-      </p>
-      <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <section className="panel-card fade-up rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,249,252,0.94))] p-5 md:rounded-[30px] md:p-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-3">
-          <h1 className="max-w-[18ch] text-[2.15rem] leading-[0.94] md:max-w-[16ch] md:text-[3rem]">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-[color:var(--brand)]">
+              {eyebrow}
+            </p>
+          </div>
+          <h1 className="max-w-[18ch] text-[2rem] leading-[0.95] text-[color:var(--ink)] md:max-w-[18ch] md:text-[2.5rem]">
             {title}
           </h1>
-          <p className="max-w-[54ch] text-[0.95rem] leading-6 text-white/78 md:text-sm md:leading-7">
+          <p className="max-w-[64ch] text-[0.95rem] leading-6 text-[color:var(--ink-soft)] md:text-sm md:leading-7">
             {description}
           </p>
         </div>
-        {actions ? <div className="flex flex-wrap gap-2.5 md:gap-3">{actions}</div> : null}
+        {actions ? (
+          <div className="flex flex-wrap gap-2.5 border-t border-[color:var(--line)] pt-4 lg:border-t-0 lg:pt-0 md:gap-3">
+            {actions}
+          </div>
+        ) : null}
       </div>
     </section>
   );
