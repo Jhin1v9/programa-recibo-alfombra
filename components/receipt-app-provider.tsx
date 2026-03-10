@@ -95,6 +95,7 @@ type ReceiptAppContextValue = {
   saveClientTemplate: () => void;
   applyClientTemplate: (clientId?: string | null, silent?: boolean) => void;
   saveReceipt: () => void;
+  deleteReceipt: (receiptId: string) => void;
   deleteSelectedReceipt: () => void;
   assignNextReceiptNumber: () => void;
   loadReceipt: (receiptId: string) => void;
@@ -577,17 +578,32 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     flash(t(isEditing ? "feedback.receiptUpdated" : "feedback.receiptSaved"));
   }
 
+  function deleteReceipt(receiptId: string) {
+    const receipt = receipts.find((item) => item.id === receiptId);
+
+    if (!receipt) {
+      flash(t("feedback.selectReceiptDelete"), "error");
+      return;
+    }
+
+    setReceipts((current) => current.filter((item) => item.id !== receiptId));
+
+    if (selectedReceiptId === receiptId) {
+      setSelectedReceiptId(null);
+      setSelectedClientId(null);
+      setDraft(createFreshDraft(sequence));
+    }
+
+    flash(t("feedback.receiptDeleted"));
+  }
+
   function deleteSelectedReceipt() {
     if (!selectedReceiptId) {
       flash(t("feedback.selectReceiptDelete"), "error");
       return;
     }
 
-    setReceipts((current) => current.filter((receipt) => receipt.id !== selectedReceiptId));
-    setSelectedReceiptId(null);
-    setSelectedClientId(null);
-    setDraft(createFreshDraft(sequence));
-    flash(t("feedback.receiptDeleted"));
+    deleteReceipt(selectedReceiptId);
   }
 
   function assignNextReceiptNumber() {
@@ -708,6 +724,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
         saveClientTemplate,
         applyClientTemplate,
         saveReceipt,
+        deleteReceipt,
         deleteSelectedReceipt,
         assignNextReceiptNumber,
         loadReceipt,

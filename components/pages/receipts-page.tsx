@@ -27,6 +27,7 @@ export function ReceiptsPage() {
     nextReceiptSuggestion,
     updateDraftField,
     saveReceipt,
+    deleteReceipt,
     deleteSelectedReceipt,
     assignNextReceiptNumber,
     prepareFreshReceipt,
@@ -240,6 +241,11 @@ export function ReceiptsPage() {
                         label: t("receipts.duplicate"),
                         variant: "secondary",
                         onClick: () => duplicateReceipt(receipt.id)
+                      },
+                      {
+                        label: t("receipts.delete"),
+                        variant: "ghost",
+                        onClick: () => deleteReceipt(receipt.id)
                       }
                     ]}
                   />
