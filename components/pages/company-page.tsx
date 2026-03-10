@@ -4,8 +4,8 @@ import { useRef, useState, type ChangeEvent } from "react";
 
 import Image from "next/image";
 
+import { CompanyStampDisplay } from "@/components/company-stamp-display";
 import { SignatureCaptureDialog } from "@/components/signature-capture-dialog";
-import { VirtualCompanyStamp } from "@/components/virtual-company-stamp";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   ActionButton,
@@ -21,6 +21,7 @@ export function CompanyPage() {
     useReceiptApp();
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const logoUploadRef = useRef<HTMLInputElement | null>(null);
+  const stampUploadRef = useRef<HTMLInputElement | null>(null);
   const signatureUploadRef = useRef<HTMLInputElement | null>(null);
   const companyInputs = [
     {
@@ -70,7 +71,14 @@ export function CompanyPage() {
     logoUploadRef.current?.click();
   }
 
-  function persistCompanyAssetValue(fieldName: "companyLogoDataUrl" | "companySignatureDataUrl", dataUrl: string) {
+  function openStampUpload() {
+    stampUploadRef.current?.click();
+  }
+
+  function persistCompanyAssetValue(
+    fieldName: "companyLogoDataUrl" | "companySignatureDataUrl" | "companyStampDataUrl",
+    dataUrl: string
+  ) {
     updateCompanyField(fieldName, dataUrl);
     window.localStorage.setItem(
       STORAGE_KEYS.company,
@@ -85,7 +93,7 @@ export function CompanyPage() {
 
   function handleImageFileChange(
     event: ChangeEvent<HTMLInputElement>,
-    fieldName: "companyLogoDataUrl" | "companySignatureDataUrl",
+    fieldName: "companyLogoDataUrl" | "companySignatureDataUrl" | "companyStampDataUrl",
     invalidMessage: string
   ) {
     const [file] = Array.from(event.target.files || []);
@@ -121,6 +129,7 @@ export function CompanyPage() {
         actions={
           <div className="flex flex-wrap gap-3">
             <ActionButton label={t("company.uploadLogo")} variant="secondary" onClick={openLogoUpload} />
+            <ActionButton label={t("company.uploadStamp")} variant="ghost" onClick={openStampUpload} />
             <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
           </div>
         }
@@ -151,6 +160,14 @@ export function CompanyPage() {
                 label={t("company.logo")}
                 value={previewCompany.companyLogoDataUrl ? t("company.currentLogo") : t("company.noLogo")}
               />
+              <SummaryItem
+                label={t("company.stampAsset")}
+                value={
+                  previewCompany.companyStampDataUrl
+                    ? t("company.currentStamp")
+                    : t("company.virtualStampFallback")
+                }
+              />
               <SummaryItem label={t("company.name")} value={previewCompany.companyName} />
               <SummaryItem label={t("company.taxId")} value={previewCompany.companyTaxId} />
               <SummaryItem label={t("company.phone")} value={previewCompany.companyPhone} />
@@ -163,11 +180,15 @@ export function CompanyPage() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-          <SectionCard eyebrow={t("company.identityTools")} title={t("company.virtualStampTitle")}>
+          <SectionCard eyebrow={t("company.identityTools")} title={t("company.stampAsset")}>
             <div className="flex flex-col items-center gap-5 rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.94))] px-5 py-6">
-              <VirtualCompanyStamp company={previewCompany} />
+              <CompanyStampDisplay company={previewCompany} />
               <div className="max-w-[48ch] text-center text-sm leading-7 text-[color:var(--ink-soft)]">
-                <p>{t("company.virtualStampText")}</p>
+                <p>
+                  {previewCompany.companyStampDataUrl
+                    ? t("company.customStampText")
+                    : t("company.virtualStampText")}
+                </p>
                 <p className="mt-2">{t("company.mobileHint")}</p>
               </div>
             </div>
@@ -181,6 +202,15 @@ export function CompanyPage() {
               accept="image/png,image/jpeg,image/webp,image/svg+xml"
               onChange={(event) =>
                 handleImageFileChange(event, "companyLogoDataUrl", t("company.logoUploadInvalid"))
+              }
+            />
+            <input
+              ref={stampUploadRef}
+              className="sr-only"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              onChange={(event) =>
+                handleImageFileChange(event, "companyStampDataUrl", t("company.stampUploadInvalid"))
               }
             />
             <input
@@ -226,6 +256,44 @@ export function CompanyPage() {
                   </>
                 }
                 hint={t("company.logoHint")}
+              />
+
+              <AssetPanel
+                eyebrow={t("company.stampAsset")}
+                title={
+                  previewCompany.companyStampDataUrl ? t("company.currentStamp") : t("company.virtualStampFallback")
+                }
+                description={t("company.stampAssetText")}
+                preview={
+                  previewCompany.companyStampDataUrl ? (
+                    <Image
+                      src={previewCompany.companyStampDataUrl}
+                      alt={t("company.currentStamp")}
+                      width={240}
+                      height={140}
+                      unoptimized
+                      className="max-h-[140px] max-w-full object-contain"
+                    />
+                  ) : (
+                    <BrandPreviewPlaceholder message={t("company.virtualStampFallback")} />
+                  )
+                }
+                actions={
+                  <>
+                    <ActionButton
+                      label={previewCompany.companyStampDataUrl ? t("company.updateStamp") : t("company.uploadStamp")}
+                      variant="secondary"
+                      onClick={openStampUpload}
+                    />
+                    <ActionButton
+                      label={t("company.clearStamp")}
+                      variant="ghost"
+                      onClick={() => persistCompanyAssetValue("companyStampDataUrl", "")}
+                      disabled={!previewCompany.companyStampDataUrl}
+                    />
+                  </>
+                }
+                hint={t("company.stampHint")}
               />
 
               <AssetPanel
@@ -299,8 +367,9 @@ export function CompanyPage() {
 
       <div className="mobile-safe-dock pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
         <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <ActionButton label={t("company.uploadLogo")} variant="secondary" onClick={openLogoUpload} />
+            <ActionButton label={t("company.uploadStamp")} variant="ghost" onClick={openStampUpload} />
             <ActionButton label={t("company.uploadSignature")} variant="ghost" onClick={openSignatureUpload} />
             <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
           </div>

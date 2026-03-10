@@ -127,6 +127,17 @@ Object.assign(translations.es, {
   "company.noLogo": "Todavia no hay logo guardado.",
   "company.logoHint": "Acepta PNG, JPG, WebP o SVG. Usa un logo con fondo limpio para que el PDF salga mejor.",
   "company.logoUploadInvalid": "Selecciona una imagen valida para usarla como logo.",
+  "company.stampAsset": "Carimbo de empresa",
+  "company.stampAssetText":
+    "Sube el carimbo real de la empresa para que salga en el PDF y sustituya el sello virtual generado.",
+  "company.uploadStamp": "Subir carimbo",
+  "company.updateStamp": "Actualizar carimbo",
+  "company.clearStamp": "Borrar carimbo",
+  "company.currentStamp": "Carimbo actual",
+  "company.virtualStampFallback": "Usando carimbo virtual",
+  "company.stampHint":
+    "Acepta PNG, JPG, WebP o SVG. Lo ideal es una imagen limpia con fondo transparente o blanco.",
+  "company.stampUploadInvalid": "Selecciona una imagen valida para usarla como carimbo.",
   "company.signatureTitle": "Firma y sello de empresa",
   "company.signatureText":
     "Guarda una firma reutilizable de empresa y revisa el carimbo virtual que saldra en el recibo y en el PDF.",
@@ -141,6 +152,8 @@ Object.assign(translations.es, {
   "company.virtualStampTitle": "Carimbo virtual",
   "company.virtualStampText":
     "Este sello se genera automaticamente con los datos de empresa y se incrusta en el PDF.",
+  "company.customStampText":
+    "Se esta usando el carimbo real subido por la empresa. Ese sera el que aparezca en el recibo y en el PDF.",
   "company.mobileHint":
     "En movil puedes firmar directamente con el dedo y reutilizar esa firma en nuevos recibos.",
 });

@@ -3,8 +3,8 @@
 import Image from "next/image";
 
 import { BrandMark } from "@/components/brand-mark";
+import { CompanyStampDisplay } from "@/components/company-stamp-display";
 import { useReceiptApp } from "@/components/receipt-app-provider";
-import { VirtualCompanyStamp } from "@/components/virtual-company-stamp";
 import {
   DEFAULT_COMPANY,
   formatClientName,
@@ -241,7 +241,7 @@ export function ReceiptPreview({
             <div className="receipt-stamp-box mt-3 rounded-[18px] px-4 py-3">
               <p className="receipt-copy-strong text-[0.8rem] font-semibold">{t("preview.stamp")}</p>
               <div className="mt-3 flex items-center gap-4">
-                <VirtualCompanyStamp company={previewCompany} compact />
+                <CompanyStampDisplay company={previewCompany} compact />
                 <div className="receipt-copy-soft text-[0.76rem] leading-5">
                   <p>{previewCompany.companyStamp || t("preview.stampFallback")}</p>
                   <p className="mt-2">{t("preview.stampFooter")}</p>

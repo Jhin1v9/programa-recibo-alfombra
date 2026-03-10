@@ -6,8 +6,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { CompanyStampDisplay } from "@/components/company-stamp-display";
 import { SignatureCaptureDialog } from "@/components/signature-capture-dialog";
-import { VirtualCompanyStamp } from "@/components/virtual-company-stamp";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   ActionButton,
@@ -225,10 +225,10 @@ export function ReceiptsPage() {
 
             <div className="rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] p-4">
               <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
-                {t("company.virtualStampTitle")}
+                {t("company.stampAsset")}
               </p>
               <div className="mt-4 flex justify-center">
-                <VirtualCompanyStamp company={companyForm} compact />
+                <CompanyStampDisplay company={companyForm} compact />
               </div>
             </div>
           </div>
