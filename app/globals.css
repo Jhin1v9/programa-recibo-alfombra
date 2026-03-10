@@ -3,6 +3,7 @@
 :root {
   --font-sans: var(--font-body);
   --font-display-ui: var(--font-display);
+  --font-signature-ui: var(--font-signature);
   --canvas: #f5f7fb;
   --canvas-strong: #ffffff;
   --surface: rgba(255, 255, 255, 0.84);
@@ -51,6 +52,12 @@ h3,
 h4,
 .font-display {
   font-family: var(--font-display-ui), sans-serif;
+}
+
+.signature-script {
+  font-family: var(--font-signature-ui), cursive;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .panel-card {
@@ -140,6 +147,10 @@ h4,
 .receipt-document-head,
 .receipt-table-row {
   grid-template-columns: 1fr;
+}
+
+.mobile-nav-card {
+  min-height: 132px;
 }
 
 .receipt-document-root {
@@ -232,6 +243,12 @@ h4,
   border-top: 1px solid #94a3b8;
 }
 
+.receipt-signature-fallback {
+  font-size: 1.85rem;
+  line-height: 1;
+  color: #111827;
+}
+
 .receipt-stamp-box {
   border: 1px dashed #94a3b8;
   background: #ffffff;
@@ -271,6 +288,12 @@ h4,
 @media (max-width: 1024px) {
   .receipt-sheet {
     aspect-ratio: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-card {
+    min-height: 118px;
   }
 }
 

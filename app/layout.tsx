@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Space_Grotesk } from "next/font/google";
+import { Dancing_Script, Manrope, Space_Grotesk } from "next/font/google";
 
 import { AppShell } from "@/components/app-shell";
 import { ReceiptAppProvider } from "@/components/receipt-app-provider";
@@ -14,6 +14,12 @@ const bodyFont = Manrope({
 const displayFont = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display"
+});
+
+const signatureFont = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-signature"
 });
 
 export const metadata: Metadata = {
@@ -41,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${bodyFont.variable} ${displayFont.variable}`}>
+      <body className={`${bodyFont.variable} ${displayFont.variable} ${signatureFont.variable}`}>
         <ReceiptAppProvider>
           <AppShell>{children}</AppShell>
         </ReceiptAppProvider>

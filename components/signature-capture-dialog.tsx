@@ -6,11 +6,14 @@ import { buttonClasses } from "@/components/workspace-ui";
 
 const CANVAS_WIDTH = 920;
 const CANVAS_HEIGHT = 280;
+const SIGNATURE_INK = "#111111";
+const SIGNATURE_STROKE = 5.4;
 
 type SignatureCaptureDialogProps = {
   open: boolean;
   title: string;
   description: string;
+  signerName?: string;
   initialValue?: string;
   onClose: () => void;
   onSave: (dataUrl: string) => void;
@@ -19,6 +22,8 @@ type SignatureCaptureDialogProps = {
     cancel: string;
     save: string;
     empty: string;
+    sheetTitle: string;
+    sheetNote: string;
   };
 };
 
@@ -26,6 +31,7 @@ export function SignatureCaptureDialog({
   open,
   title,
   description,
+  signerName,
   initialValue,
   onClose,
   onSave,
@@ -36,6 +42,18 @@ export function SignatureCaptureDialog({
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
   const hasStrokeRef = useRef(false);
   const emptyMessage = useMemo(() => labels.empty, [labels.empty]);
+
+  function primeCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.lineWidth = SIGNATURE_STROKE;
+    context.strokeStyle = SIGNATURE_INK;
+    context.imageSmoothingEnabled = true;
+  }
 
   useEffect(() => {
     if (!open || !canvasRef.current) {
@@ -51,11 +69,7 @@ export function SignatureCaptureDialog({
 
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.lineWidth = 3.2;
-    context.strokeStyle = "#0f172a";
+    primeCanvas(context, canvas);
 
     if (!initialValue) {
       hasStrokeRef.current = false;
@@ -64,7 +78,7 @@ export function SignatureCaptureDialog({
 
     const image = new Image();
     image.onload = () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      primeCanvas(context, canvas);
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       hasStrokeRef.current = true;
     };
@@ -159,7 +173,7 @@ export function SignatureCaptureDialog({
       return;
     }
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    primeCanvas(context, canvas);
     hasStrokeRef.current = false;
   }
 
@@ -191,6 +205,19 @@ export function SignatureCaptureDialog({
 
         <div className="flex-1 px-4 py-4 md:px-6 md:py-6">
           <div className="rounded-[24px] border-2 border-dashed border-[color:var(--line-strong)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))] p-3 md:p-4">
+            <div className="mb-3 flex items-center justify-between gap-3 rounded-[18px] border border-[color:var(--line)] bg-white px-4 py-3">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[color:var(--brand)]">
+                  {labels.sheetTitle}
+                </p>
+                <p className="mt-1 text-sm text-[color:var(--ink-soft)]">
+                  {labels.sheetNote}
+                </p>
+              </div>
+              <div className="signature-script text-right text-[1.7rem] leading-none text-[color:var(--ink)]">
+                {signerName || title}
+              </div>
+            </div>
             <canvas
               ref={canvasRef}
               className="h-[250px] w-full touch-none rounded-[18px] bg-white"

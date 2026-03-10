@@ -360,7 +360,9 @@ Object.assign(translations.es, {
   "signature.clear": "Limpiar",
   "signature.cancel": "Cancelar",
   "signature.save": "Guardar firma",
-  "signature.empty": "Haz la firma dentro del recuadro antes de guardar."
+  "signature.empty": "Haz la firma dentro del recuadro antes de guardar.",
+  "signature.sheetTitle": "Firma",
+  "signature.sheetNote": "Fondo blanco y tinta negra para que el PDF salga limpio."
 });
 
 Object.assign(translations.ca, {
@@ -430,7 +432,9 @@ Object.assign(translations.ca, {
   "signature.clear": "Netejar",
   "signature.cancel": "Cancelar",
   "signature.save": "Guardar signatura",
-  "signature.empty": "Fes la signatura dins del requadre abans de guardar."
+  "signature.empty": "Fes la signatura dins del requadre abans de guardar.",
+  "signature.sheetTitle": "Signatura",
+  "signature.sheetNote": "Fons blanc i tinta negra perque el PDF surti net."
 });
 
 Object.assign(translations.en, {
@@ -499,7 +503,9 @@ Object.assign(translations.en, {
   "signature.clear": "Clear",
   "signature.cancel": "Cancel",
   "signature.save": "Save signature",
-  "signature.empty": "Draw the signature inside the box before saving."
+  "signature.empty": "Draw the signature inside the box before saving.",
+  "signature.sheetTitle": "Signature",
+  "signature.sheetNote": "White background and black ink so the PDF stays clean."
 });
 
 export const DEFAULT_LANGUAGE: AppLanguage = "es";

@@ -29,12 +29,15 @@ export function ReceiptPreview({
   const { t } = useReceiptApp();
   const previewCompany = normalizeCompany(company || DEFAULT_COMPANY);
   const previewReceipt = normalizeReceiptDraft(receipt);
-  const clientName = formatClientName(previewReceipt) || t("preview.clientNameFallback");
+  const rawClientName = formatClientName(previewReceipt);
+  const clientName = rawClientName || t("preview.clientNameFallback");
   const companySignatureDataUrl =
     previewReceipt.companySignatureDataUrl || previewCompany.companySignatureDataUrl;
   const locationValue =
     joinNonEmpty([previewReceipt.clientCity, previewReceipt.clientPostalCode], " / ") ||
     t("preview.cityPostalFallback");
+  const companySignerName =
+    previewCompany.companyResponsible || t("preview.signatureCompanyFallback");
 
   return (
     <section
@@ -151,12 +154,14 @@ export function ReceiptPreview({
             <div className="grid gap-3 sm:grid-cols-2">
               <SignatureBox
                 title={t("preview.clientSignature")}
-                caption={clientName || t("preview.signatureClientFallback")}
+                signerName={rawClientName}
+                footerLabel={t("preview.signatureClientFallback")}
                 imageDataUrl={previewReceipt.clientSignatureDataUrl}
               />
               <SignatureBox
                 title={t("preview.companySignature")}
-                caption={previewCompany.companyResponsible || t("preview.signatureCompanyFallback")}
+                signerName={companySignerName}
+                footerLabel={t("preview.signatureCompanyFallback")}
                 imageDataUrl={companySignatureDataUrl}
               />
             </div>
@@ -251,11 +256,13 @@ function MetaLine({
 
 function SignatureBox({
   title,
-  caption,
+  signerName,
+  footerLabel,
   imageDataUrl
 }: Readonly<{
   title: string;
-  caption: string;
+  signerName?: string;
+  footerLabel: string;
   imageDataUrl?: string;
 }>) {
   return (
@@ -271,10 +278,14 @@ function SignatureBox({
             unoptimized
             className="max-h-[62px] max-w-full object-contain"
           />
+        ) : signerName ? (
+          <p className="signature-script receipt-signature-fallback max-w-full truncate px-2 text-center">
+            {signerName}
+          </p>
         ) : null}
       </div>
       <div className="receipt-signature-caption pt-2 text-center text-[0.7rem] leading-5">
-        {caption}
+        {footerLabel}
       </div>
     </div>
   );

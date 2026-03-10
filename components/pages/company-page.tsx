@@ -158,6 +158,7 @@ export function CompanyPage() {
         open={signatureDialogOpen}
         title={t("signature.dialogTitleCompany")}
         description={t("signature.dialogDescription")}
+        signerName={companyForm.companyResponsible}
         initialValue={companyForm.companySignatureDataUrl}
         onClose={() => setSignatureDialogOpen(false)}
         onSave={(dataUrl) => updateCompanyField("companySignatureDataUrl", dataUrl)}
@@ -165,7 +166,9 @@ export function CompanyPage() {
           clear: t("signature.clear"),
           cancel: t("signature.cancel"),
           save: t("signature.save"),
-          empty: t("signature.empty")
+          empty: t("signature.empty"),
+          sheetTitle: t("signature.sheetTitle"),
+          sheetNote: t("signature.sheetNote")
         }}
       />
     </>

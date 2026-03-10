@@ -89,6 +89,8 @@ export function ReceiptsPage() {
   const sortedReceipts = [...receipts].sort(
     (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
   );
+  const clientSignerName = formatClientName(draft) || undefined;
+  const companySignerName = companyForm.companyResponsible || undefined;
 
   return (
     <>
@@ -178,6 +180,7 @@ export function ReceiptsPage() {
               title={t("receipts.clientSignature")}
               status={draft.clientSignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
               imageDataUrl={draft.clientSignatureDataUrl}
+              fallbackText={clientSignerName}
               primaryAction={{
                 label: t("receipts.captureClientSignature"),
                 onClick: () => setSignatureTarget("client")
@@ -193,6 +196,7 @@ export function ReceiptsPage() {
               title={t("receipts.companySignature")}
               status={draft.companySignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
               imageDataUrl={draft.companySignatureDataUrl}
+              fallbackText={companySignerName}
               primaryAction={{
                 label: t("receipts.captureCompanySignature"),
                 onClick: () => setSignatureTarget("company")
@@ -294,6 +298,7 @@ export function ReceiptsPage() {
             : t("signature.dialogTitleClient")
         }
         description={t("signature.dialogDescription")}
+        signerName={signatureTarget === "company" ? companySignerName : clientSignerName}
         initialValue={
           signatureTarget === "company"
             ? draft.companySignatureDataUrl || companyForm.companySignatureDataUrl
@@ -312,7 +317,9 @@ export function ReceiptsPage() {
           clear: t("signature.clear"),
           cancel: t("signature.cancel"),
           save: t("signature.save"),
-          empty: t("signature.empty")
+          empty: t("signature.empty"),
+          sheetTitle: t("signature.sheetTitle"),
+          sheetNote: t("signature.sheetNote")
         }}
       />
     </>
@@ -323,6 +330,7 @@ function SignatureStatusCard({
   title,
   status,
   imageDataUrl,
+  fallbackText,
   primaryAction,
   secondaryAction,
   tertiaryAction
@@ -330,6 +338,7 @@ function SignatureStatusCard({
   title: string;
   status: string;
   imageDataUrl?: string;
+  fallbackText?: string;
   primaryAction: { label: string; onClick: () => void };
   secondaryAction?: { label: string; onClick: () => void; disabled?: boolean };
   tertiaryAction?: { label: string; onClick: () => void; disabled?: boolean };
@@ -353,6 +362,10 @@ function SignatureStatusCard({
             unoptimized
             className="max-h-[112px] max-w-full object-contain"
           />
+        ) : fallbackText ? (
+          <p className="signature-script max-w-full truncate px-3 text-center text-[2rem] text-[color:var(--ink)]">
+            {fallbackText}
+          </p>
         ) : (
           <p className="max-w-[18ch] text-center text-sm leading-6 text-[color:var(--ink-soft)]">
             {status}

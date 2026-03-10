@@ -46,16 +46,20 @@ export function PageIntro({
   actions?: React.ReactNode;
 }>) {
   return (
-    <section className="hero-card fade-up overflow-hidden rounded-[32px] border border-white/10 p-6 text-white shadow-[0_32px_80px_rgba(15,23,42,0.16)]">
+    <section className="hero-card fade-up overflow-hidden rounded-[26px] border border-white/10 p-5 text-white shadow-[0_24px_56px_rgba(15,23,42,0.14)] md:rounded-[32px] md:p-6 md:shadow-[0_32px_80px_rgba(15,23,42,0.16)]">
       <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.28em] text-amber-200/80">
         {eyebrow}
       </p>
       <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-3">
-          <h1 className="max-w-[16ch] text-4xl leading-none md:text-[3rem]">{title}</h1>
-          <p className="max-w-[54ch] text-sm leading-7 text-white/78">{description}</p>
+          <h1 className="max-w-[18ch] text-[2.15rem] leading-[0.94] md:max-w-[16ch] md:text-[3rem]">
+            {title}
+          </h1>
+          <p className="max-w-[54ch] text-[0.95rem] leading-6 text-white/78 md:text-sm md:leading-7">
+            {description}
+          </p>
         </div>
-        {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
+        {actions ? <div className="flex flex-wrap gap-2.5 md:gap-3">{actions}</div> : null}
       </div>
     </section>
   );
