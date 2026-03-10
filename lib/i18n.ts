@@ -398,9 +398,9 @@ Object.assign(translations.es, {
   "preview.headerEyebrow": "Recibo de recogida y custodia",
   "preview.headerText": "Limpieza profesional de alfombras, tapetes y recogidas con custodia.",
   "preview.brandRibbon": "Custodia temporal y limpieza profesional",
-  "preview.documentTitle": "RECIBO DE RECOGIDA DE ALFOMBRA",
+  "preview.documentTitle": "RESGUARDO DE RECOGIDA",
   "preview.documentSubtitle":
-    "Comprobante de custodia temporal para servicio de limpieza profesional",
+    "Comprobante de custodia temporal para limpieza profesional",
   "preview.confirmation":
     "Por el presente documento, {company} confirma que la alfombra descrita en este recibo fue recogida en las instalaciones del cliente y permanece bajo custodia temporal para limpieza, tratamiento y manipulación profesional.",
   "preview.metaReceipt": "Recibo n.o",

@@ -104,20 +104,37 @@ export const RECEIPT_FIELDS = [
 ] as const;
 
 export const DEFAULT_COMPANY: CompanyProfile = {
-  companyName: "Su empresa",
-  companyTaxId: "NIF / identificación",
-  companyPhone: "Teléfono",
-  companyEmail: "Email",
-  companyAddress: "Dirección de la empresa",
-  companyResponsible: "Responsable",
-  companyStamp: "Sello oficial",
+  companyName: "Superclim Servicios",
+  companyTaxId: "",
+  companyPhone: "+34 624 529 442",
+  companyEmail: "",
+  companyAddress: "Carrer d'Alfons Sala, 57, 08202 Sabadell, Barcelona",
+  companyResponsible: "",
+  companyStamp: "",
   companyStampDataUrl: "",
   companyLogoDataUrl: "",
   companySignatureDataUrl: ""
 };
 
+const LEGACY_COMPANY_PLACEHOLDERS: Partial<Record<keyof CompanyProfile, readonly string[]>> = {
+  companyName: ["Su empresa"],
+  companyTaxId: ["NIF / identificación", "NIF / identificacion"],
+  companyPhone: ["Telefono", "Teléfono"],
+  companyEmail: ["Email"],
+  companyAddress: ["Direccion de la empresa", "Dirección de la empresa"],
+  companyResponsible: ["Responsable"],
+  companyStamp: ["Sello oficial"]
+};
+
 function cleanString(value: unknown) {
   return String(value ?? "").trim();
+}
+
+function cleanCompanyField(fieldName: keyof CompanyProfile, value: unknown) {
+  const cleaned = cleanString(value);
+  const legacyValues = LEGACY_COMPANY_PLACEHOLDERS[fieldName] || [];
+
+  return legacyValues.includes(cleaned) ? "" : cleaned;
 }
 
 function createEmptyStringRecord<const T extends readonly string[]>(fieldNames: T) {
@@ -163,7 +180,7 @@ export function pickFields<const K extends readonly string[]>(
 
 export function normalizeCompany(company?: Partial<CompanyProfile> | null): CompanyProfile {
   return COMPANY_FIELDS.reduce((accumulator, fieldName) => {
-    accumulator[fieldName] = cleanString(company?.[fieldName]) || DEFAULT_COMPANY[fieldName];
+    accumulator[fieldName] = cleanCompanyField(fieldName, company?.[fieldName]) || DEFAULT_COMPANY[fieldName];
     return accumulator;
   }, { ...DEFAULT_COMPANY });
 }

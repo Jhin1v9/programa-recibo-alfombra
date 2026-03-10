@@ -86,16 +86,16 @@ h4,
   max-width: 860px;
   min-width: 0;
   aspect-ratio: 210 / 297;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
   position: relative;
   overflow: hidden;
   container-type: inline-size;
 }
 
 .receipt-sheet-screen {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 30px;
-  box-shadow: var(--shadow-strong);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.14);
 }
 
 .receipt-sheet-export {
@@ -108,16 +108,6 @@ h4,
   border-radius: 0;
   box-shadow: none;
   overflow: visible;
-}
-
-.receipt-export-host {
-  position: fixed;
-  top: 0;
-  left: -10000px;
-  width: 794px;
-  overflow: visible;
-  pointer-events: none;
-  z-index: -1;
 }
 
 .receipt-sheet::before,
@@ -149,7 +139,6 @@ h4,
 }
 
 .receipt-brand-band,
-.receipt-document-head,
 .receipt-table-row {
   grid-template-columns: 1fr;
 }
@@ -230,16 +219,6 @@ h4,
 
 .receipt-brand-overline {
   color: rgba(255, 255, 255, 0.6);
-}
-
-.receipt-brand-copy {
-  color: #e2e8f0;
-  overflow-wrap: anywhere;
-}
-
-.receipt-brand-meta {
-  color: #f8fafc;
-  overflow-wrap: anywhere;
 }
 
 .receipt-document-divider {

@@ -9,6 +9,7 @@ import {
   DEFAULT_COMPANY,
   formatClientName,
   formatDate,
+  formatReceiptNumber,
   joinNonEmpty,
   normalizeCompany,
   normalizeReceiptDraft
@@ -22,17 +23,32 @@ type ReceiptPreviewProps = {
   variant?: "pickup" | "delivery";
 };
 
+type PreviewCopy = {
+  title: string;
+  subtitle: string;
+  dateLabel: string;
+  dateValue: string;
+  intro: string;
+  serviceRows: Array<[string, string]>;
+  termsTitle: string;
+  termsBody: string;
+  footer: string;
+  footerIssuedBy: string;
+};
+
 export function ReceiptPreview({
   company,
   receipt,
   mode = "screen",
   variant = "pickup"
-}: ReceiptPreviewProps) {
+}: Readonly<ReceiptPreviewProps>) {
   const { t } = useReceiptApp();
   const previewCompany = normalizeCompany(company || DEFAULT_COMPANY);
   const previewReceipt = normalizeReceiptDraft(receipt);
   const rawClientName = formatClientName(previewReceipt);
   const clientName = rawClientName || t("preview.clientNameFallback");
+  const fallbackReceiptNumber = sanitizeReceiptNumber(previewReceipt.receiptNumber);
+  const headerAddressLines = splitAddressLines(previewCompany.companyAddress);
   const companySignatureDataUrl =
     variant === "delivery"
       ? previewReceipt.deliveryCompanySignatureDataUrl || previewCompany.companySignatureDataUrl
@@ -44,68 +60,17 @@ export function ReceiptPreview({
   const locationValue =
     joinNonEmpty([previewReceipt.clientCity, previewReceipt.clientPostalCode], " / ") ||
     t("preview.cityPostalFallback");
-  const companySignerName =
-    previewCompany.companyResponsible || t("preview.signatureCompanyFallback");
-  const previewCopy =
-    variant === "delivery"
-      ? {
-          title: t("deliveryPreview.documentTitle"),
-          subtitle: t("deliveryPreview.documentSubtitle"),
-          dateLabel: t("deliveryPreview.metaDate"),
-          dateValue:
-            formatDate(previewReceipt.handoverDate || previewReceipt.deliveryDate) || "--/--/----",
-          intro: t("deliveryPreview.confirmation", {
-            company: previewCompany.companyName
-          }),
-          serviceRows: [
-            [t("receipts.receiptNumber"), previewReceipt.receiptNumber || "RC-0000"],
-            [t("receipts.pickupDate"), formatDate(previewReceipt.pickupDate) || "--/--/----"],
-            [t("receipts.deliveryDate"), formatDate(previewReceipt.deliveryDate) || "--/--/----"],
-            [
-              t("delivery.deliveryDateActual"),
-              formatDate(previewReceipt.handoverDate || previewReceipt.deliveryDate) || "--/--/----"
-            ],
-            [
-              t("delivery.deliveryReceivedBy"),
-              previewReceipt.deliveryReceivedBy || clientName
-            ],
-            [
-              t("delivery.deliveryCondition"),
-              previewReceipt.deliveryCondition || t("deliveryPreview.conditionFallback")
-            ],
-            [
-              t("delivery.deliveryNotes"),
-              previewReceipt.deliveryNotes || t("preview.noExtraNotes")
-            ]
-          ] as Array<[string, string]>,
-          termsTitle: t("deliveryPreview.termsTitle"),
-          termsBody: t("deliveryPreview.termsBody"),
-          footer: t("deliveryPreview.footer"),
-          footerIssuedBy: t("deliveryPreview.footerIssuedBy", {
-            company: previewCompany.companyName
-          })
-        }
-      : {
-          title: t("preview.documentTitle"),
-          subtitle: t("preview.documentSubtitle"),
-          dateLabel: t("preview.metaDate"),
-          dateValue: formatDate(previewReceipt.pickupDate) || "--/--/----",
-          intro: t("preview.confirmation", {
-            company: previewCompany.companyName
-          }),
-          serviceRows: [
-            [t("receipts.pickupDate"), formatDate(previewReceipt.pickupDate) || "--/--/----"],
-            [t("receipts.deliveryDate"), formatDate(previewReceipt.deliveryDate) || "--/--/----"],
-            [t("receipts.estimatedValue"), previewReceipt.estimatedValue || t("preview.valueFallback")],
-            [t("receipts.serviceNotes"), previewReceipt.serviceNotes || t("preview.noExtraNotes")]
-          ] as Array<[string, string]>,
-          termsTitle: "",
-          termsBody: "",
-          footer: t("preview.footer"),
-          footerIssuedBy: t("preview.footerIssuedBy", {
-            company: previewCompany.companyName
-          })
-        };
+  const companySignerName = previewCompany.companyResponsible || previewCompany.companyName;
+  const previewCopy = buildPreviewCopy({
+    companyName: previewCompany.companyName,
+    dateFallback: formatDate(previewReceipt.pickupDate) || "--/--/----",
+    deliveryFallback:
+      formatDate(previewReceipt.handoverDate || previewReceipt.deliveryDate) || "--/--/----",
+    fallbackReceiptNumber,
+    previewReceipt,
+    t,
+    variant
+  });
 
   return (
     <section
@@ -118,67 +83,47 @@ export function ReceiptPreview({
           mode === "export" ? "receipt-document-root-export" : "receipt-document-root-screen"
         } flex min-h-full flex-col gap-3 p-4 sm:gap-4 sm:p-6`}
       >
-        <section className="receipt-surface receipt-surface-strong overflow-hidden rounded-[22px]">
-          <div className="receipt-brand-band receipt-brand-band-surface grid gap-4 px-5 py-4">
-            <div>
-              <div className="flex items-center gap-3">
+        <section className="receipt-surface receipt-surface-strong overflow-hidden rounded-[24px]">
+          <div className="grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_250px] sm:items-start">
+            <div className="min-w-0">
+              <div className="flex items-start gap-3">
                 <BrandMark compact light imageDataUrl={previewCompany.companyLogoDataUrl} />
-                <div>
-                  <p className="receipt-company-title text-[1.42rem] font-extrabold tracking-[0.06em]">
+                <div className="min-w-0">
+                  <p className="receipt-company-title text-[1.18rem] font-extrabold tracking-[0.03em]">
                     {previewCompany.companyName}
                   </p>
-                  <p className="receipt-brand-overline mt-1 text-[0.66rem] font-bold uppercase tracking-[0.22em]">
+                  <h1 className="receipt-heading-primary mt-2 text-[1.42rem] font-extrabold leading-tight tracking-[0.01em]">
+                    {previewCopy.title}
+                  </h1>
+                  <p className="receipt-brand-overline mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em]">
                     {t("preview.brandRibbon")}
                   </p>
                 </div>
               </div>
-              <p className="receipt-brand-copy mt-1 text-[0.74rem] leading-5">
-                {t("preview.headerText")}
-              </p>
             </div>
 
-            <div className="receipt-brand-meta space-y-1 text-[0.76rem] leading-5">
-              <p>
-                <span className="font-semibold">{t("company.phone")}:</span>{" "}
-                {previewCompany.companyPhone}
-              </p>
-              <p>
-                <span className="font-semibold">{t("company.address")}:</span>{" "}
-                {previewCompany.companyAddress}
-              </p>
-              <p>{previewCompany.companyEmail}</p>
-              <p>{previewCompany.companyTaxId}</p>
-            </div>
-          </div>
-
-          <div className="receipt-document-head receipt-document-divider grid gap-4 px-5 py-4">
-            <div>
-              <h1 className="receipt-heading-primary text-[1.35rem] font-extrabold tracking-tight">
-                {previewCopy.title}
-              </h1>
-              <p className="receipt-copy-muted mt-1 text-[0.76rem] leading-5">
-                {previewCopy.subtitle}
-              </p>
-            </div>
-
-            <div className="receipt-meta-box rounded-[16px] p-3 text-[0.76rem]">
-              <MetaLine
-                label={t("preview.metaReceipt")}
-                value={previewReceipt.receiptNumber || "RC-0000"}
-              />
-              <MetaLine
-                label={previewCopy.dateLabel}
-                value={previewCopy.dateValue}
+            <div className="receipt-meta-box rounded-[18px] p-4">
+              <HeaderMetaItem label={t("preview.metaReceipt")} value={fallbackReceiptNumber} />
+              <HeaderMetaItem label={previewCopy.dateLabel} value={previewCopy.dateValue} />
+              <HeaderMetaItem label={t("company.phone")} value={previewCompany.companyPhone} />
+              <HeaderMetaItem
+                label={t("company.address")}
+                value={headerAddressLines[0]}
+                extraLine={headerAddressLines[1]}
                 withBorder={false}
               />
             </div>
           </div>
+
+          <div className="receipt-document-divider px-5 py-3">
+            <p className="receipt-copy-muted text-[0.78rem] leading-5">
+              {previewCopy.subtitle}
+            </p>
+          </div>
         </section>
 
         <section className="receipt-note-box rounded-[18px] px-4 py-3">
-          <p className="receipt-copy-body text-[0.78rem] leading-5">
-            {previewCopy.intro}
-          </p>
+          <p className="receipt-copy-body text-[0.78rem] leading-5">{previewCopy.intro}</p>
         </section>
 
         <PreviewSection title={t("preview.clientBlock")}>
@@ -214,7 +159,9 @@ export function ReceiptPreview({
 
         {variant === "delivery" ? (
           <section className="receipt-note-box rounded-[18px] px-4 py-3">
-            <p className="receipt-copy-strong text-[0.76rem] font-semibold">{previewCopy.termsTitle}</p>
+            <p className="receipt-copy-strong text-[0.76rem] font-semibold">
+              {previewCopy.termsTitle}
+            </p>
             <p className="receipt-copy-body mt-2 text-[0.76rem] leading-5">
               {previewCopy.termsBody}
             </p>
@@ -262,6 +209,96 @@ export function ReceiptPreview({
   );
 }
 
+function buildPreviewCopy({
+  companyName,
+  dateFallback,
+  deliveryFallback,
+  fallbackReceiptNumber,
+  previewReceipt,
+  t,
+  variant
+}: Readonly<{
+  companyName: string;
+  dateFallback: string;
+  deliveryFallback: string;
+  fallbackReceiptNumber: string;
+  previewReceipt: ReceiptDraft;
+  t: (key: string, params?: Record<string, string | number>) => string;
+  variant: "pickup" | "delivery";
+}>): PreviewCopy {
+  if (variant === "delivery") {
+    return {
+      title: t("deliveryPreview.documentTitle"),
+      subtitle: t("deliveryPreview.documentSubtitle"),
+      dateLabel: t("deliveryPreview.metaDate"),
+      dateValue: deliveryFallback,
+      intro: t("deliveryPreview.confirmation", {
+        company: companyName
+      }),
+      serviceRows: [
+        [t("receipts.receiptNumber"), fallbackReceiptNumber],
+        [t("receipts.pickupDate"), dateFallback],
+        [t("receipts.deliveryDate"), formatDate(previewReceipt.deliveryDate) || "--/--/----"],
+        [t("delivery.deliveryDateActual"), deliveryFallback],
+        [t("delivery.deliveryReceivedBy"), previewReceipt.deliveryReceivedBy || companyName],
+        [
+          t("delivery.deliveryCondition"),
+          previewReceipt.deliveryCondition || t("deliveryPreview.conditionFallback")
+        ],
+        [t("delivery.deliveryNotes"), previewReceipt.deliveryNotes || t("preview.noExtraNotes")]
+      ],
+      termsTitle: t("deliveryPreview.termsTitle"),
+      termsBody: t("deliveryPreview.termsBody"),
+      footer: t("deliveryPreview.footer"),
+      footerIssuedBy: t("deliveryPreview.footerIssuedBy", {
+        company: companyName
+      })
+    };
+  }
+
+  return {
+    title: t("preview.documentTitle"),
+    subtitle: t("preview.documentSubtitle"),
+    dateLabel: t("preview.metaDate"),
+    dateValue: dateFallback,
+    intro: t("preview.confirmation", {
+      company: companyName
+    }),
+    serviceRows: [
+      [t("receipts.pickupDate"), dateFallback],
+      [t("receipts.deliveryDate"), formatDate(previewReceipt.deliveryDate) || "--/--/----"],
+      [t("receipts.estimatedValue"), previewReceipt.estimatedValue || t("preview.valueFallback")],
+      [t("receipts.serviceNotes"), previewReceipt.serviceNotes || t("preview.noExtraNotes")]
+    ],
+    termsTitle: "",
+    termsBody: "",
+    footer: t("preview.footer"),
+    footerIssuedBy: t("preview.footerIssuedBy", {
+      company: companyName
+    })
+  };
+}
+
+function splitAddressLines(address: string) {
+  const parts = address
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 2) {
+    return [address, ""];
+  }
+
+  const firstLine = parts.slice(0, 2).join(", ");
+  const secondLine = parts.slice(2).join(", ");
+  return [firstLine, secondLine];
+}
+
+function sanitizeReceiptNumber(receiptNumber: string) {
+  const cleaned = receiptNumber.trim();
+  return cleaned && cleaned !== "RC-0000" ? cleaned : formatReceiptNumber(1);
+}
+
 function PreviewSection({
   title,
   children
@@ -303,23 +340,30 @@ function PreviewTable({
   );
 }
 
-function MetaLine({
+function HeaderMetaItem({
   label,
   value,
+  extraLine,
   withBorder = true
 }: Readonly<{
   label: string;
   value: string;
+  extraLine?: string;
   withBorder?: boolean;
 }>) {
   return (
     <div
-      className={`receipt-meta-line flex items-center justify-between gap-3 pb-2 text-[0.76rem] ${
-        withBorder ? "mb-2" : ""
-      }`}
+      className={`receipt-meta-line ${withBorder ? "mb-2 pb-2" : ""}`}
     >
-      <span className="receipt-copy-strong font-semibold">{label}</span>
-      <span className="receipt-heading-secondary text-right font-bold">{value}</span>
+      <p className="receipt-copy-strong text-[0.68rem] font-semibold uppercase tracking-[0.14em]">
+        {label}
+      </p>
+      <p className="receipt-heading-secondary mt-1 text-[0.82rem] font-bold leading-5">
+        {value}
+      </p>
+      {extraLine ? (
+        <p className="receipt-copy-muted mt-1 text-[0.72rem] leading-5">{extraLine}</p>
+      ) : null}
     </div>
   );
 }
