@@ -13,20 +13,41 @@ export function VirtualCompanyStamp({
   compact = false
 }: Readonly<VirtualCompanyStampProps>) {
   const data = normalizeCompany(company);
+  const size = compact ? 132 : 176;
+  const padding = compact ? 14 : 20;
 
   return (
     <div
-      className={`relative isolate overflow-hidden rounded-full border-2 border-[color:var(--brand-deep)] text-center ${
-        compact ? "h-[132px] w-[132px] p-3.5" : "h-[176px] w-[176px] p-5"
-      } bg-[radial-gradient(circle,rgba(255,255,255,0.98)_0%,rgba(255,248,243,0.96)_58%,rgba(255,240,231,0.94)_100%)] text-[color:var(--brand-deep)]`}
+      className="relative isolate overflow-hidden rounded-full text-center"
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        padding: `${padding}px`,
+        border: "2px solid var(--brand-deep)",
+        color: "var(--brand-deep)",
+        background:
+          "radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 243, 0.96) 58%, rgba(255, 240, 231, 0.94) 100%)"
+      }}
     >
-      <div className="absolute inset-[8px] rounded-full border border-[color:var(--brand)]/50" />
-      <div className="absolute inset-[16px] rounded-full border border-dashed border-[color:var(--brand)]/35" />
+      <div
+        className="absolute rounded-full"
+        style={{
+          inset: "8px",
+          border: "1px solid rgba(195, 106, 57, 0.5)"
+        }}
+      />
+      <div
+        className="absolute rounded-full border-dashed"
+        style={{
+          inset: "16px",
+          border: "1px dashed rgba(195, 106, 57, 0.35)"
+        }}
+      />
       <div className="relative z-10 flex h-full flex-col items-center justify-center">
         <p className="max-w-[11ch] text-[0.76rem] font-extrabold uppercase leading-4 tracking-[0.16em]">
           {data.companyName}
         </p>
-        <div className="my-2 h-px w-16 bg-[color:var(--brand)]/35" />
+        <div className="my-2 h-px w-16" style={{ background: "rgba(195, 106, 57, 0.35)" }} />
         <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em]">
           {data.companyStamp}
         </p>

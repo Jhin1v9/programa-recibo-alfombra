@@ -42,9 +42,9 @@ export function ReceiptPreview({
         mode === "export" ? "receipt-sheet-export" : "receipt-sheet-screen"
       }`}
     >
-      <div className="flex h-full flex-col gap-3 p-4 text-slate-800 sm:gap-4 sm:p-6">
-        <section className="overflow-hidden rounded-[22px] border-2 border-slate-800 bg-white">
-          <div className="receipt-brand-band grid gap-4 bg-slate-900 px-5 py-4 text-white">
+      <div className="receipt-document-root flex h-full flex-col gap-3 p-4 sm:gap-4 sm:p-6">
+        <section className="receipt-surface receipt-surface-strong overflow-hidden rounded-[22px]">
+          <div className="receipt-brand-band receipt-brand-band-surface grid gap-4 px-5 py-4">
             <div>
               <div className="flex items-center gap-3">
                 <BrandMark compact light />
@@ -52,17 +52,17 @@ export function ReceiptPreview({
                   <p className="text-[1.42rem] font-extrabold tracking-[0.06em]">
                     {previewCompany.companyName}
                   </p>
-                  <p className="mt-1 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-white/60">
+                  <p className="receipt-brand-overline mt-1 text-[0.66rem] font-bold uppercase tracking-[0.22em]">
                     {t("preview.brandRibbon")}
                   </p>
                 </div>
               </div>
-              <p className="mt-1 text-[0.74rem] leading-5 text-slate-200">
+              <p className="receipt-brand-copy mt-1 text-[0.74rem] leading-5">
                 {t("preview.headerText")}
               </p>
             </div>
 
-            <div className="space-y-1 text-[0.76rem] leading-5 text-slate-100">
+            <div className="receipt-brand-meta space-y-1 text-[0.76rem] leading-5">
               <p>
                 <span className="font-semibold">{t("company.phone")}:</span>{" "}
                 {previewCompany.companyPhone}
@@ -76,17 +76,17 @@ export function ReceiptPreview({
             </div>
           </div>
 
-          <div className="receipt-document-head grid gap-4 border-t border-slate-800 px-5 py-4">
+          <div className="receipt-document-head receipt-document-divider grid gap-4 px-5 py-4">
             <div>
-              <h1 className="text-[1.35rem] font-extrabold tracking-tight text-slate-900">
+              <h1 className="receipt-heading-primary text-[1.35rem] font-extrabold tracking-tight">
                 {t("preview.documentTitle")}
               </h1>
-              <p className="mt-1 text-[0.76rem] leading-5 text-slate-600">
+              <p className="receipt-copy-muted mt-1 text-[0.76rem] leading-5">
                 {t("preview.documentSubtitle")}
               </p>
             </div>
 
-            <div className="rounded-[16px] border border-slate-400 p-3 text-[0.76rem]">
+            <div className="receipt-meta-box rounded-[16px] p-3 text-[0.76rem]">
               <MetaLine
                 label={t("preview.metaReceipt")}
                 value={previewReceipt.receiptNumber || "RC-0000"}
@@ -100,8 +100,8 @@ export function ReceiptPreview({
           </div>
         </section>
 
-        <section className="rounded-[18px] border border-slate-300 bg-slate-50 px-4 py-3">
-          <p className="text-[0.78rem] leading-5 text-slate-700">
+        <section className="receipt-note-box rounded-[18px] px-4 py-3">
+          <p className="receipt-copy-body text-[0.78rem] leading-5">
             {t("preview.confirmation", {
               company: previewCompany.companyName
             })}
@@ -161,11 +161,11 @@ export function ReceiptPreview({
               />
             </div>
 
-            <div className="mt-3 rounded-[18px] border border-dashed border-slate-400 px-4 py-3">
-              <p className="text-[0.8rem] font-semibold text-slate-700">{t("preview.stamp")}</p>
+            <div className="receipt-stamp-box mt-3 rounded-[18px] px-4 py-3">
+              <p className="receipt-copy-strong text-[0.8rem] font-semibold">{t("preview.stamp")}</p>
               <div className="mt-3 flex items-center gap-4">
                 <VirtualCompanyStamp company={previewCompany} compact />
-                <div className="text-[0.76rem] leading-5 text-slate-500">
+                <div className="receipt-copy-soft text-[0.76rem] leading-5">
                   <p>{previewCompany.companyStamp || t("preview.stampFallback")}</p>
                   <p className="mt-2">{t("preview.stampFooter")}</p>
                 </div>
@@ -173,9 +173,9 @@ export function ReceiptPreview({
             </div>
           </PreviewSection>
 
-          <footer className="rounded-[18px] border border-slate-300 bg-slate-50 px-4 py-3">
-            <p className="text-[0.7rem] leading-5 text-slate-600">{t("preview.footer")}</p>
-            <p className="mt-2 text-[0.7rem] leading-5 text-slate-600">
+          <footer className="receipt-note-box rounded-[18px] px-4 py-3">
+            <p className="receipt-copy-muted text-[0.7rem] leading-5">{t("preview.footer")}</p>
+            <p className="receipt-copy-muted mt-2 text-[0.7rem] leading-5">
               {t("preview.footerIssuedBy", {
                 company: previewCompany.companyName
               })}
@@ -196,7 +196,7 @@ function PreviewSection({
 }>) {
   return (
     <section>
-      <h2 className="mb-2 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-slate-900">
+      <h2 className="receipt-section-title mb-2 text-[0.78rem] font-bold uppercase tracking-[0.18em]">
         {title}
       </h2>
       {children}
@@ -210,16 +210,16 @@ function PreviewTable({
   rows: Array<[string, string]>;
 }>) {
   return (
-    <div className="overflow-hidden rounded-[18px] border-2 border-slate-300 bg-white">
+    <div className="receipt-table-shell overflow-hidden rounded-[18px]">
       {rows.map(([label, value], index) => (
         <div
           key={`${label}-${index}`}
-          className="receipt-table-row grid border-b border-slate-300 last:border-b-0"
+          className="receipt-table-row receipt-table-divider grid last:border-b-0"
         >
-          <div className="border-b border-r border-slate-300 bg-slate-100 px-4 py-2.5 text-[0.74rem] font-semibold text-slate-700 last:border-b-0">
+          <div className="receipt-table-label px-4 py-2.5 text-[0.74rem] font-semibold">
             {label}
           </div>
-          <div className="min-h-[38px] px-4 py-2.5 text-[0.74rem] leading-5 text-slate-700">
+          <div className="receipt-table-value min-h-[38px] px-4 py-2.5 text-[0.74rem] leading-5">
             {value}
           </div>
         </div>
@@ -239,12 +239,12 @@ function MetaLine({
 }>) {
   return (
     <div
-      className={`flex items-center justify-between gap-3 pb-2 text-[0.76rem] ${
-        withBorder ? "mb-2 border-b border-slate-300" : ""
+      className={`receipt-meta-line flex items-center justify-between gap-3 pb-2 text-[0.76rem] ${
+        withBorder ? "mb-2" : ""
       }`}
     >
-      <span className="font-semibold text-slate-700">{label}</span>
-      <span className="text-right font-bold text-slate-900">{value}</span>
+      <span className="receipt-copy-strong font-semibold">{label}</span>
+      <span className="receipt-heading-secondary text-right font-bold">{value}</span>
     </div>
   );
 }
@@ -259,8 +259,8 @@ function SignatureBox({
   imageDataUrl?: string;
 }>) {
   return (
-    <div className="flex min-h-[120px] flex-col rounded-[18px] border-2 border-slate-300 px-4 py-3">
-      <p className="text-center text-[0.78rem] font-semibold text-slate-700">{title}</p>
+    <div className="receipt-signature-box flex min-h-[120px] flex-col rounded-[18px] px-4 py-3">
+      <p className="receipt-copy-strong text-center text-[0.78rem] font-semibold">{title}</p>
       <div className="flex flex-1 items-center justify-center py-3">
         {imageDataUrl ? (
           <Image
@@ -273,7 +273,7 @@ function SignatureBox({
           />
         ) : null}
       </div>
-      <div className="border-t border-slate-400 pt-2 text-center text-[0.7rem] leading-5 text-slate-500">
+      <div className="receipt-signature-caption pt-2 text-center text-[0.7rem] leading-5">
         {caption}
       </div>
     </div>

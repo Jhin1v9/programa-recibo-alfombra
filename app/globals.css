@@ -142,6 +142,101 @@ h4,
   grid-template-columns: 1fr;
 }
 
+.receipt-document-root {
+  color: #1f2937;
+}
+
+.receipt-surface {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+.receipt-surface-strong {
+  border: 2px solid #0f172a;
+}
+
+.receipt-brand-band-surface {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.receipt-brand-overline {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.receipt-brand-copy {
+  color: #e2e8f0;
+}
+
+.receipt-brand-meta {
+  color: #f8fafc;
+}
+
+.receipt-document-divider {
+  border-top: 1px solid #0f172a;
+}
+
+.receipt-heading-primary,
+.receipt-section-title,
+.receipt-heading-secondary {
+  color: #0f172a;
+}
+
+.receipt-copy-body,
+.receipt-copy-strong,
+.receipt-table-value {
+  color: #334155;
+}
+
+.receipt-copy-soft,
+.receipt-copy-muted,
+.receipt-signature-caption {
+  color: #64748b;
+}
+
+.receipt-meta-box {
+  border: 1px solid #94a3b8;
+  background: #ffffff;
+}
+
+.receipt-meta-line {
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.receipt-note-box {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+}
+
+.receipt-table-shell {
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+}
+
+.receipt-table-divider {
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.receipt-table-label {
+  border-right: 1px solid #cbd5e1;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.receipt-signature-box {
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+}
+
+.receipt-signature-caption {
+  border-top: 1px solid #94a3b8;
+}
+
+.receipt-stamp-box {
+  border: 1px dashed #94a3b8;
+  background: #ffffff;
+}
+
 @container (min-width: 640px) {
   .receipt-brand-band {
     grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.9fr);
