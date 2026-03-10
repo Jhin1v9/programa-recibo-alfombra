@@ -35,13 +35,15 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         <section className="xl:hidden">
           <div className="grid gap-4">
             <div className="panel-card rounded-[28px] p-4">
-              <div className="flex items-start justify-between gap-4">
-                <BrandMark />
-                <div className="rounded-[20px] border border-[color:var(--line)] bg-white px-3 py-2 text-right">
+              <div className="flex items-start gap-3">
+                <BrandMark compact />
+                <div className="min-w-0">
                   <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
-                    {activeNavItem.label}
+                    {t("sidebar.workspace")}
                   </p>
-                  <p className="mt-1 text-xs text-[color:var(--ink-soft)]">{activeNavItem.note}</p>
+                  <h1 className="mt-1 text-lg leading-5 text-[color:var(--ink)]">
+                    Recibos Alfombra Studio
+                  </h1>
                 </div>
               </div>
 
@@ -49,19 +51,17 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-[color:var(--brand)]">
-                      {t("sidebar.workspace")}
+                      {activeNavItem.label}
                     </p>
-                    <h1 className="mt-2 text-[1.65rem] leading-[0.98] text-[color:var(--ink)]">
-                      Recibos Alfombra Studio
-                    </h1>
+                    <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                      {activeNavItem.note}
+                    </p>
                   </div>
-                  <span className="rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
+                  <span className="shrink-0 rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
                     {activeNavItem.tag}
                   </span>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {t("sidebar.description")}
-                </p>
+                <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">{t("sidebar.description")}</p>
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   <SidebarMetric label={t("sidebar.clients")} value={String(clients.length)} compact />
                   <SidebarMetric label={t("sidebar.receipts")} value={String(receipts.length)} compact />
@@ -211,21 +211,21 @@ function SidebarMetric({
 }: Readonly<{ label: string; value: string; compact?: boolean }>) {
   return (
     <div
-      className={`rounded-[22px] border px-4 ${compact ? "bg-white/8 py-3 text-white" : "bg-white/70 py-4"}`}
+      className={`rounded-[22px] border px-4 ${compact ? "bg-[rgba(15,23,42,0.04)] py-3" : "bg-white/70 py-4"}`}
       style={{
-        borderColor: compact ? "rgba(255, 255, 255, 0.1)" : "var(--line)"
+        borderColor: compact ? "rgba(15, 23, 42, 0.08)" : "var(--line)"
       }}
     >
       <strong
         className={`block break-words ${compact ? "text-base leading-5" : "text-lg leading-6"} ${
-          compact ? "text-white" : "text-[color:var(--ink)]"
+          compact ? "text-[color:var(--ink)]" : "text-[color:var(--ink)]"
         }`}
       >
         {value}
       </strong>
       <span
         className={`mt-4 block text-xs font-extrabold uppercase tracking-[0.18em] ${
-          compact ? "text-white/72" : "text-[color:var(--ink-soft)]"
+          compact ? "text-[color:var(--ink-soft)]" : "text-[color:var(--ink-soft)]"
         }`}
       >
         {label}
