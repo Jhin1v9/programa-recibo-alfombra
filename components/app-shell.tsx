@@ -49,9 +49,9 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <div className="flex items-start gap-3">
                 <BrandMark compact />
                 <div className="min-w-0">
-                  <h1 className="text-lg leading-5 text-[color:var(--ink)]">
+                  <p className="text-lg leading-5 text-[color:var(--ink)]">
                     Recibos Alfombra Studio
-                  </h1>
+                  </p>
                 </div>
               </div>
 
@@ -82,35 +82,50 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             <nav className="grid grid-cols-3 gap-2.5 sm:grid-cols-2 sm:gap-3">
               {navItems.map((item) => {
                 const active = isActiveRoute(item.href);
+                const cardClassName = `mobile-nav-card rounded-[20px] border p-3 transition ${
+                  active
+                    ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(255,246,240,0.98),rgba(255,255,255,0.96))] shadow-[0_18px_34px_rgba(191,95,52,0.1)]"
+                    : "border-[color:var(--line)] bg-white/90 hover:border-[rgba(15,23,42,0.18)] hover:bg-white"
+                }`;
+                const cardContent = (
+                  <div className="flex h-full flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <SidebarIcon icon={item.icon} active={active} />
+                      {active ? (
+                        <span
+                          className="hidden rounded-full border border-[rgba(191,95,52,0.18)] bg-[rgba(191,95,52,0.1)] px-2.5 py-1 text-[0.66rem] font-extrabold uppercase tracking-[0.16em] text-[color:var(--brand)] sm:inline-flex"
+                          aria-hidden="true"
+                        >
+                          {t("receipts.current")}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div>
+                      <strong className="block break-words text-[0.9rem] leading-[1.15] text-[color:var(--ink)] [overflow-wrap:anywhere] sm:text-base">
+                        {item.label}
+                      </strong>
+                      <span className="mt-2 hidden text-[0.92rem] leading-5 text-[color:var(--ink-soft)] sm:block">
+                        {item.note}
+                      </span>
+                    </div>
+                  </div>
+                );
+
+                if (active) {
+                  return (
+                    <div
+                      key={item.href}
+                      className={cardClassName}
+                      aria-current="page"
+                    >
+                      {cardContent}
+                    </div>
+                  );
+                }
 
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`mobile-nav-card rounded-[20px] border p-3 transition ${
-                      active
-                        ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(255,246,240,0.98),rgba(255,255,255,0.96))] shadow-[0_18px_34px_rgba(191,95,52,0.1)]"
-                        : "border-[color:var(--line)] bg-white/90 hover:border-[rgba(15,23,42,0.18)] hover:bg-white"
-                    }`}
-                  >
-                    <div className="flex h-full flex-col justify-between gap-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <SidebarIcon icon={item.icon} active={active} />
-                        {active ? (
-                          <span className="hidden rounded-full border border-[rgba(191,95,52,0.18)] bg-[rgba(191,95,52,0.1)] px-2.5 py-1 text-[0.66rem] font-extrabold uppercase tracking-[0.16em] text-[color:var(--brand)] sm:inline-flex">
-                            {t("receipts.current")}
-                          </span>
-                        ) : null}
-                      </div>
-                      <div>
-                        <strong className="block break-words text-[0.9rem] leading-[1.15] text-[color:var(--ink)] [overflow-wrap:anywhere] sm:text-base">
-                          {item.label}
-                        </strong>
-                        <span className="mt-2 hidden text-[0.92rem] leading-5 text-[color:var(--ink-soft)] sm:block">
-                          {item.note}
-                        </span>
-                      </div>
-                    </div>
+                  <Link key={item.href} href={item.href} className={cardClassName}>
+                    {cardContent}
                   </Link>
                 );
               })}
@@ -142,28 +157,36 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           <nav className="mt-4 grid gap-2">
             {navItems.map((item) => {
               const active = isActiveRoute(item.href);
+              const linkClassName = `rounded-[22px] border px-4 py-3 transition ${
+                active
+                  ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(255,246,240,0.98),rgba(255,255,255,0.96))] shadow-[0_12px_24px_rgba(191,95,52,0.08)]"
+                  : "border-[color:var(--line)] bg-white/72 hover:border-[rgba(15,23,42,0.14)] hover:bg-white"
+              }`;
+              const linkContent = (
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5">
+                    <SidebarIcon icon={item.icon} active={active} />
+                  </div>
+                  <div className="min-w-0">
+                    <strong className="block text-sm text-[color:var(--ink)]">{item.label}</strong>
+                    <span className="mt-1 block text-sm text-[color:var(--ink-soft)]">
+                      {item.note}
+                    </span>
+                  </div>
+                </div>
+              );
+
+              if (active) {
+                return (
+                  <div key={item.href} className={linkClassName} aria-current="page">
+                    {linkContent}
+                  </div>
+                );
+              }
 
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`rounded-[22px] border px-4 py-3 transition ${
-                    active
-                      ? "border-[rgba(191,95,52,0.38)] bg-[linear-gradient(135deg,rgba(255,246,240,0.98),rgba(255,255,255,0.96))] shadow-[0_12px_24px_rgba(191,95,52,0.08)]"
-                      : "border-[color:var(--line)] bg-white/72 hover:border-[rgba(15,23,42,0.14)] hover:bg-white"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5">
-                      <SidebarIcon icon={item.icon} active={active} />
-                    </div>
-                    <div className="min-w-0">
-                      <strong className="block text-sm text-[color:var(--ink)]">{item.label}</strong>
-                      <span className="mt-1 block text-sm text-[color:var(--ink-soft)]">
-                        {item.note}
-                      </span>
-                    </div>
-                  </div>
+                <Link key={item.href} href={item.href} className={linkClassName}>
+                  {linkContent}
                 </Link>
               );
             })}
