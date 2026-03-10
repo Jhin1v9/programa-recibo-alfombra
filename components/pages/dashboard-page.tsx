@@ -47,7 +47,7 @@ export function DashboardPage() {
         }
       />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label={t("dashboard.clientsSaved")} value={String(clients.length)} />
         <StatCard label={t("dashboard.receiptsSaved")} value={String(receipts.length)} />
         <StatCard label={t("dashboard.currentState")} value={selectionLabel} />
@@ -131,25 +131,27 @@ export function DashboardPage() {
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow={t("dashboard.utility")} title={t("dashboard.whatNext")}>
-            <div className="grid gap-3">
-              <UtilityRow
-                title={t("dashboard.setupBrand")}
-                text={t("dashboard.setupBrandText")}
-              />
-              <UtilityRow
-                title={t("dashboard.newClient")}
-                text={t("dashboard.newClientText")}
-              />
-              <UtilityRow
-                title={t("dashboard.recurringService")}
-                text={t("dashboard.recurringServiceText")}
-              />
-            </div>
-          </SectionCard>
+          <section className="hidden xl:block">
+            <SectionCard eyebrow={t("dashboard.utility")} title={t("dashboard.whatNext")}>
+              <div className="grid gap-3">
+                <UtilityRow
+                  title={t("dashboard.setupBrand")}
+                  text={t("dashboard.setupBrandText")}
+                />
+                <UtilityRow
+                  title={t("dashboard.newClient")}
+                  text={t("dashboard.newClientText")}
+                />
+                <UtilityRow
+                  title={t("dashboard.recurringService")}
+                  text={t("dashboard.recurringServiceText")}
+                />
+              </div>
+            </SectionCard>
+          </section>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-2">
+        <div className="hidden gap-6 lg:grid xl:grid-cols-2">
           <SectionCard eyebrow={t("dashboard.recent")} title={t("dashboard.latestClients")}>
             <div className="grid gap-3">
               {latestClients.length === 0 ? (

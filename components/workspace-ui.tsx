@@ -46,23 +46,23 @@ export function PageIntro({
   actions?: React.ReactNode;
 }>) {
   return (
-    <section className="panel-card fade-up rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,249,252,0.94))] p-5 md:rounded-[30px] md:p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="space-y-3">
+    <section className="panel-card fade-up rounded-[24px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,249,252,0.94))] p-4 md:rounded-[28px] md:p-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div className="space-y-2.5">
           <div className="flex flex-wrap items-center gap-3">
             <p className="rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-[color:var(--brand)]">
               {eyebrow}
             </p>
           </div>
-          <h1 className="max-w-[18ch] text-[2rem] leading-[0.95] text-[color:var(--ink)] md:max-w-[18ch] md:text-[2.5rem]">
+          <h1 className="max-w-[22ch] text-[1.7rem] leading-[0.98] text-[color:var(--ink)] md:max-w-[28ch] md:text-[2.1rem]">
             {title}
           </h1>
-          <p className="max-w-[64ch] text-[0.95rem] leading-6 text-[color:var(--ink-soft)] md:text-sm md:leading-7">
+          <p className="max-w-[72ch] text-sm leading-6 text-[color:var(--ink-soft)]">
             {description}
           </p>
         </div>
         {actions ? (
-          <div className="flex flex-wrap gap-2.5 border-t border-[color:var(--line)] pt-4 lg:border-t-0 lg:pt-0 md:gap-3">
+          <div className="flex flex-wrap gap-2.5 border-t border-[color:var(--line)] pt-4 xl:border-t-0 xl:pt-0 md:gap-3">
             {actions}
           </div>
         ) : null}
@@ -85,13 +85,13 @@ export function SectionCard({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="panel-card fade-up rounded-[30px] p-5">
-      <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+    <section className="panel-card fade-up rounded-[28px] p-4 md:p-5">
+      <div className="mb-4 flex flex-col gap-3 md:mb-5 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.24em] text-[color:var(--brand)]">
             {eyebrow}
           </p>
-          <h2 className="mt-2 text-2xl leading-none">{title}</h2>
+          <h2 className="mt-2 text-[1.45rem] leading-none md:text-[1.7rem]">{title}</h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -186,9 +186,11 @@ export function EmptyState({ message }: Readonly<{ message: string }>) {
 
 export function StatCard({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
-    <div className="panel-card rounded-[26px] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] p-5">
-      <strong className="block text-2xl text-[color:var(--ink)]">{value}</strong>
-      <span className="mt-6 block text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
+    <div className="panel-card rounded-[24px] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] p-4 md:p-5">
+      <strong className="block text-[1.55rem] leading-none text-[color:var(--ink)] md:text-2xl">
+        {value}
+      </strong>
+      <span className="mt-3 block text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)] md:mt-6">
         {label}
       </span>
     </div>
