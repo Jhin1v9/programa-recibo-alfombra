@@ -15,6 +15,7 @@ import type { ReceiptDraft, ServicePreset } from "@/lib/types";
 
 export function ReceiptsPage() {
   const {
+    draft,
     previewCompany,
     previewDraft,
     receipts,
@@ -114,7 +115,7 @@ export function ReceiptsPage() {
                 <EditableField
                   key={field.name}
                   config={field}
-                  value={previewDraft[field.name as keyof ServicePreset]}
+                  value={draft[field.name as keyof ServicePreset]}
                   onChange={(value) => updateDraftField(field.name as keyof ReceiptDraft, value)}
                 />
               ))}
@@ -127,7 +128,7 @@ export function ReceiptsPage() {
                 <EditableField
                   key={field.name}
                   config={field}
-                  value={previewDraft[field.name as keyof ReceiptDraft]}
+                  value={draft[field.name as keyof ReceiptDraft]}
                   onChange={(value) => updateDraftField(field.name as keyof ReceiptDraft, value)}
                 />
               ))}
