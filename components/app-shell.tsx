@@ -104,7 +104,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                         ) : null}
                       </div>
                       <div>
-                        <strong className="block text-[0.95rem] leading-5 text-[color:var(--ink)] sm:text-base">
+                        <strong className="block break-words text-[0.9rem] leading-[1.15] text-[color:var(--ink)] [overflow-wrap:anywhere] sm:text-base">
                           {item.label}
                         </strong>
                         <span className="mt-2 hidden text-[0.92rem] leading-5 text-[color:var(--ink-soft)] sm:block">
