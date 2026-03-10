@@ -15,6 +15,16 @@ export function VirtualCompanyStamp({
   const data = normalizeCompany(company);
   const size = compact ? 132 : 176;
   const padding = compact ? 14 : 20;
+  const companyLines = buildStampLines(data.companyName || "Superclim Servicios");
+  const stampTitle = (data.companyStamp || "Custodia temporal").toUpperCase();
+  const stampFooter = data.companyTaxId || data.companyPhone || "Limpieza profesional";
+  const outerRing = "#0d4d92";
+  const innerRing = "rgba(31, 111, 184, 0.35)";
+  const dashedRing = "rgba(75, 148, 216, 0.34)";
+  const textMain = "#0b3768";
+  const textSoft = "#24588f";
+  const accent = "#1d7ad9";
+  const accentSoft = "#e9f5ff";
 
   return (
     <div
@@ -23,38 +33,93 @@ export function VirtualCompanyStamp({
         width: `${size}px`,
         height: `${size}px`,
         padding: `${padding}px`,
-        border: "2px solid var(--brand-deep)",
-        color: "var(--brand-deep)",
+        border: `2px solid ${outerRing}`,
+        color: textMain,
         background:
-          "radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 243, 0.96) 58%, rgba(255, 240, 231, 0.94) 100%)"
+          "radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 1) 0%, rgba(244, 250, 255, 0.98) 54%, rgba(228, 241, 255, 0.96) 100%)"
       }}
     >
       <div
         className="absolute rounded-full"
         style={{
           inset: "8px",
-          border: "1px solid rgba(195, 106, 57, 0.5)"
+          border: `1px solid ${innerRing}`
         }}
       />
       <div
         className="absolute rounded-full border-dashed"
         style={{
           inset: "16px",
-          border: "1px dashed rgba(195, 106, 57, 0.35)"
+          border: `1px dashed ${dashedRing}`
         }}
       />
+      <div
+        className="absolute left-1/2 top-[14px] flex -translate-x-1/2 items-center justify-center rounded-full"
+        style={{
+          width: compact ? "26px" : "30px",
+          height: compact ? "26px" : "30px",
+          background: accentSoft,
+          border: `1px solid ${innerRing}`
+        }}
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          className={compact ? "h-[14px] w-[14px]" : "h-[16px] w-[16px]"}
+          fill="none"
+          stroke={accent}
+          strokeWidth="1.9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 3c2.4 3.5 4.8 6 4.8 9A4.8 4.8 0 1 1 7.2 12c0-3 2.4-5.5 4.8-9Z" />
+          <path d="M16.8 5.6h2.2" />
+          <path d="M17.9 4.5v2.2" />
+        </svg>
+      </div>
       <div className="relative z-10 flex h-full flex-col items-center justify-center">
-        <p className="max-w-[11ch] text-[0.76rem] font-extrabold uppercase leading-4 tracking-[0.16em]">
-          {data.companyName}
+        <div className="pt-4">
+          {companyLines.map((line) => (
+            <p
+              key={line}
+              className="max-w-[12ch] text-[0.7rem] font-extrabold uppercase leading-[1.1] tracking-[0.14em]"
+              style={{ color: textMain }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+        <div
+          className="my-2 h-px w-16"
+          style={{ background: "linear-gradient(90deg, transparent 0%, rgba(29,122,217,0.45) 20%, rgba(13,77,146,0.78) 50%, rgba(29,122,217,0.45) 80%, transparent 100%)" }}
+        />
+        <p
+          className="max-w-[13ch] text-[0.53rem] font-bold uppercase leading-[1.25] tracking-[0.2em]"
+          style={{ color: textSoft }}
+        >
+          {stampTitle}
         </p>
-        <div className="my-2 h-px w-16" style={{ background: "rgba(195, 106, 57, 0.35)" }} />
-        <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em]">
-          {data.companyStamp}
-        </p>
-        <p className="mt-2 max-w-[13ch] text-[0.58rem] font-semibold leading-4">
-          {data.companyTaxId}
+        <p
+          className="mt-2 max-w-[13ch] text-[0.56rem] font-semibold leading-[1.3]"
+          style={{ color: textSoft }}
+        >
+          {stampFooter}
         </p>
       </div>
     </div>
   );
+}
+
+function buildStampLines(companyName: string) {
+  const tokens = companyName
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (tokens.length <= 2) {
+    return [companyName];
+  }
+
+  const midpoint = Math.ceil(tokens.length / 2);
+  return [tokens.slice(0, midpoint).join(" "), tokens.slice(midpoint).join(" ")];
 }
