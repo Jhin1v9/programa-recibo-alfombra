@@ -126,7 +126,7 @@ export function DeliveryPdfPage({
         </SectionCard>
       </div>
 
-      <div className="pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
+      <div className="mobile-safe-dock pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
         <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
           <div className="grid grid-cols-3 gap-2">
             <LinkButton href={"/entrega" as Route} label={t("delivery.backToEditor")} variant="ghost" />

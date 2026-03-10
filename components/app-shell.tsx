@@ -69,10 +69,12 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                   </span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">{t("sidebar.description")}</p>
-                <div className="mt-4 grid grid-cols-3 gap-2">
+                <div className="mt-4 grid grid-cols-2 gap-2">
                   <SidebarMetric label={t("sidebar.clients")} value={String(clients.length)} compact />
                   <SidebarMetric label={t("sidebar.receipts")} value={String(receipts.length)} compact />
-                  <SidebarMetric label={t("sidebar.selected")} value={selectionLabel} compact />
+                  <div className="col-span-2">
+                    <SidebarMetric label={t("sidebar.selected")} value={selectionLabel} compact />
+                  </div>
                 </div>
               </div>
             </div>

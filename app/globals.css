@@ -188,6 +188,14 @@ h4,
   height: auto;
 }
 
+.mobile-safe-dock {
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+.mobile-safe-footer {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
 .receipt-surface {
   background: #ffffff;
   border: 1px solid #cbd5e1;

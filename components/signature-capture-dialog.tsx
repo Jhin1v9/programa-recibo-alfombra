@@ -194,18 +194,19 @@ export function SignatureCaptureDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/48 p-3 backdrop-blur-sm md:p-6">
-      <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-[28px] border border-black/8 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.24)]">
-        <div className="border-b border-[color:var(--line)] px-5 py-4 md:px-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/48 p-2 backdrop-blur-sm sm:p-3 md:p-6">
+      <div className="mx-auto flex min-h-full items-center justify-center">
+        <div className="flex w-full max-w-3xl flex-col overflow-hidden rounded-[28px] border border-black/8 bg-white shadow-[0_30px_80px_rgba(15,23,42,0.24)] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-1.5rem)]">
+        <div className="border-b border-[color:var(--line)] px-4 py-4 md:px-6">
           <h2 className="text-xl font-extrabold text-[color:var(--ink)]">{title}</h2>
           <p className="mt-2 max-w-[62ch] text-sm leading-7 text-[color:var(--ink-soft)]">
             {description}
           </p>
         </div>
 
-        <div className="flex-1 px-4 py-4 md:px-6 md:py-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 md:px-6 md:py-6">
           <div className="rounded-[24px] border-2 border-dashed border-[color:var(--line-strong)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))] p-3 md:p-4">
-            <div className="mb-3 flex items-center justify-between gap-3 rounded-[18px] border border-[color:var(--line)] bg-white px-4 py-3">
+            <div className="mb-3 grid gap-3 rounded-[18px] border border-[color:var(--line)] bg-white px-4 py-3 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[color:var(--brand)]">
                   {labels.sheetTitle}
@@ -214,13 +215,13 @@ export function SignatureCaptureDialog({
                   {labels.sheetNote}
                 </p>
               </div>
-              <div className="signature-script text-right text-[1.7rem] leading-none text-[color:var(--ink)]">
+              <div className="signature-script break-words text-right text-[1.2rem] leading-none text-[color:var(--ink)] sm:text-[1.7rem]">
                 {signerName || title}
               </div>
             </div>
             <canvas
               ref={canvasRef}
-              className="h-[250px] w-full touch-none rounded-[18px] bg-white"
+              className="h-[180px] w-full touch-none rounded-[18px] bg-white sm:h-[250px]"
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={stopDrawing}
@@ -230,19 +231,24 @@ export function SignatureCaptureDialog({
           </div>
         </div>
 
-        <div className="border-t border-[color:var(--line)] px-4 py-4 md:px-6">
-          <div className="grid gap-3 sm:grid-cols-3">
+        <div className="mobile-safe-footer border-t border-[color:var(--line)] bg-white px-3 py-3 md:px-6 md:py-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
             <button type="button" className={buttonClasses("ghost")} onClick={clearCanvas}>
               {labels.clear}
             </button>
             <button type="button" className={buttonClasses("ghost")} onClick={onClose}>
               {labels.cancel}
             </button>
-            <button type="button" className={buttonClasses("primary")} onClick={handleSave}>
+            <button
+              type="button"
+              className={`${buttonClasses("primary")} col-span-2 sm:col-span-1`}
+              onClick={handleSave}
+            >
               {labels.save}
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
