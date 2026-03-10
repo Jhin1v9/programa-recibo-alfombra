@@ -100,6 +100,20 @@ export function ClientsPage() {
         eyebrow={t("clients.eyebrow")}
         title={t("clients.title")}
         description={t("clients.description")}
+        actions={
+          <>
+            <div className="rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-4 py-3 text-left">
+              <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-[color:var(--brand)]">
+                {t("clients.currentClient")}
+              </p>
+              <p className="mt-1 text-sm font-semibold text-[color:var(--ink)]">
+                {selectedClient ? formatClientName(selectedClient) || t("dashboard.clientNoName") : t("clients.noSelected")}
+              </p>
+            </div>
+            <ActionButton label={t("clients.saveClient")} variant="primary" onClick={saveClient} />
+            <ActionButton label={t("clients.clearClient")} variant="ghost" onClick={clearClientFields} />
+          </>
+        }
       />
 
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">

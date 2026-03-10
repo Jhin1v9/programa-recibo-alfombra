@@ -50,10 +50,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <div className="flex items-start gap-3">
                 <BrandMark compact imageDataUrl={previewCompany.companyLogoDataUrl} />
                 <div className="min-w-0">
-                  <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
-                    {t("sidebar.workspace")}
-                  </p>
-                  <h1 className="mt-1 text-lg leading-5 text-[color:var(--ink)]">
+                  <h1 className="text-lg leading-5 text-[color:var(--ink)]">
                     Recibos Alfombra Studio
                   </h1>
                 </div>
@@ -124,11 +121,8 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
         <aside className="app-sidebar panel-card hidden h-fit overflow-hidden rounded-[28px] p-4 xl:sticky xl:top-6 xl:block">
           <div className="rounded-[22px] border border-[color:var(--line)] bg-white px-4 py-4">
-            <div className="flex items-start justify-between gap-4">
+            <div>
               <BrandMark imageDataUrl={previewCompany.companyLogoDataUrl} />
-              <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
-                {t("sidebar.workspace")}
-              </span>
             </div>
             <div className="mt-4 rounded-[20px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.94))] px-4 py-4">
               <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.22em] text-[color:var(--brand)]">
