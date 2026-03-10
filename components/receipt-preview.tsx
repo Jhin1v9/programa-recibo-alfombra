@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/brand-mark";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   DEFAULT_COMPANY,
@@ -40,9 +41,17 @@ export function ReceiptPreview({
         <section className="overflow-hidden rounded-[22px] border-2 border-slate-800 bg-white">
           <div className="receipt-brand-band grid gap-4 bg-slate-900 px-5 py-4 text-white">
             <div>
-              <p className="text-[1.6rem] font-extrabold tracking-[0.06em]">
-                {previewCompany.companyName}
-              </p>
+              <div className="flex items-center gap-3">
+                <BrandMark compact light />
+                <div>
+                  <p className="text-[1.42rem] font-extrabold tracking-[0.06em]">
+                    {previewCompany.companyName}
+                  </p>
+                  <p className="mt-1 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-white/60">
+                    {t("preview.brandRibbon")}
+                  </p>
+                </div>
+              </div>
               <p className="mt-1 text-[0.74rem] leading-5 text-slate-200">
                 {t("preview.headerText")}
               </p>
@@ -176,7 +185,7 @@ function PreviewSection({
 }>) {
   return (
     <section>
-      <h2 className="mb-2 text-[0.8rem] font-bold uppercase tracking-[0.18em] text-slate-900">
+      <h2 className="mb-2 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-slate-900">
         {title}
       </h2>
       {children}
@@ -196,10 +205,10 @@ function PreviewTable({
           key={`${label}-${index}`}
           className="receipt-table-row grid border-b border-slate-300 last:border-b-0"
         >
-          <div className="border-b border-r border-slate-300 bg-slate-100 px-4 py-3 text-[0.76rem] font-semibold text-slate-700 last:border-b-0">
+          <div className="border-b border-r border-slate-300 bg-slate-100 px-4 py-2.5 text-[0.74rem] font-semibold text-slate-700 last:border-b-0">
             {label}
           </div>
-          <div className="min-h-[42px] px-4 py-3 text-[0.76rem] leading-5 text-slate-700">
+          <div className="min-h-[38px] px-4 py-2.5 text-[0.74rem] leading-5 text-slate-700">
             {value}
           </div>
         </div>

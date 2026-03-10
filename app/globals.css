@@ -3,23 +3,23 @@
 :root {
   --font-sans: var(--font-body);
   --font-display-ui: var(--font-display);
-  --canvas: #f3efe7;
-  --canvas-strong: #fcfaf5;
-  --surface: rgba(255, 251, 245, 0.82);
-  --surface-strong: rgba(255, 255, 255, 0.92);
-  --surface-muted: rgba(245, 238, 226, 0.88);
-  --ink: #101826;
-  --ink-soft: #425066;
-  --line: rgba(16, 24, 38, 0.12);
-  --line-strong: rgba(16, 24, 38, 0.2);
-  --brand: #bf5f34;
-  --brand-deep: #8f4023;
-  --accent: #1f6b5d;
-  --accent-soft: rgba(31, 107, 93, 0.12);
+  --canvas: #f5f7fb;
+  --canvas-strong: #ffffff;
+  --surface: rgba(255, 255, 255, 0.84);
+  --surface-strong: rgba(255, 255, 255, 0.96);
+  --surface-muted: rgba(246, 248, 252, 0.94);
+  --ink: #0f172a;
+  --ink-soft: #475569;
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.16);
+  --brand: #c36a39;
+  --brand-deep: #8f4a26;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
   --danger: #a33131;
   --success: #176144;
-  --shadow-soft: 0 24px 60px rgba(16, 24, 38, 0.08);
-  --shadow-strong: 0 36px 90px rgba(16, 24, 38, 0.16);
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --shadow-strong: 0 36px 90px rgba(15, 23, 42, 0.14);
 }
 
 ::selection {
@@ -36,12 +36,12 @@ body {
   overflow-x: clip;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(191, 95, 52, 0.16), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(31, 107, 93, 0.15), transparent 28%),
-    linear-gradient(rgba(16, 24, 38, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 24, 38, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at top left, rgba(195, 106, 57, 0.12), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.1), transparent 28%),
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
     var(--canvas);
-  background-size: auto, auto, 34px 34px, 34px 34px, auto;
+  background-size: auto, auto, 32px 32px, 32px 32px, auto;
   font-family: var(--font-sans), sans-serif;
 }
 
@@ -55,15 +55,16 @@ h4,
 
 .panel-card {
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(249, 250, 252, 0.84));
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(18px);
 }
 
 .hero-card {
   background:
-    radial-gradient(circle at top right, rgba(249, 196, 79, 0.18), transparent 28%),
-    linear-gradient(145deg, #121a2f 0%, #17314c 48%, #18473e 100%);
+    radial-gradient(circle at top right, rgba(250, 204, 21, 0.14), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.12), transparent 24%),
+    linear-gradient(145deg, #0f172a 0%, #14253f 48%, #152d4f 100%);
   box-shadow: var(--shadow-strong);
 }
 
@@ -86,7 +87,7 @@ h4,
 
 .receipt-sheet-screen {
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: 30px;
   box-shadow: var(--shadow-strong);
 }
 
@@ -120,7 +121,7 @@ h4,
   right: -72px;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(15, 23, 42, 0.08), transparent 72%);
+  background: radial-gradient(circle, rgba(195, 106, 57, 0.08), transparent 72%);
 }
 
 .receipt-sheet::after {
@@ -128,7 +129,7 @@ h4,
   left: -72px;
   width: 150px;
   height: 150px;
-  background: radial-gradient(circle, rgba(30, 64, 175, 0.08), transparent 72%);
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.08), transparent 72%);
 }
 
 .receipt-info-row {

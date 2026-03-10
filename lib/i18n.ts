@@ -244,6 +244,7 @@ Object.assign(translations.es, {
   "language.en": "English",
   "preview.headerEyebrow": "Recibo de recogida y custodia",
   "preview.headerText": "Limpieza profesional de alfombras, tapetes y recogidas con custodia.",
+  "preview.brandRibbon": "Custodia temporal y limpieza profesional",
   "preview.documentTitle": "RECIBO DE RECOGIDA DE ALFOMBRA",
   "preview.documentSubtitle":
     "Comprobante de custodia temporal para servicio de limpieza profesional",
@@ -346,6 +347,7 @@ Object.assign(translations.ca, {
     "Aqui veus el full A4 complet abans de descarregar el PDF o obrir-lo en una pestanya nova.",
   "receipts.backToEditor": "Tornar a l'editor",
   "preview.documentTitle": "REBUT DE RECOLLIDA DE CATIFA",
+  "preview.brandRibbon": "Custodia temporal i neteja professional",
   "preview.documentSubtitle":
     "Comprovant de custodia temporal per al servei de neteja professional",
   "sidebar.state": "Estat",
@@ -398,6 +400,7 @@ Object.assign(translations.en, {
     "Here you can review the full A4 sheet before downloading the PDF or opening it in a new tab.",
   "receipts.backToEditor": "Back to editor",
   "preview.documentTitle": "RUG PICKUP RECEIPT",
+  "preview.brandRibbon": "Temporary custody and professional cleaning",
   "preview.documentSubtitle":
     "Temporary custody proof for professional cleaning service",
   "sidebar.state": "State",

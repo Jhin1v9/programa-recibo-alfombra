@@ -20,18 +20,18 @@ export function buttonClasses(variant: ButtonVariant) {
     "inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-extrabold transition duration-200 disabled:cursor-not-allowed disabled:opacity-45";
 
   if (variant === "primary") {
-    return `${base} bg-[linear-gradient(135deg,#101826_0%,#22304d_100%)] text-white shadow-[0_18px_34px_rgba(16,24,38,0.18)] hover:-translate-y-0.5`;
+    return `${base} bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_100%)] text-white shadow-[0_16px_30px_rgba(15,23,42,0.18)] hover:-translate-y-0.5`;
   }
 
   if (variant === "secondary") {
-    return `${base} bg-[linear-gradient(135deg,var(--brand)_0%,var(--brand-deep)_100%)] text-white shadow-[0_18px_34px_rgba(191,95,52,0.18)] hover:-translate-y-0.5`;
+    return `${base} bg-[linear-gradient(135deg,var(--brand)_0%,var(--brand-deep)_100%)] text-white shadow-[0_16px_30px_rgba(191,95,52,0.18)] hover:-translate-y-0.5`;
   }
 
   if (variant === "danger") {
-    return `${base} bg-[rgba(163,49,49,0.1)] text-[color:var(--danger)] hover:-translate-y-0.5`;
+    return `${base} bg-[linear-gradient(135deg,rgba(163,49,49,0.13),rgba(255,255,255,0.92))] text-[color:var(--danger)] hover:-translate-y-0.5`;
   }
 
-  return `${base} bg-black/[0.05] text-[color:var(--ink)] hover:-translate-y-0.5`;
+  return `${base} border border-[color:var(--line)] bg-white text-[color:var(--ink)] hover:-translate-y-0.5`;
 }
 
 export function PageIntro({
@@ -46,7 +46,7 @@ export function PageIntro({
   actions?: React.ReactNode;
 }>) {
   return (
-    <section className="hero-card fade-up overflow-hidden rounded-[30px] border border-white/10 p-6 text-white">
+    <section className="hero-card fade-up overflow-hidden rounded-[32px] border border-white/10 p-6 text-white shadow-[0_32px_80px_rgba(15,23,42,0.16)]">
       <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.28em] text-amber-200/80">
         {eyebrow}
       </p>
@@ -117,7 +117,7 @@ export function EditableField({
           value={value}
           placeholder={config.placeholder}
           onChange={(event) => onChange(event.target.value)}
-          className="min-h-[112px] rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-strong)] px-4 py-3 text-[color:var(--ink)] outline-none transition placeholder:text-black/35 focus:border-[color:var(--brand)] focus:ring-4 focus:ring-[rgba(191,95,52,0.14)]"
+          className="min-h-[112px] rounded-[22px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] px-4 py-3 text-[color:var(--ink)] outline-none transition placeholder:text-black/35 focus:border-[color:var(--brand)] focus:ring-4 focus:ring-[rgba(191,95,52,0.14)]"
         />
       ) : (
         <input
@@ -125,7 +125,7 @@ export function EditableField({
           value={value}
           placeholder={config.placeholder}
           onChange={(event) => onChange(event.target.value)}
-          className="h-12 rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-strong)] px-4 text-[color:var(--ink)] outline-none transition placeholder:text-black/35 focus:border-[color:var(--brand)] focus:ring-4 focus:ring-[rgba(191,95,52,0.14)]"
+          className="h-12 rounded-[22px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] px-4 text-[color:var(--ink)] outline-none transition placeholder:text-black/35 focus:border-[color:var(--brand)] focus:ring-4 focus:ring-[rgba(191,95,52,0.14)]"
         />
       )}
     </label>
@@ -176,7 +176,7 @@ export function EmptyState({ message }: Readonly<{ message: string }>) {
 
 export function StatCard({ label, value }: Readonly<{ label: string; value: string }>) {
   return (
-    <div className="panel-card rounded-[26px] p-5">
+    <div className="panel-card rounded-[26px] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] p-5">
       <strong className="block text-2xl text-[color:var(--ink)]">{value}</strong>
       <span className="mt-6 block text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
         {label}
@@ -208,8 +208,8 @@ export function RegistryCard({
     <article
       className={`cursor-pointer rounded-[24px] border p-4 transition ${
         active
-          ? "border-[rgba(191,95,52,0.55)] bg-[rgba(255,255,255,0.86)] shadow-[inset_0_0_0_1px_rgba(191,95,52,0.2)]"
-          : "border-[color:var(--line)] bg-[color:var(--surface-strong)] hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(16,24,38,0.08)]"
+          ? "border-[rgba(191,95,52,0.45)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(255,246,240,0.95))] shadow-[0_20px_40px_rgba(191,95,52,0.08)]"
+          : "border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(246,248,252,0.9))] hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(16,24,38,0.08)]"
       }`}
       onClick={onOpen}
     >
