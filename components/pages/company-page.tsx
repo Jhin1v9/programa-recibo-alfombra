@@ -13,6 +13,7 @@ import {
   PageIntro,
   SectionCard
 } from "@/components/workspace-ui";
+import { STORAGE_KEYS, normalizeCompany } from "@/lib/receipt-core";
 import type { CompanyProfile } from "@/lib/types";
 
 export function CompanyPage() {
@@ -64,6 +65,19 @@ export function CompanyPage() {
     signatureUploadRef.current?.click();
   }
 
+  function persistSignatureValue(dataUrl: string) {
+    updateCompanyField("companySignatureDataUrl", dataUrl);
+    window.localStorage.setItem(
+      STORAGE_KEYS.company,
+      JSON.stringify(
+        normalizeCompany({
+          ...companyForm,
+          companySignatureDataUrl: dataUrl
+        })
+      )
+    );
+  }
+
   function handleSignatureFileChange(event: ChangeEvent<HTMLInputElement>) {
     const [file] = Array.from(event.target.files || []);
 
@@ -81,7 +95,7 @@ export function CompanyPage() {
 
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        updateCompanyField("companySignatureDataUrl", reader.result);
+        persistSignatureValue(reader.result);
       }
     };
 
@@ -141,9 +155,25 @@ export function CompanyPage() {
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow={t("company.identityTools")} title={t("company.signatureTitle")}>
+          <SectionCard
+            eyebrow={t("company.identityTools")}
+            title={t("company.signatureTitle")}
+            actions={
+              <div className="flex flex-wrap gap-3">
+                <ActionButton
+                  label={t("company.uploadSignature")}
+                  variant="secondary"
+                  onClick={openSignatureUpload}
+                />
+                <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
+              </div>
+            }
+          >
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
               <div className="rounded-[26px] border border-[color:var(--line)] bg-white/82 p-5">
+                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
+                  {t("company.uploadSignature")}
+                </p>
                 <p className="text-sm leading-7 text-[color:var(--ink-soft)]">{t("company.signatureText")}</p>
                 <input
                   ref={signatureUploadRef}
@@ -153,6 +183,11 @@ export function CompanyPage() {
                   onChange={handleSignatureFileChange}
                 />
                 <div className="mt-5 flex flex-wrap gap-3">
+                  <ActionButton
+                    label={t("company.uploadSignature")}
+                    variant="secondary"
+                    onClick={openSignatureUpload}
+                  />
                   <ActionButton
                     label={
                       previewCompany.companySignatureDataUrl
@@ -170,7 +205,7 @@ export function CompanyPage() {
                   <ActionButton
                     label={t("company.clearSignature")}
                     variant="ghost"
-                    onClick={() => updateCompanyField("companySignatureDataUrl", "")}
+                    onClick={() => persistSignatureValue("")}
                     disabled={!previewCompany.companySignatureDataUrl}
                   />
                   <ActionButton
@@ -217,7 +252,7 @@ export function CompanyPage() {
         signerName={companyForm.companyResponsible}
         initialValue={companyForm.companySignatureDataUrl}
         onClose={() => setSignatureDialogOpen(false)}
-        onSave={(dataUrl) => updateCompanyField("companySignatureDataUrl", dataUrl)}
+        onSave={persistSignatureValue}
         labels={{
           clear: t("signature.clear"),
           cancel: t("signature.cancel"),
