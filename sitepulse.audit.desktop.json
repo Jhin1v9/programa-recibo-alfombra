@@ -1,0 +1,39 @@
+{
+  "name": "programa-recibo-alfombra-desktop",
+  "baseUrl": "http://127.0.0.1:3000",
+  "serverCommand": "npm run dev -- --hostname 127.0.0.1 --port 3000",
+  "serverCwd": ".",
+  "routeLoadTimeoutMs": 40000,
+  "buttonClickTimeoutMs": 4000,
+  "clickWaitMs": 900,
+  "viewportWidth": 1536,
+  "viewportHeight": 864,
+  "scrollEffectMinPx": 8,
+  "sectionOrderWaitMs": 1200,
+  "maxRunMs": 900000,
+  "checkpointEveryClicks": 10,
+  "reportDir": "sitepulse-reports",
+  "checkpointFile": "sitepulse-reports/desktop-checkpoint.json",
+  "autoDiscoverRoutes": false,
+  "discoverFromSitemap": false,
+  "discoverMenuLinks": false,
+  "maxActionsPerRoute": 200,
+  "maxActionRoutes": 0,
+  "requireButtonEffect": true,
+  "allowedNoEffectButtonContains": [
+    "whatsapp",
+    "menu"
+  ],
+  "ignoredRequestFailedErrors": [
+    "ERR_ABORTED"
+  ],
+  "sectionOrderRules": [],
+  "routes": [
+    "/",
+    "/empresa",
+    "/clientes",
+    "/recibos",
+    "/entrega",
+    "/configuracion"
+  ]
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { DashboardPage } from "@/components/pages/dashboard-page";
+import { buildPageMetadata } from "@/lib/site-metadata";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -19,10 +20,12 @@ const structuredData = {
 };
 
 export const metadata: Metadata = {
-  title: "Programa de resguardos para recogida de alfombras",
-  alternates: {
-    canonical: "/"
-  }
+  ...buildPageMetadata({
+    title: "Programa de resguardos para recogida de alfombras",
+    description:
+      "Programa para guardar clientes y generar resguardos de recogida y custodia temporal para limpieza profesional.",
+    path: "/"
+  })
 };
 
 export default function HomePage() {

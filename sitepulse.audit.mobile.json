@@ -1,0 +1,39 @@
+{
+  "name": "programa-recibo-alfombra-mobile",
+  "baseUrl": "http://127.0.0.1:3000",
+  "serverCommand": "npm run dev -- --hostname 127.0.0.1 --port 3000",
+  "serverCwd": ".",
+  "routeLoadTimeoutMs": 40000,
+  "buttonClickTimeoutMs": 4500,
+  "clickWaitMs": 1100,
+  "viewportWidth": 390,
+  "viewportHeight": 844,
+  "scrollEffectMinPx": 6,
+  "sectionOrderWaitMs": 1400,
+  "maxRunMs": 900000,
+  "checkpointEveryClicks": 10,
+  "reportDir": "sitepulse-reports",
+  "checkpointFile": "sitepulse-reports/mobile-checkpoint.json",
+  "autoDiscoverRoutes": false,
+  "discoverFromSitemap": false,
+  "discoverMenuLinks": false,
+  "maxActionsPerRoute": 200,
+  "maxActionRoutes": 0,
+  "requireButtonEffect": true,
+  "allowedNoEffectButtonContains": [
+    "whatsapp",
+    "menu"
+  ],
+  "ignoredRequestFailedErrors": [
+    "ERR_ABORTED"
+  ],
+  "sectionOrderRules": [],
+  "routes": [
+    "/",
+    "/empresa",
+    "/clientes",
+    "/recibos",
+    "/entrega",
+    "/configuracion"
+  ]
+}

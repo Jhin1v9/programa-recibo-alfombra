@@ -48,6 +48,29 @@ npm run start
 npm run check
 ```
 
+## Auditoria con SitePulse
+
+Configs listas para rutas criticas:
+
+- `sitepulse.audit.desktop.json`
+- `sitepulse.audit.mobile.json`
+
+Ejemplos desde el repo `sitepulse-qa`:
+
+```bash
+npm --prefix qa run audit:cmd -- --config "C:\Users\Administrador\Documents\programa-recibo-alfombra\sitepulse.audit.desktop.json" --base-url "https://programa-recibo-alfombra.vercel.app" --no-server
+npm --prefix qa run audit:cmd:mobile -- --config "C:\Users\Administrador\Documents\programa-recibo-alfombra\sitepulse.audit.mobile.json" --base-url "https://programa-recibo-alfombra.vercel.app" --no-server
+```
+
+Rotas cobertas por defecto:
+
+- `/`
+- `/empresa`
+- `/clientes`
+- `/recibos`
+- `/entrega`
+- `/configuracion`
+
 ## Deploy en Vercel
 
 - La app ya esta en `Next.js`, asi que Vercel detecta el proyecto automaticamente.

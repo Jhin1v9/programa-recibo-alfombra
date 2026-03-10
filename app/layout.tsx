@@ -3,6 +3,13 @@ import { Dancing_Script, Manrope, Space_Grotesk } from "next/font/google";
 
 import { AppShell } from "@/components/app-shell";
 import { ReceiptAppProvider } from "@/components/receipt-app-provider";
+import {
+  APP_DESCRIPTION,
+  APP_NAME,
+  APP_OG_IMAGE_PATH,
+  APP_TITLE,
+  SITE_URL
+} from "@/lib/site-metadata";
 
 import "./globals.css";
 
@@ -23,14 +30,13 @@ const signatureFont = Dancing_Script({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://programa-recibo-alfombra.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Programa de resguardos para recogida de alfombras",
-    template: "%s | Recibos Alfombra Studio"
+    default: APP_TITLE,
+    template: `%s | ${APP_NAME}`
   },
-  description:
-    "Aplicacion para importar contactos, guardar clientes y generar resguardos de recogida y custodia temporal en formato A4.",
-  applicationName: "Recibos Alfombra Studio",
+  description: APP_DESCRIPTION,
+  applicationName: APP_NAME,
   keywords: ["recibos", "alfombra", "tapetes", "clientes", "pdf", "next.js", "vercel"],
   authors: [
     {
@@ -44,26 +50,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "Programa de resguardos para recogida de alfombras",
-    description:
-      "Aplicacion para importar contactos, guardar clientes y generar resguardos de recogida y custodia temporal en formato A4.",
-    url: "https://programa-recibo-alfombra.vercel.app",
-    siteName: "Recibos Alfombra Studio",
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    url: SITE_URL,
+    siteName: APP_NAME,
     images: [
       {
-        url: "/icon.svg",
-        width: 512,
-        height: 512,
-        alt: "Recibos Alfombra Studio"
+        url: APP_OG_IMAGE_PATH,
+        width: 1200,
+        height: 630,
+        alt: APP_NAME
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Programa de resguardos para recogida de alfombras",
-    description:
-      "Aplicacion para importar contactos, guardar clientes y generar resguardos de recogida y custodia temporal en formato A4.",
-    images: ["/icon.svg"]
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: [APP_OG_IMAGE_PATH]
   }
 };
 
