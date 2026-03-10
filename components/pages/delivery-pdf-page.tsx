@@ -58,7 +58,7 @@ export function DeliveryPdfPage({
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "") || "constancia-entrega-alfombra";
     const targetWindow =
-      action === "open" ? window.open("", "_blank", "noopener,noreferrer") : null;
+      action === "open" ? window.open("about:blank", "_blank") : null;
 
     if (targetWindow) {
       targetWindow.document.write(

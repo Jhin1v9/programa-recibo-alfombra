@@ -101,9 +101,13 @@ h4,
 .receipt-sheet-export {
   width: 794px;
   max-width: none;
+  min-height: 1123px;
+  height: auto;
+  aspect-ratio: auto;
   border: 0;
   border-radius: 0;
   box-shadow: none;
+  overflow: visible;
 }
 
 .receipt-export-host {
@@ -111,6 +115,7 @@ h4,
   top: 0;
   left: -10000px;
   width: 794px;
+  overflow: visible;
   pointer-events: none;
   z-index: -1;
 }
