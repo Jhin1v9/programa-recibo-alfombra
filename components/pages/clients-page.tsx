@@ -8,8 +8,8 @@ import {
   EditableField,
   EmptyState,
   PageIntro,
-  RegistryCard,
-  SectionCard
+  SectionCard,
+  buttonClasses
 } from "@/components/workspace-ui";
 import {
   countReceiptsForClient,
@@ -21,6 +21,8 @@ import {
   normalizeIdentityText
 } from "@/lib/receipt-core";
 import type { ClientFields, ReceiptDraft } from "@/lib/types";
+
+const CLIENTS_PER_PAGE = 8;
 
 export function ClientsPage() {
   const {
@@ -48,6 +50,7 @@ export function ClientsPage() {
     "clients.importWaiting" | "clients.importPick" | "clients.importing" | "clients.importDone"
   >("clients.importWaiting");
   const [isImporting, setIsImporting] = useState(false);
+  const [clientPage, setClientPage] = useState(1);
   const deferredClientSearch = useDeferredValue(clientSearch);
   const clientInputs = [
     { name: "clientFirstName", label: t("clients.firstName"), placeholder: t("clients.firstName") },
@@ -72,6 +75,11 @@ export function ClientsPage() {
   const filteredClients = [...clients]
     .sort((first, second) => +new Date(second.updatedAt || second.createdAt) - +new Date(first.updatedAt || first.createdAt))
     .filter((client) => matchesClientSearch(client, normalizeIdentityText(deferredClientSearch)));
+  const totalClientPages = Math.max(1, Math.ceil(filteredClients.length / CLIENTS_PER_PAGE));
+  const currentClientPage = Math.min(clientPage, totalClientPages);
+  const pageStartIndex = (currentClientPage - 1) * CLIENTS_PER_PAGE;
+  const pageEndIndex = Math.min(pageStartIndex + CLIENTS_PER_PAGE, filteredClients.length);
+  const visibleClients = filteredClients.slice(pageStartIndex, pageEndIndex);
 
   const importFilesLabel =
     importFiles.length === 0
@@ -223,62 +231,121 @@ export function ClientsPage() {
                 full: true
               }}
               value={clientSearch}
-              onChange={setClientSearch}
+              onChange={(value) => {
+                setClientSearch(value);
+                setClientPage(1);
+              }}
             />
 
-            <div className="mt-4 flex flex-col gap-3">
-              {filteredClients.length === 0 ? (
-                <EmptyState message={t("clients.emptyFilter")} />
-              ) : (
-                filteredClients.map((client) => {
-                  const receiptCount = countReceiptsForClient(receipts, client);
-                  const latestReceipt = findLatestReceiptForClient(receipts, client);
+            <div className="mt-4 rounded-[24px] border border-[color:var(--line)] bg-[rgba(15,23,42,0.03)] p-3 md:p-4">
+              <div className="flex flex-col gap-3 border-b border-[color:var(--line)] pb-3 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <CompactInfoPill
+                    label={t("clients.totalSaved")}
+                    value={t("clients.totalSavedCount", { count: clients.length })}
+                  />
+                  <CompactInfoPill
+                    label={t("clients.filtered")}
+                    value={t("clients.filteredCount", { count: filteredClients.length })}
+                  />
+                  <CompactInfoPill
+                    label={t("clients.pageLabel")}
+                    value={t("clients.pageOf", { page: currentClientPage, total: totalClientPages })}
+                  />
+                </div>
 
-                  return (
-                    <RegistryCard
-                      key={client.id}
-                      active={client.id === selectedClientId}
-                      title={formatClientName(client) || t("dashboard.clientNoName")}
-                      chips={[
-                        client.clientCity,
-                        hasAnyField(client.servicePreset) ? t("clients.templateChip") : "",
-                        receiptCount ? t("clients.receiptsCount", { count: receiptCount }) : ""
-                      ].filter(Boolean)}
-                      body={
-                        <>
-                          <p>
-                            {client.clientPhone || t("dashboard.noPhone")}
-                            {client.clientEmail ? ` / ${client.clientEmail}` : ""}
-                          </p>
-                          <p>{client.clientAddress || t("clients.noAddress")}</p>
-                          <p>
-                            {t("clients.lastService")}:{" "}
-                            {latestReceipt ? formatDate(latestReceipt.pickupDate) : t("clients.noHistory")}
-                          </p>
-                        </>
-                      }
-                      onOpen={() => loadClient(client.id)}
-                      actions={[
-                        {
-                          label: t("clients.use"),
-                          variant: "primary",
-                          onClick: () => loadClient(client.id)
-                        },
-                        {
-                          label: t("clients.newReceipt"),
-                          variant: "ghost",
-                          onClick: () => startNewReceiptForClient(client.id)
-                        },
-                        {
-                          label: t("clients.repeat"),
-                          variant: "secondary",
-                          onClick: () => repeatLastServiceForClient(client.id)
-                        }
-                      ]}
-                    />
-                  );
-                })
-              )}
+                <div className="flex flex-wrap gap-2">
+                  {clientSearch ? (
+                    <button
+                      type="button"
+                      className={buttonClasses("ghost")}
+                      onClick={() => {
+                        setClientSearch("");
+                        setClientPage(1);
+                      }}
+                    >
+                      {t("clients.clearSearch")}
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className={buttonClasses("ghost")}
+                    onClick={() => setClientPage((page) => Math.max(1, page - 1))}
+                    disabled={currentClientPage <= 1}
+                  >
+                    {t("clients.previousPage")}
+                  </button>
+                  <button
+                    type="button"
+                    className={buttonClasses("ghost")}
+                    onClick={() => setClientPage((page) => Math.min(totalClientPages, page + 1))}
+                    disabled={currentClientPage >= totalClientPages}
+                  >
+                    {t("clients.nextPage")}
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-3">
+                {filteredClients.length === 0 ? (
+                  <EmptyState message={t("clients.emptyFilter")} />
+                ) : (
+                  <>
+                    <p className="mb-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+                      {t("clients.showingRange", {
+                        from: pageStartIndex + 1,
+                        to: pageEndIndex,
+                        total: filteredClients.length
+                      })}
+                    </p>
+
+                    <div
+                      className="client-registry-scroll space-y-3 pr-1"
+                      style={{
+                        maxHeight: "min(42rem, 72vh)",
+                        overflowY: "auto",
+                        overscrollBehavior: "contain",
+                        scrollbarGutter: "stable"
+                      }}
+                    >
+                      {visibleClients.map((client) => {
+                        const receiptCount = countReceiptsForClient(receipts, client);
+                        const latestReceipt = findLatestReceiptForClient(receipts, client);
+
+                        return (
+                          <ClientRegistryRow
+                            key={client.id}
+                            active={client.id === selectedClientId}
+                            title={formatClientName(client) || t("dashboard.clientNoName")}
+                            chips={[
+                              client.clientCity,
+                              hasAnyField(client.servicePreset) ? t("clients.templateChip") : "",
+                              receiptCount ? t("clients.receiptsCount", { count: receiptCount }) : ""
+                            ].filter(Boolean)}
+                            phone={client.clientPhone || t("dashboard.noPhone")}
+                            email={client.clientEmail}
+                            address={client.clientAddress || t("clients.noAddress")}
+                            latestService={
+                              latestReceipt
+                                ? formatDate(latestReceipt.pickupDate)
+                                : t("clients.noHistory")
+                            }
+                            onOpen={() => loadClient(client.id)}
+                            onNewReceipt={() => startNewReceiptForClient(client.id)}
+                            onRepeat={() => repeatLastServiceForClient(client.id)}
+                            labels={{
+                              use: t("clients.use"),
+                              newReceipt: t("clients.newReceiptShort"),
+                              repeat: t("clients.repeat"),
+                              lastService: t("clients.lastService")
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </SectionCard>
         </div>
@@ -304,6 +371,118 @@ export function ClientsPage() {
         </SectionCard>
       </div>
     </>
+  );
+}
+
+function CompactInfoPill({ label, value }: Readonly<{ label: string; value: string }>) {
+  return (
+    <div className="rounded-full border border-[color:var(--line)] bg-white px-3 py-2">
+      <span className="text-[0.68rem] font-extrabold uppercase tracking-[0.16em] text-[color:var(--brand)]">
+        {label}
+      </span>
+      <strong className="ml-2 text-sm text-[color:var(--ink)]">{value}</strong>
+    </div>
+  );
+}
+
+function ClientRegistryRow({
+  active,
+  title,
+  chips,
+  phone,
+  email,
+  address,
+  latestService,
+  onOpen,
+  onNewReceipt,
+  onRepeat,
+  labels
+}: Readonly<{
+  active: boolean;
+  title: string;
+  chips: string[];
+  phone: string;
+  email?: string;
+  address: string;
+  latestService: string;
+  onOpen: () => void;
+  onNewReceipt: () => void;
+  onRepeat: () => void;
+  labels: {
+    use: string;
+    newReceipt: string;
+    repeat: string;
+    lastService: string;
+  };
+}>) {
+  return (
+    <article
+      className={`cursor-pointer rounded-[22px] border p-4 transition ${
+        active
+          ? "border-[rgba(191,95,52,0.42)] bg-[linear-gradient(135deg,rgba(255,247,241,0.98),rgba(255,255,255,0.98))] shadow-[0_16px_30px_rgba(191,95,52,0.08)]"
+          : "border-[color:var(--line)] bg-white hover:border-[rgba(15,23,42,0.14)]"
+      }`}
+      onClick={onOpen}
+    >
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+        <div className="min-w-0">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <h3 className="truncate text-base font-extrabold text-[color:var(--ink)]">{title}</h3>
+            <div className="flex flex-wrap gap-2">
+              {chips.map((chip) => (
+                <span
+                  key={chip}
+                  className="rounded-full border border-[color:var(--accent-soft)] bg-[color:var(--accent-soft)] px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.16em] text-[color:var(--accent)]"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--ink-soft)] lg:grid-cols-2">
+            <p className="truncate">{email ? `${phone} / ${email}` : phone}</p>
+            <p className="truncate">
+              {labels.lastService}: {latestService}
+            </p>
+            <p className="lg:col-span-2">{address}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 xl:max-w-[280px] xl:justify-end">
+          <button
+            type="button"
+            className={buttonClasses("primary")}
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpen();
+            }}
+          >
+            {labels.use}
+          </button>
+          <button
+            type="button"
+            className={buttonClasses("ghost")}
+            onClick={(event) => {
+              event.stopPropagation();
+              onNewReceipt();
+            }}
+          >
+            {labels.newReceipt}
+          </button>
+          <button
+            type="button"
+            className={buttonClasses("secondary")}
+            onClick={(event) => {
+              event.stopPropagation();
+              onRepeat();
+            }}
+          >
+            {labels.repeat}
+          </button>
+        </div>
+      </div>
+    </article>
   );
 }
 
