@@ -1,0 +1,58 @@
+{
+  "name": "programa-recibo-alfombra",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicacao moderna para recibos de recolha de alfombra com Next.js, React, TypeScript e Tailwind CSS.",
+  "license": "MIT",
+  "author": {
+    "name": "Jhin1v9",
+    "email": "abnerr2002@icloud.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jhin1v9/programa-recibo-alfombra.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jhin1v9/programa-recibo-alfombra/issues"
+  },
+  "homepage": "https://github.com/Jhin1v9/programa-recibo-alfombra#readme",
+  "keywords": [
+    "nextjs",
+    "react",
+    "typescript",
+    "receipt-generator",
+    "alfombra",
+    "tapetes",
+    "pdf",
+    "vercel"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "npm@11.6.2",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "audit": "npm audit",
+    "check": "npm run lint && npm run typecheck && npm run build"
+  },
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.38.0",
+    "eslint-config-next": "^16.1.6",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}

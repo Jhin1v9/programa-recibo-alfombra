@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: var(--font-body);
+  --font-display-ui: var(--font-display);
+  --canvas: #f3efe7;
+  --canvas-strong: #fcfaf5;
+  --surface: rgba(255, 251, 245, 0.82);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --surface-muted: rgba(245, 238, 226, 0.88);
+  --ink: #101826;
+  --ink-soft: #425066;
+  --line: rgba(16, 24, 38, 0.12);
+  --line-strong: rgba(16, 24, 38, 0.2);
+  --brand: #bf5f34;
+  --brand-deep: #8f4023;
+  --accent: #1f6b5d;
+  --accent-soft: rgba(31, 107, 93, 0.12);
+  --danger: #a33131;
+  --success: #176144;
+  --shadow-soft: 0 24px 60px rgba(16, 24, 38, 0.08);
+  --shadow-strong: 0 36px 90px rgba(16, 24, 38, 0.16);
+}
+
+::selection {
+  background: rgba(191, 95, 52, 0.18);
+  color: var(--ink);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: clip;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(191, 95, 52, 0.16), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(31, 107, 93, 0.15), transparent 28%),
+    linear-gradient(rgba(16, 24, 38, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 24, 38, 0.04) 1px, transparent 1px),
+    var(--canvas);
+  background-size: auto, auto, 34px 34px, 34px 34px, auto;
+  font-family: var(--font-sans), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display-ui), sans-serif;
+}
+
+.panel-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+}
+
+.hero-card {
+  background:
+    radial-gradient(circle at top right, rgba(249, 196, 79, 0.18), transparent 28%),
+    linear-gradient(145deg, #121a2f 0%, #17314c 48%, #18473e 100%);
+  box-shadow: var(--shadow-strong);
+}
+
+.status-pill {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 250, 245, 0.9);
+}
+
+.receipt-sheet {
+  width: 100%;
+  max-width: 860px;
+  min-width: 0;
+  min-height: 297mm;
+  background:
+    linear-gradient(180deg, rgba(191, 95, 52, 0.04), transparent 130px),
+    linear-gradient(130deg, rgba(255, 255, 255, 0.94), rgba(255, 251, 246, 0.94));
+  box-shadow: var(--shadow-strong);
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.receipt-sheet::before,
+.receipt-sheet::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.receipt-sheet::before {
+  top: -90px;
+  right: -90px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(191, 95, 52, 0.12), transparent 72%);
+}
+
+.receipt-sheet::after {
+  bottom: 58px;
+  left: -90px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(31, 107, 93, 0.12), transparent 72%);
+}
+
+.receipt-header {
+  background:
+    radial-gradient(circle at top right, rgba(249, 196, 79, 0.18), transparent 26%),
+    linear-gradient(145deg, #121a2f 0%, #18334a 60%, #1f4f45 100%);
+}
+
+.receipt-header-grid {
+  grid-template-columns: 1fr;
+}
+
+.receipt-info-row {
+  grid-template-columns: 1fr;
+}
+
+.receipt-info-label {
+  border-right: 0;
+}
+
+@container (min-width: 640px) {
+  .receipt-header-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.95fr);
+  }
+
+  .receipt-info-row {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .receipt-info-label {
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.55s ease both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .receipt-sheet {
+    min-height: auto;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  .app-sidebar,
+  .app-feedback,
+  .workspace-panel,
+  .print-note {
+    display: none !important;
+  }
+
+  .preview-panel {
+    padding: 0 !important;
+  }
+
+  .receipt-sheet {
+    width: 100%;
+    min-height: auto;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible;
+  }
+
+  .receipt-sheet::before,
+  .receipt-sheet::after {
+    display: none;
+  }
+}
