@@ -208,10 +208,12 @@ h4,
 
 .receipt-brand-copy {
   color: #e2e8f0;
+  overflow-wrap: anywhere;
 }
 
 .receipt-brand-meta {
   color: #f8fafc;
+  overflow-wrap: anywhere;
 }
 
 .receipt-document-divider {
@@ -228,6 +230,7 @@ h4,
 .receipt-copy-strong,
 .receipt-table-value {
   color: #334155;
+  overflow-wrap: anywhere;
 }
 
 .receipt-copy-soft,
@@ -263,6 +266,7 @@ h4,
   border-right: 1px solid #cbd5e1;
   background: #f1f5f9;
   color: #334155;
+  overflow-wrap: anywhere;
 }
 
 .receipt-signature-box {
@@ -283,6 +287,72 @@ h4,
 .receipt-stamp-box {
   border: 1px dashed #94a3b8;
   background: #ffffff;
+}
+
+.receipt-sheet-export .receipt-document-root-export {
+  gap: 10px !important;
+  padding: 14px !important;
+}
+
+.receipt-sheet-export .receipt-brand-band {
+  gap: 12px !important;
+  padding: 12px 16px !important;
+}
+
+.receipt-sheet-export .receipt-document-head {
+  gap: 12px !important;
+  padding: 12px 16px !important;
+}
+
+.receipt-sheet-export .receipt-company-title {
+  font-size: 1.18rem !important;
+  line-height: 1.05 !important;
+}
+
+.receipt-sheet-export .receipt-heading-primary {
+  font-size: 1.16rem !important;
+  line-height: 1.05 !important;
+}
+
+.receipt-sheet-export .receipt-section-title {
+  margin-bottom: 6px !important;
+  font-size: 0.68rem !important;
+}
+
+.receipt-sheet-export .receipt-brand-copy,
+.receipt-sheet-export .receipt-brand-meta,
+.receipt-sheet-export .receipt-copy-body,
+.receipt-sheet-export .receipt-copy-soft,
+.receipt-sheet-export .receipt-copy-muted,
+.receipt-sheet-export .receipt-table-label,
+.receipt-sheet-export .receipt-table-value,
+.receipt-sheet-export .receipt-signature-caption {
+  font-size: 0.68rem !important;
+  line-height: 1.4 !important;
+}
+
+.receipt-sheet-export .receipt-meta-box {
+  padding: 10px 12px !important;
+}
+
+.receipt-sheet-export .receipt-note-box,
+.receipt-sheet-export .receipt-stamp-box,
+.receipt-sheet-export .receipt-signature-box {
+  padding: 10px 12px !important;
+}
+
+.receipt-sheet-export .receipt-signature-box {
+  min-height: 96px !important;
+}
+
+.receipt-sheet-export .receipt-signature-fallback {
+  font-size: 1.45rem !important;
+}
+
+.receipt-sheet-export .receipt-table-label,
+.receipt-sheet-export .receipt-table-value {
+  min-height: 0 !important;
+  padding: 7px 10px !important;
 }
 
 @container (min-width: 640px) {
@@ -358,6 +428,12 @@ h4,
     margin: 0 !important;
     max-width: none;
     overflow: visible;
+  }
+
+  .receipt-document-root-screen,
+  .receipt-document-root-export {
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .receipt-sheet::before,

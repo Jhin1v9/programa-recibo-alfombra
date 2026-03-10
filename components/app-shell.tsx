@@ -12,6 +12,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   const {
     clients,
     receipts,
+    previewCompany,
     selectionLabel,
     nextReceiptSuggestion,
     feedback,
@@ -42,7 +43,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           <div className="grid gap-4">
             <div className="panel-card rounded-[28px] p-4">
               <div className="flex items-start gap-3">
-                <BrandMark compact />
+                <BrandMark compact imageDataUrl={previewCompany.companyLogoDataUrl} />
                 <div className="min-w-0">
                   <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
                     {t("sidebar.workspace")}
@@ -120,7 +121,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         <aside className="app-sidebar panel-card hidden h-fit overflow-hidden rounded-[30px] p-5 xl:sticky xl:top-6 xl:block">
           <div className="rounded-[24px] border border-[color:var(--line)] bg-white px-4 py-4">
             <div className="flex items-start justify-between gap-4">
-              <BrandMark />
+              <BrandMark imageDataUrl={previewCompany.companyLogoDataUrl} />
               <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">
                 {t("sidebar.workspace")}
               </span>

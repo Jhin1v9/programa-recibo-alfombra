@@ -6,6 +6,7 @@ export type CompanyProfile = {
   companyAddress: string;
   companyResponsible: string;
   companyStamp: string;
+  companyLogoDataUrl: string;
   companySignatureDataUrl: string;
 };
 

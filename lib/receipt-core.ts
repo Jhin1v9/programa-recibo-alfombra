@@ -24,6 +24,7 @@ export const COMPANY_FIELDS = [
   "companyAddress",
   "companyResponsible",
   "companyStamp",
+  "companyLogoDataUrl",
   "companySignatureDataUrl"
 ] as const;
 
@@ -109,6 +110,7 @@ export const DEFAULT_COMPANY: CompanyProfile = {
   companyAddress: "Direccion de la empresa",
   companyResponsible: "Responsable",
   companyStamp: "Sello oficial",
+  companyLogoDataUrl: "",
   companySignatureDataUrl: ""
 };
 

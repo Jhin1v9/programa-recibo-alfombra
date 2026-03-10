@@ -116,6 +116,17 @@ Object.assign(translations.es, {
   "company.stamp": "Sello / carimbo",
   "company.stampPlaceholder": "Ej.: Sello oficial",
   "company.identityTools": "Identidad visual",
+  "company.assetsTitle": "Logo, firma y sello",
+  "company.logo": "Logo",
+  "company.logoText":
+    "Sube el logo que debe aparecer en la cabecera del PDF y en el encabezado del espacio de trabajo.",
+  "company.uploadLogo": "Subir logo",
+  "company.updateLogo": "Actualizar logo",
+  "company.clearLogo": "Borrar logo",
+  "company.currentLogo": "Logo actual",
+  "company.noLogo": "Todavia no hay logo guardado.",
+  "company.logoHint": "Acepta PNG, JPG, WebP o SVG. Usa un logo con fondo limpio para que el PDF salga mejor.",
+  "company.logoUploadInvalid": "Selecciona una imagen valida para usarla como logo.",
   "company.signatureTitle": "Firma y sello de empresa",
   "company.signatureText":
     "Guarda una firma reutilizable de empresa y revisa el carimbo virtual que saldra en el recibo y en el PDF.",

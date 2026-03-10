@@ -20,6 +20,7 @@ export function CompanyPage() {
   const { companyForm, saveCompanyProfile, updateCompanyField, previewCompany, t } =
     useReceiptApp();
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
+  const logoUploadRef = useRef<HTMLInputElement | null>(null);
   const signatureUploadRef = useRef<HTMLInputElement | null>(null);
   const companyInputs = [
     {
@@ -65,20 +66,28 @@ export function CompanyPage() {
     signatureUploadRef.current?.click();
   }
 
-  function persistSignatureValue(dataUrl: string) {
-    updateCompanyField("companySignatureDataUrl", dataUrl);
+  function openLogoUpload() {
+    logoUploadRef.current?.click();
+  }
+
+  function persistCompanyAssetValue(fieldName: "companyLogoDataUrl" | "companySignatureDataUrl", dataUrl: string) {
+    updateCompanyField(fieldName, dataUrl);
     window.localStorage.setItem(
       STORAGE_KEYS.company,
       JSON.stringify(
         normalizeCompany({
           ...companyForm,
-          companySignatureDataUrl: dataUrl
+          [fieldName]: dataUrl
         })
       )
     );
   }
 
-  function handleSignatureFileChange(event: ChangeEvent<HTMLInputElement>) {
+  function handleImageFileChange(
+    event: ChangeEvent<HTMLInputElement>,
+    fieldName: "companyLogoDataUrl" | "companySignatureDataUrl",
+    invalidMessage: string
+  ) {
     const [file] = Array.from(event.target.files || []);
 
     if (!file) {
@@ -86,7 +95,7 @@ export function CompanyPage() {
     }
 
     if (!file.type.startsWith("image/")) {
-      window.alert(t("company.signatureUploadInvalid"));
+      window.alert(invalidMessage);
       event.target.value = "";
       return;
     }
@@ -95,7 +104,7 @@ export function CompanyPage() {
 
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        persistSignatureValue(reader.result);
+        persistCompanyAssetValue(fieldName, reader.result);
       }
     };
 
@@ -109,7 +118,12 @@ export function CompanyPage() {
         eyebrow={t("company.eyebrow")}
         title={t("company.title")}
         description={t("company.description")}
-        actions={<ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />}
+        actions={
+          <div className="flex flex-wrap gap-3">
+            <ActionButton label={t("company.uploadLogo")} variant="secondary" onClick={openLogoUpload} />
+            <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
+          </div>
+        }
       />
 
       <div className="grid gap-6 pb-28 md:pb-0">
@@ -133,6 +147,10 @@ export function CompanyPage() {
 
           <SectionCard eyebrow={t("company.summary")} title={t("company.quickView")} chip={t("company.current")}>
             <div className="space-y-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+              <SummaryItem
+                label={t("company.logo")}
+                value={previewCompany.companyLogoDataUrl ? t("company.currentLogo") : t("company.noLogo")}
+              />
               <SummaryItem label={t("company.name")} value={previewCompany.companyName} />
               <SummaryItem label={t("company.taxId")} value={previewCompany.companyTaxId} />
               <SummaryItem label={t("company.phone")} value={previewCompany.companyPhone} />
@@ -144,7 +162,7 @@ export function CompanyPage() {
           </SectionCard>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <SectionCard eyebrow={t("company.identityTools")} title={t("company.virtualStampTitle")}>
             <div className="flex flex-col items-center gap-5 rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.94))] px-5 py-6">
               <VirtualCompanyStamp company={previewCompany} />
@@ -155,76 +173,69 @@ export function CompanyPage() {
             </div>
           </SectionCard>
 
-          <SectionCard
-            eyebrow={t("company.identityTools")}
-            title={t("company.signatureTitle")}
-            actions={
-              <div className="flex flex-wrap gap-3">
-                <ActionButton
-                  label={t("company.uploadSignature")}
-                  variant="secondary"
-                  onClick={openSignatureUpload}
-                />
-                <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
-              </div>
-            }
-          >
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
-              <div className="rounded-[26px] border border-[color:var(--line)] bg-white/82 p-5">
-                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
-                  {t("company.uploadSignature")}
-                </p>
-                <p className="text-sm leading-7 text-[color:var(--ink-soft)]">{t("company.signatureText")}</p>
-                <input
-                  ref={signatureUploadRef}
-                  className="sr-only"
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleSignatureFileChange}
-                />
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <ActionButton
-                    label={t("company.uploadSignature")}
-                    variant="secondary"
-                    onClick={openSignatureUpload}
-                  />
-                  <ActionButton
-                    label={
-                      previewCompany.companySignatureDataUrl
-                        ? t("company.updateSignature")
-                        : t("company.captureSignature")
-                    }
-                    variant="primary"
-                    onClick={() => setSignatureDialogOpen(true)}
-                  />
-                  <ActionButton
-                    label={t("company.uploadSignature")}
-                    variant="secondary"
-                    onClick={openSignatureUpload}
-                  />
-                  <ActionButton
-                    label={t("company.clearSignature")}
-                    variant="ghost"
-                    onClick={() => persistSignatureValue("")}
-                    disabled={!previewCompany.companySignatureDataUrl}
-                  />
-                  <ActionButton
-                    label={t("company.save")}
-                    variant="ghost"
-                    onClick={saveCompanyProfile}
-                  />
-                </div>
-                <p className="mt-4 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {t("company.uploadSignatureHint")}
-                </p>
-              </div>
+          <SectionCard eyebrow={t("company.identityTools")} title={t("company.assetsTitle")}>
+            <input
+              ref={logoUploadRef}
+              className="sr-only"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              onChange={(event) =>
+                handleImageFileChange(event, "companyLogoDataUrl", t("company.logoUploadInvalid"))
+              }
+            />
+            <input
+              ref={signatureUploadRef}
+              className="sr-only"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(event) =>
+                handleImageFileChange(event, "companySignatureDataUrl", t("company.signatureUploadInvalid"))
+              }
+            />
 
-              <div className="rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] p-4">
-                <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
-                  {previewCompany.companySignatureDataUrl ? t("company.savedSignature") : t("company.noSignature")}
-                </p>
-                <div className="mt-4 flex min-h-[180px] items-center justify-center rounded-[20px] border-2 border-dashed border-[color:var(--line-strong)] bg-white">
-                  {previewCompany.companySignatureDataUrl ? (
+            <div className="grid gap-5 xl:grid-cols-2">
+              <AssetPanel
+                eyebrow={t("company.logo")}
+                title={previewCompany.companyLogoDataUrl ? t("company.currentLogo") : t("company.noLogo")}
+                description={t("company.logoText")}
+                preview={previewCompany.companyLogoDataUrl ? (
+                  <Image
+                    src={previewCompany.companyLogoDataUrl}
+                    alt={t("company.currentLogo")}
+                    width={260}
+                    height={140}
+                    unoptimized
+                    className="max-h-[140px] max-w-full object-contain"
+                  />
+                ) : (
+                  <BrandPreviewPlaceholder message={t("company.noLogo")} />
+                )}
+                actions={
+                  <>
+                    <ActionButton
+                      label={previewCompany.companyLogoDataUrl ? t("company.updateLogo") : t("company.uploadLogo")}
+                      variant="secondary"
+                      onClick={openLogoUpload}
+                    />
+                    <ActionButton
+                      label={t("company.clearLogo")}
+                      variant="ghost"
+                      onClick={() => persistCompanyAssetValue("companyLogoDataUrl", "")}
+                      disabled={!previewCompany.companyLogoDataUrl}
+                    />
+                  </>
+                }
+                hint={t("company.logoHint")}
+              />
+
+              <AssetPanel
+                eyebrow={t("company.signatureTitle")}
+                title={
+                  previewCompany.companySignatureDataUrl ? t("company.savedSignature") : t("company.noSignature")
+                }
+                description={t("company.signatureText")}
+                preview={
+                  previewCompany.companySignatureDataUrl ? (
                     <Image
                       src={previewCompany.companySignatureDataUrl}
                       alt={t("company.savedSignature")}
@@ -234,12 +245,35 @@ export function CompanyPage() {
                       className="max-h-[130px] max-w-full object-contain"
                     />
                   ) : (
-                    <p className="max-w-[18ch] text-center text-sm leading-6 text-[color:var(--ink-soft)]">
-                      {t("company.noSignature")}
-                    </p>
-                  )}
-                </div>
-              </div>
+                    <BrandPreviewPlaceholder message={t("company.noSignature")} />
+                  )
+                }
+                actions={
+                  <>
+                    <ActionButton
+                      label={t("company.uploadSignature")}
+                      variant="secondary"
+                      onClick={openSignatureUpload}
+                    />
+                    <ActionButton
+                      label={
+                        previewCompany.companySignatureDataUrl
+                          ? t("company.updateSignature")
+                          : t("company.captureSignature")
+                      }
+                      variant="primary"
+                      onClick={() => setSignatureDialogOpen(true)}
+                    />
+                    <ActionButton
+                      label={t("company.clearSignature")}
+                      variant="ghost"
+                      onClick={() => persistCompanyAssetValue("companySignatureDataUrl", "")}
+                      disabled={!previewCompany.companySignatureDataUrl}
+                    />
+                  </>
+                }
+                hint={t("company.uploadSignatureHint")}
+              />
             </div>
           </SectionCard>
         </div>
@@ -252,7 +286,7 @@ export function CompanyPage() {
         signerName={companyForm.companyResponsible}
         initialValue={companyForm.companySignatureDataUrl}
         onClose={() => setSignatureDialogOpen(false)}
-        onSave={persistSignatureValue}
+        onSave={(dataUrl) => persistCompanyAssetValue("companySignatureDataUrl", dataUrl)}
         labels={{
           clear: t("signature.clear"),
           cancel: t("signature.cancel"),
@@ -265,7 +299,8 @@ export function CompanyPage() {
 
       <div className="pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
         <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
+            <ActionButton label={t("company.uploadLogo")} variant="secondary" onClick={openLogoUpload} />
             <ActionButton label={t("company.uploadSignature")} variant="ghost" onClick={openSignatureUpload} />
             <ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />
           </div>
@@ -283,5 +318,44 @@ function SummaryItem({ label, value }: Readonly<{ label: string; value: string }
       </p>
       <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{value}</p>
     </div>
+  );
+}
+
+function AssetPanel({
+  eyebrow,
+  title,
+  description,
+  preview,
+  actions,
+  hint
+}: Readonly<{
+  eyebrow: string;
+  title: string;
+  description: string;
+  preview: React.ReactNode;
+  actions: React.ReactNode;
+  hint: string;
+}>) {
+  return (
+    <div className="rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] p-5">
+      <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
+        {eyebrow}
+      </p>
+      <h3 className="mt-2 text-lg text-[color:var(--ink)]">{title}</h3>
+      <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">{description}</p>
+      <div className="mt-4 flex min-h-[180px] items-center justify-center rounded-[20px] border-2 border-dashed border-[color:var(--line-strong)] bg-white p-4">
+        {preview}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-3">{actions}</div>
+      <p className="mt-4 text-sm leading-6 text-[color:var(--ink-soft)]">{hint}</p>
+    </div>
+  );
+}
+
+function BrandPreviewPlaceholder({ message }: Readonly<{ message: string }>) {
+  return (
+    <p className="max-w-[18ch] text-center text-sm leading-6 text-[color:var(--ink-soft)]">
+      {message}
+    </p>
   );
 }

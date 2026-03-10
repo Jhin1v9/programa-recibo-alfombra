@@ -122,9 +122,9 @@ export function ReceiptPreview({
           <div className="receipt-brand-band receipt-brand-band-surface grid gap-4 px-5 py-4">
             <div>
               <div className="flex items-center gap-3">
-                <BrandMark compact light />
+                <BrandMark compact light imageDataUrl={previewCompany.companyLogoDataUrl} />
                 <div>
-                  <p className="text-[1.42rem] font-extrabold tracking-[0.06em]">
+                  <p className="receipt-company-title text-[1.42rem] font-extrabold tracking-[0.06em]">
                     {previewCompany.companyName}
                   </p>
                   <p className="receipt-brand-overline mt-1 text-[0.66rem] font-bold uppercase tracking-[0.22em]">
