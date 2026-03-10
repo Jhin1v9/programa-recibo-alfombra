@@ -187,23 +187,75 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
         <div className="flex min-w-0 flex-col gap-4 md:gap-6">
           {children}
+        </div>
+      </div>
 
+      {feedback ? (
+        <div className="pointer-events-none fixed inset-x-4 top-4 z-[80] md:inset-x-auto md:right-6 md:top-6 md:w-full md:max-w-[420px]">
           <div
-            className={`app-feedback rounded-[22px] px-4 py-3 text-sm font-extrabold ${
-              feedback
-                ? feedback.kind === "error"
-                  ? "bg-[rgba(163,49,49,0.1)] text-[color:var(--danger)]"
-                  : "bg-[rgba(23,97,68,0.12)] text-[color:var(--success)]"
-                : "bg-transparent text-transparent"
+            className={`pointer-events-auto rounded-[24px] border px-4 py-4 shadow-[0_20px_45px_rgba(15,23,42,0.18)] backdrop-blur ${
+              feedback.kind === "error"
+                ? "border-[rgba(163,49,49,0.18)] bg-[rgba(255,249,249,0.96)]"
+                : "border-[rgba(23,97,68,0.16)] bg-[rgba(248,255,251,0.96)]"
             }`}
             role="status"
             aria-live="polite"
-            onClick={() => dismissFeedback()}
+            aria-atomic="true"
           >
-            {feedback?.message || t("sidebar.idle")}
+            <div className="flex items-start gap-3">
+              <span
+                className={`mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
+                  feedback.kind === "error"
+                    ? "border-[rgba(163,49,49,0.18)] bg-[rgba(163,49,49,0.08)] text-[color:var(--danger)]"
+                    : "border-[rgba(23,97,68,0.16)] bg-[rgba(23,97,68,0.08)] text-[color:var(--success)]"
+                }`}
+                aria-hidden="true"
+              >
+                {feedback.kind === "error" ? (
+                  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 8v5" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 7L10 17l-5-5" />
+                  </svg>
+                )}
+              </span>
+
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`text-[0.72rem] font-extrabold uppercase tracking-[0.2em] ${
+                    feedback.kind === "error"
+                      ? "text-[color:var(--danger)]"
+                      : "text-[color:var(--success)]"
+                  }`}
+                >
+                  {feedback.kind === "error"
+                    ? t("feedback.errorTitle")
+                    : t("feedback.successTitle")}
+                </p>
+                <p className="mt-1 text-sm leading-6 text-[color:var(--ink)]">
+                  {feedback.message}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--line)] bg-white/92 text-[color:var(--ink-soft)] transition hover:bg-white hover:text-[color:var(--ink)]"
+                onClick={() => dismissFeedback()}
+                aria-label={t("feedback.dismiss")}
+              >
+                <svg viewBox="0 0 24 24" className="h-[16px] w-[16px]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                  <path d="M6 6l12 12" />
+                  <path d="M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

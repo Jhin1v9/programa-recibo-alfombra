@@ -68,6 +68,7 @@ type ReceiptAppContextValue = {
   language: AppLanguage;
   languageOptions: typeof LANGUAGE_OPTIONS;
   dismissFeedback: () => void;
+  showFeedback: (message: string, kind?: "success" | "error") => void;
   setLanguage: (language: AppLanguage) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
   companyForm: CompanyProfile;
@@ -712,6 +713,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
         language,
         languageOptions: LANGUAGE_OPTIONS,
         dismissFeedback,
+        showFeedback: flash,
         setLanguage,
         t,
         companyForm,

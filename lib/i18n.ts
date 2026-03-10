@@ -440,6 +440,9 @@ Object.assign(translations.es, {
   "selection.activeClient": "cliente activo",
   "selection.none": "sin seleccion",
   "feedback.companySaved": "Datos de la empresa guardados.",
+  "feedback.successTitle": "Guardado",
+  "feedback.errorTitle": "Atencion",
+  "feedback.dismiss": "Cerrar aviso",
   "feedback.clientRequired":
     "Rellena al menos nombre, telefono o email para guardar el cliente.",
   "feedback.clientUpdated": "Cliente actualizado.",
@@ -476,6 +479,12 @@ Object.assign(translations.es, {
   "feedback.importPickFile": "Selecciona al menos un archivo para importar.",
   "feedback.importSummary": "Importacion completada: {added} nuevos, {updated} actualizados.{failed}",
   "feedback.importFailed": " {count} archivo(s) fallaron.",
+  "feedback.logoUpdated": "Logo PDF actualizado.",
+  "feedback.logoCleared": "Logo PDF borrado.",
+  "feedback.stampUpdated": "Carimbo actualizado.",
+  "feedback.stampCleared": "Carimbo borrado.",
+  "feedback.signatureUpdated": "Firma de empresa actualizada.",
+  "feedback.signatureCleared": "Firma de empresa borrada.",
   "signature.dialogTitleClient": "Capturar firma del cliente",
   "signature.dialogTitleCompany": "Capturar firma de la empresa",
   "signature.dialogDescription":
@@ -566,6 +575,9 @@ Object.assign(translations.ca, {
   "signature.dialogTitleCompany": "Capturar signatura de l'empresa",
   "signature.dialogDescription":
     "Dibuixa la signatura amb el dit o el ratoli. Quedara incrustada al rebut i al PDF final.",
+  "feedback.successTitle": "Desat",
+  "feedback.errorTitle": "Atencio",
+  "feedback.dismiss": "Tancar avís",
   "signature.clear": "Netejar",
   "signature.cancel": "Cancelar",
   "signature.save": "Guardar signatura",
@@ -651,6 +663,9 @@ Object.assign(translations.en, {
   "signature.dialogTitleCompany": "Capture company signature",
   "signature.dialogDescription":
     "Draw the signature with your finger or mouse. It will be embedded in the receipt and final PDF.",
+  "feedback.successTitle": "Saved",
+  "feedback.errorTitle": "Attention",
+  "feedback.dismiss": "Close notice",
   "signature.clear": "Clear",
   "signature.cancel": "Cancel",
   "signature.save": "Save signature",

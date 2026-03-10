@@ -17,7 +17,7 @@ export type { ButtonVariant, FieldConfig };
 
 export function buttonClasses(variant: ButtonVariant) {
   const base =
-    "inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-extrabold transition duration-200 disabled:cursor-not-allowed disabled:opacity-45";
+    "inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-extrabold transition duration-200 active:translate-y-[1px] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgba(191,95,52,0.18)] disabled:cursor-not-allowed disabled:opacity-45";
 
   if (variant === "primary") {
     return `${base} bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_100%)] text-white shadow-[0_16px_30px_rgba(15,23,42,0.18)] hover:-translate-y-0.5`;

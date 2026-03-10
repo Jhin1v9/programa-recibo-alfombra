@@ -17,7 +17,7 @@ import { STORAGE_KEYS, normalizeCompany } from "@/lib/receipt-core";
 import type { CompanyProfile } from "@/lib/types";
 
 export function CompanyPage() {
-  const { companyForm, saveCompanyProfile, updateCompanyField, previewCompany, t } =
+  const { companyForm, saveCompanyProfile, showFeedback, updateCompanyField, previewCompany, t } =
     useReceiptApp();
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const logoUploadRef = useRef<HTMLInputElement | null>(null);
@@ -77,7 +77,8 @@ export function CompanyPage() {
 
   function persistCompanyAssetValue(
     fieldName: "companyLogoDataUrl" | "companySignatureDataUrl" | "companyStampDataUrl",
-    dataUrl: string
+    dataUrl: string,
+    successMessage?: string
   ) {
     updateCompanyField(fieldName, dataUrl);
     window.localStorage.setItem(
@@ -89,12 +90,17 @@ export function CompanyPage() {
         })
       )
     );
+
+    if (successMessage) {
+      showFeedback(successMessage);
+    }
   }
 
   function handleImageFileChange(
     event: ChangeEvent<HTMLInputElement>,
     fieldName: "companyLogoDataUrl" | "companySignatureDataUrl" | "companyStampDataUrl",
-    invalidMessage: string
+    invalidMessage: string,
+    successMessage: string
   ) {
     const [file] = Array.from(event.target.files || []);
 
@@ -103,7 +109,7 @@ export function CompanyPage() {
     }
 
     if (!file.type.startsWith("image/")) {
-      window.alert(invalidMessage);
+      showFeedback(invalidMessage, "error");
       event.target.value = "";
       return;
     }
@@ -112,8 +118,12 @@ export function CompanyPage() {
 
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        persistCompanyAssetValue(fieldName, reader.result);
+        persistCompanyAssetValue(fieldName, reader.result, successMessage);
       }
+    };
+
+    reader.onerror = () => {
+      showFeedback(invalidMessage, "error");
     };
 
     reader.readAsDataURL(file);
@@ -201,7 +211,12 @@ export function CompanyPage() {
               type="file"
               accept="image/png,image/jpeg,image/webp,image/svg+xml"
               onChange={(event) =>
-                handleImageFileChange(event, "companyLogoDataUrl", t("company.logoUploadInvalid"))
+                handleImageFileChange(
+                  event,
+                  "companyLogoDataUrl",
+                  t("company.logoUploadInvalid"),
+                  t("feedback.logoUpdated")
+                )
               }
             />
             <input
@@ -210,7 +225,12 @@ export function CompanyPage() {
               type="file"
               accept="image/png,image/jpeg,image/webp,image/svg+xml"
               onChange={(event) =>
-                handleImageFileChange(event, "companyStampDataUrl", t("company.stampUploadInvalid"))
+                handleImageFileChange(
+                  event,
+                  "companyStampDataUrl",
+                  t("company.stampUploadInvalid"),
+                  t("feedback.stampUpdated")
+                )
               }
             />
             <input
@@ -219,7 +239,12 @@ export function CompanyPage() {
               type="file"
               accept="image/png,image/jpeg,image/webp"
               onChange={(event) =>
-                handleImageFileChange(event, "companySignatureDataUrl", t("company.signatureUploadInvalid"))
+                handleImageFileChange(
+                  event,
+                  "companySignatureDataUrl",
+                  t("company.signatureUploadInvalid"),
+                  t("feedback.signatureUpdated")
+                )
               }
             />
 
@@ -250,7 +275,13 @@ export function CompanyPage() {
                     <ActionButton
                       label={t("company.clearLogo")}
                       variant="ghost"
-                      onClick={() => persistCompanyAssetValue("companyLogoDataUrl", "")}
+                      onClick={() =>
+                        persistCompanyAssetValue(
+                          "companyLogoDataUrl",
+                          "",
+                          t("feedback.logoCleared")
+                        )
+                      }
                       disabled={!previewCompany.companyLogoDataUrl}
                     />
                   </>
@@ -288,7 +319,13 @@ export function CompanyPage() {
                     <ActionButton
                       label={t("company.clearStamp")}
                       variant="ghost"
-                      onClick={() => persistCompanyAssetValue("companyStampDataUrl", "")}
+                      onClick={() =>
+                        persistCompanyAssetValue(
+                          "companyStampDataUrl",
+                          "",
+                          t("feedback.stampCleared")
+                        )
+                      }
                       disabled={!previewCompany.companyStampDataUrl}
                     />
                   </>
@@ -335,7 +372,13 @@ export function CompanyPage() {
                     <ActionButton
                       label={t("company.clearSignature")}
                       variant="ghost"
-                      onClick={() => persistCompanyAssetValue("companySignatureDataUrl", "")}
+                      onClick={() =>
+                        persistCompanyAssetValue(
+                          "companySignatureDataUrl",
+                          "",
+                          t("feedback.signatureCleared")
+                        )
+                      }
                       disabled={!previewCompany.companySignatureDataUrl}
                     />
                   </>
@@ -354,7 +397,13 @@ export function CompanyPage() {
         signerName={companyForm.companyResponsible}
         initialValue={companyForm.companySignatureDataUrl}
         onClose={() => setSignatureDialogOpen(false)}
-        onSave={(dataUrl) => persistCompanyAssetValue("companySignatureDataUrl", dataUrl)}
+        onSave={(dataUrl) =>
+          persistCompanyAssetValue(
+            "companySignatureDataUrl",
+            dataUrl,
+            t("feedback.signatureUpdated")
+          )
+        }
         labels={{
           clear: t("signature.clear"),
           cancel: t("signature.cancel"),
