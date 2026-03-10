@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef, useState } from "react";
+
 import { ReceiptPreview } from "@/components/receipt-preview";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
@@ -11,6 +13,7 @@ import {
   SectionCard
 } from "@/components/workspace-ui";
 import { formatClientName, formatDate } from "@/lib/receipt-core";
+import { exportReceiptPdf } from "@/lib/receipt-pdf";
 import type { ReceiptDraft, ServicePreset } from "@/lib/types";
 
 export function ReceiptsPage() {
@@ -31,6 +34,8 @@ export function ReceiptsPage() {
     duplicateReceipt,
     t
   } = useReceiptApp();
+  const exportPreviewRef = useRef<HTMLDivElement | null>(null);
+  const [pdfAction, setPdfAction] = useState<"download" | "open" | null>(null);
   const rugInputs = [
     { name: "rugType", label: t("receipts.rugType"), placeholder: t("receipts.rugTypePlaceholder") },
     { name: "rugSize", label: t("receipts.rugSize"), placeholder: t("receipts.rugSizePlaceholder") },
@@ -80,6 +85,49 @@ export function ReceiptsPage() {
     (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
   );
 
+  async function handlePdfExport(action: "download" | "open") {
+    if (!exportPreviewRef.current) {
+      return;
+    }
+
+    const fileLabel = [previewDraft.receiptNumber || nextReceiptSuggestion, formatClientName(previewDraft)]
+      .filter(Boolean)
+      .join("-");
+    const fileName = `${fileLabel || "recibo-alfombra"}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "recibo-alfombra";
+    const targetWindow =
+      action === "open" ? window.open("", "_blank", "noopener,noreferrer") : null;
+
+    if (targetWindow) {
+      targetWindow.document.write(
+        `<title>${t("receipts.generatingPdf")}</title><p style="font-family:sans-serif;padding:24px">${t(
+          "receipts.generatingPdf"
+        )}</p>`
+      );
+    }
+
+    setPdfAction(action);
+
+    try {
+      await exportReceiptPdf({
+        action,
+        fileName: `${fileName}.pdf`,
+        sourceElement: exportPreviewRef.current,
+        targetWindow
+      });
+    } catch (error) {
+      if (targetWindow && !targetWindow.closed) {
+        targetWindow.close();
+      }
+      window.alert(t("receipts.pdfError"));
+      console.error(error);
+    } finally {
+      setPdfAction(null);
+    }
+  }
+
   return (
     <>
       <PageIntro
@@ -89,7 +137,18 @@ export function ReceiptsPage() {
         actions={
           <div className="flex flex-wrap gap-3">
             <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
-            <ActionButton label={t("receipts.print")} variant="secondary" onClick={() => window.print()} />
+            <ActionButton
+              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.downloadPdf")}
+              variant="secondary"
+              onClick={() => void handlePdfExport("download")}
+              disabled={pdfAction !== null}
+            />
+            <ActionButton
+              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.openPdf")}
+              variant="ghost"
+              onClick={() => void handlePdfExport("open")}
+              disabled={pdfAction !== null}
+            />
           </div>
         }
       />
@@ -196,6 +255,12 @@ export function ReceiptsPage() {
           </div>
 
           <ReceiptPreview company={previewCompany} receipt={previewDraft} />
+        </div>
+      </div>
+
+      <div className="receipt-export-host" aria-hidden="true">
+        <div ref={exportPreviewRef}>
+          <ReceiptPreview company={previewCompany} receipt={previewDraft} mode="export" />
         </div>
       </div>
     </>
