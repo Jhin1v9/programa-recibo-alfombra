@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   ClientFields,
   ClientRecord,
   CompanyProfile,
@@ -105,10 +105,10 @@ export const RECEIPT_FIELDS = [
 
 export const DEFAULT_COMPANY: CompanyProfile = {
   companyName: "Su empresa",
-  companyTaxId: "NIF / identificacion",
-  companyPhone: "Telefono",
+  companyTaxId: "NIF / identificación",
+  companyPhone: "Teléfono",
   companyEmail: "Email",
-  companyAddress: "Direccion de la empresa",
+  companyAddress: "Dirección de la empresa",
   companyResponsible: "Responsable",
   companyStamp: "Sello oficial",
   companyStampDataUrl: "",
@@ -355,7 +355,7 @@ export function normalizePhone(value: string | undefined) {
 export function truncateLabel(value: string | undefined, maxLength: number) {
   const text = cleanString(value);
   if (text.length <= maxLength) {
-    return text || "sin seleccion";
+    return text || "sin selección";
   }
 
   return `${text.slice(0, maxLength - 1)}...`;
@@ -491,7 +491,7 @@ export function buildSelectionLabel(options: {
     return truncateLabel(formatClientName(client || {}) || "cliente activo", 18);
   }
 
-  return "sin seleccion";
+  return "sin selección";
 }
 
 type DelimitedEntry = {
@@ -892,3 +892,4 @@ export function createId() {
 
   return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
+

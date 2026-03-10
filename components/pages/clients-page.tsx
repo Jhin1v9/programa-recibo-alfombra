@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useDeferredValue, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -67,7 +67,7 @@ export function ClientsPage() {
     {
       name: "clientAddress",
       label: t("clients.address"),
-      placeholder: "Calle, numero, ciudad",
+      placeholder: "Calle, número, ciudad",
       full: true
     },
     { name: "clientCity", label: t("clients.city"), placeholder: t("clients.city") },
@@ -506,3 +506,4 @@ function SummaryItem({ label, value }: Readonly<{ label: string; value: string }
     </div>
   );
 }
+
