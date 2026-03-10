@@ -6,6 +6,7 @@ export type CompanyProfile = {
   companyAddress: string;
   companyResponsible: string;
   companyStamp: string;
+  companySignatureDataUrl: string;
 };
 
 export type ClientFields = {
@@ -35,6 +36,8 @@ export type ReceiptMeta = {
   receiptNumber: string;
   pickupDate: string;
   deliveryDate: string;
+  clientSignatureDataUrl: string;
+  companySignatureDataUrl: string;
 };
 
 export type ServicePreset = RugFields & ServiceFields;

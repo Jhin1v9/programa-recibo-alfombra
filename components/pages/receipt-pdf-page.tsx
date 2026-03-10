@@ -112,13 +112,35 @@ export function ReceiptPdfPage({
         }
       />
 
-      <SectionCard eyebrow={t("receipts.eyebrow")} title={t("receipts.printNote")}>
-        <div className="overflow-auto rounded-[26px] border border-[color:var(--line)] bg-[rgba(16,24,38,0.04)] p-4 md:p-6">
-          <div className="mx-auto min-w-[794px] max-w-[794px]">
-            <ReceiptPreview company={previewCompany} receipt={previewDraft} />
+      <div className="grid gap-6 pb-28 md:pb-0">
+        <SectionCard eyebrow={t("receipts.eyebrow")} title={t("receipts.printNote")}>
+          <div className="rounded-[26px] border border-[color:var(--line)] bg-[rgba(16,24,38,0.04)] p-3 md:p-6">
+            <div className="mx-auto max-w-[860px]">
+              <ReceiptPreview company={previewCompany} receipt={previewDraft} />
+            </div>
+          </div>
+        </SectionCard>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
+        <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
+          <div className="grid grid-cols-3 gap-2">
+            <LinkButton href="/recibos" label={t("receipts.backToEditor")} variant="ghost" />
+            <ActionButton
+              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.downloadPdf")}
+              variant="secondary"
+              onClick={() => void handlePdfExport("download")}
+              disabled={pdfAction !== null}
+            />
+            <ActionButton
+              label={pdfAction ? t("receipts.generatingPdf") : t("receipts.openPdf")}
+              variant="primary"
+              onClick={() => void handlePdfExport("open")}
+              disabled={pdfAction !== null}
+            />
           </div>
         </div>
-      </SectionCard>
+      </div>
 
       <div className="receipt-export-host" aria-hidden="true">
         <div ref={exportPreviewRef}>

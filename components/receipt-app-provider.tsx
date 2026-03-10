@@ -105,7 +105,12 @@ type ReceiptAppContextValue = {
 
 const ReceiptAppContext = createContext<ReceiptAppContextValue | null>(null);
 
-function createFreshDraft(sequence: number, currentDraft?: ReceiptDraft, keepClient = false) {
+function createFreshDraft(
+  sequence: number,
+  currentDraft?: ReceiptDraft,
+  keepClient = false,
+  defaultCompanySignature = ""
+) {
   const clientFields = keepClient && currentDraft ? pickFields(currentDraft, CLIENT_FIELDS) : createEmptyClientData();
 
   return normalizeReceiptDraft({
@@ -113,7 +118,8 @@ function createFreshDraft(sequence: number, currentDraft?: ReceiptDraft, keepCli
     ...clientFields,
     pickupDate: formatDateForInput(new Date()),
     receiptNumber: peekNextReceiptNumber(sequence),
-    deliveryDate: ""
+    deliveryDate: "",
+    companySignatureDataUrl: defaultCompanySignature
   });
 }
 
@@ -154,7 +160,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       setReceipts(storedReceipts);
       setLanguage(storedLanguage);
       setSequence(storedSequence);
-      setDraft(createFreshDraft(storedSequence));
+      setDraft(createFreshDraft(storedSequence, undefined, false, storedCompany.companySignatureDataUrl));
       setHasBootstrapped(true);
     });
   }, []);
@@ -325,7 +331,9 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     setSelectedReceiptId(null);
     setSelectedClientId((current) => (keepClient ? current : null));
-    setDraft((current) => createFreshDraft(sequence, current, keepClient));
+    setDraft((current) =>
+      createFreshDraft(sequence, current, keepClient, companyForm.companySignatureDataUrl)
+    );
 
     if (showMessage) {
       flash(t("feedback.newReceiptPrepared"));
@@ -363,7 +371,12 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setSelectedClientId(clientOverride?.id || null);
     setDraft(
       normalizeReceiptDraft({
-        ...createFreshDraft(sequence),
+        ...createFreshDraft(
+          sequence,
+          undefined,
+          false,
+          companyForm.companySignatureDataUrl || sourceReceipt.companySignatureDataUrl
+        ),
         ...pickFields(clientData, CLIENT_FIELDS),
         ...pickFields(sourceReceipt, CLIENT_PRESET_FIELDS),
         deliveryDate: ""
@@ -384,7 +397,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     }
 
     const nextDraft = normalizeReceiptDraft({
-      ...createFreshDraft(sequence),
+      ...createFreshDraft(sequence, undefined, false, companyForm.companySignatureDataUrl),
       ...pickFields(client, CLIENT_FIELDS),
       ...(hasAnyField(client.servicePreset) ? client.servicePreset : {})
     });
@@ -434,7 +447,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     if (hasAnyField(client.servicePreset)) {
       const nextDraft = normalizeReceiptDraft({
-        ...createFreshDraft(sequence),
+        ...createFreshDraft(sequence, undefined, false, companyForm.companySignatureDataUrl),
         ...pickFields(client, CLIENT_FIELDS),
         ...client.servicePreset
       });
@@ -591,7 +604,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     if (selectedReceiptId === receiptId) {
       setSelectedReceiptId(null);
       setSelectedClientId(null);
-      setDraft(createFreshDraft(sequence));
+      setDraft(createFreshDraft(sequence, undefined, false, companyForm.companySignatureDataUrl));
     }
 
     flash(t("feedback.receiptDeleted"));

@@ -1,8 +1,13 @@
 "use client";
 
 import type { Route } from "next";
+import { useState } from "react";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { SignatureCaptureDialog } from "@/components/signature-capture-dialog";
+import { VirtualCompanyStamp } from "@/components/virtual-company-stamp";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   ActionButton,
@@ -18,6 +23,7 @@ import type { ReceiptDraft, ServicePreset } from "@/lib/types";
 
 export function ReceiptsPage() {
   const {
+    companyForm,
     draft,
     receipts,
     selectedClient,
@@ -34,6 +40,7 @@ export function ReceiptsPage() {
     t
   } = useReceiptApp();
   const router = useRouter();
+  const [signatureTarget, setSignatureTarget] = useState<"client" | "company" | null>(null);
   const rugInputs = [
     { name: "rugType", label: t("receipts.rugType"), placeholder: t("receipts.rugTypePlaceholder") },
     { name: "rugSize", label: t("receipts.rugSize"), placeholder: t("receipts.rugSizePlaceholder") },
@@ -97,7 +104,7 @@ export function ReceiptsPage() {
         }
       />
 
-      <div className="workspace-panel min-w-0 grid gap-6">
+      <div className="workspace-panel min-w-0 grid gap-6 pb-28 md:pb-0">
         <SectionCard eyebrow={t("receipts.context")} title={t("receipts.linkedClient")} chip={t("receipts.current")}>
           {selectedClient ? (
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -161,6 +168,62 @@ export function ReceiptsPage() {
           </SectionCard>
         </div>
 
+        <SectionCard eyebrow={t("receipts.validationEyebrow")} title={t("receipts.validationTitle")}>
+          <p className="max-w-[72ch] text-sm leading-7 text-[color:var(--ink-soft)]">
+            {t("receipts.validationText")}
+          </p>
+
+          <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
+            <SignatureStatusCard
+              title={t("receipts.clientSignature")}
+              status={draft.clientSignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
+              imageDataUrl={draft.clientSignatureDataUrl}
+              primaryAction={{
+                label: t("receipts.captureClientSignature"),
+                onClick: () => setSignatureTarget("client")
+              }}
+              secondaryAction={{
+                label: t("receipts.clearClientSignature"),
+                onClick: () => updateDraftField("clientSignatureDataUrl", ""),
+                disabled: !draft.clientSignatureDataUrl
+              }}
+            />
+
+            <SignatureStatusCard
+              title={t("receipts.companySignature")}
+              status={draft.companySignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
+              imageDataUrl={draft.companySignatureDataUrl}
+              primaryAction={{
+                label: t("receipts.captureCompanySignature"),
+                onClick: () => setSignatureTarget("company")
+              }}
+              secondaryAction={{
+                label: t("receipts.useSavedCompanySignature"),
+                onClick: () =>
+                  updateDraftField(
+                    "companySignatureDataUrl",
+                    companyForm.companySignatureDataUrl || draft.companySignatureDataUrl
+                  ),
+                disabled: !companyForm.companySignatureDataUrl
+              }}
+              tertiaryAction={{
+                label: t("receipts.clearCompanySignature"),
+                onClick: () => updateDraftField("companySignatureDataUrl", ""),
+                disabled: !draft.companySignatureDataUrl
+              }}
+            />
+
+            <div className="rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] p-4">
+              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
+                {t("company.virtualStampTitle")}
+              </p>
+              <div className="mt-4 flex justify-center">
+                <VirtualCompanyStamp company={companyForm} compact />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
         <SectionCard eyebrow={t("receipts.history")} title={t("receipts.savedTitle")}>
           <div className="flex flex-col gap-3">
             {sortedReceipts.length === 0 ? (
@@ -204,7 +267,119 @@ export function ReceiptsPage() {
           </div>
         </SectionCard>
       </div>
+
+      <div className="pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
+        <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
+          <div className="grid grid-cols-3 gap-2">
+            <ActionButton label={t("receipts.mobileBarSave")} variant="primary" onClick={saveReceipt} />
+            <ActionButton
+              label={t("receipts.mobileBarPdf")}
+              variant="secondary"
+              onClick={() => router.push("/recibos/pdf" as Route)}
+            />
+            <ActionButton
+              label={t("receipts.mobileBarSign")}
+              variant="ghost"
+              onClick={() => setSignatureTarget("client")}
+            />
+          </div>
+        </div>
+      </div>
+
+      <SignatureCaptureDialog
+        open={signatureTarget !== null}
+        title={
+          signatureTarget === "company"
+            ? t("signature.dialogTitleCompany")
+            : t("signature.dialogTitleClient")
+        }
+        description={t("signature.dialogDescription")}
+        initialValue={
+          signatureTarget === "company"
+            ? draft.companySignatureDataUrl || companyForm.companySignatureDataUrl
+            : draft.clientSignatureDataUrl
+        }
+        onClose={() => setSignatureTarget(null)}
+        onSave={(dataUrl) => {
+          if (signatureTarget === "company") {
+            updateDraftField("companySignatureDataUrl", dataUrl);
+            return;
+          }
+
+          updateDraftField("clientSignatureDataUrl", dataUrl);
+        }}
+        labels={{
+          clear: t("signature.clear"),
+          cancel: t("signature.cancel"),
+          save: t("signature.save"),
+          empty: t("signature.empty")
+        }}
+      />
     </>
+  );
+}
+
+function SignatureStatusCard({
+  title,
+  status,
+  imageDataUrl,
+  primaryAction,
+  secondaryAction,
+  tertiaryAction
+}: Readonly<{
+  title: string;
+  status: string;
+  imageDataUrl?: string;
+  primaryAction: { label: string; onClick: () => void };
+  secondaryAction?: { label: string; onClick: () => void; disabled?: boolean };
+  tertiaryAction?: { label: string; onClick: () => void; disabled?: boolean };
+}>) {
+  return (
+    <div className="rounded-[26px] border border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,248,252,0.92))] p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-base font-extrabold text-[color:var(--ink)]">{title}</h3>
+          <p className="mt-1 text-sm text-[color:var(--ink-soft)]">{status}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex min-h-[148px] items-center justify-center rounded-[20px] border-2 border-dashed border-[color:var(--line-strong)] bg-white p-3">
+        {imageDataUrl ? (
+          <Image
+            src={imageDataUrl}
+            alt={title}
+            width={240}
+            height={112}
+            unoptimized
+            className="max-h-[112px] max-w-full object-contain"
+          />
+        ) : (
+          <p className="max-w-[18ch] text-center text-sm leading-6 text-[color:var(--ink-soft)]">
+            {status}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <ActionButton label={primaryAction.label} variant="primary" onClick={primaryAction.onClick} />
+        {secondaryAction ? (
+          <ActionButton
+            label={secondaryAction.label}
+            variant="ghost"
+            onClick={secondaryAction.onClick}
+            disabled={secondaryAction.disabled}
+          />
+        ) : null}
+        {tertiaryAction ? (
+          <ActionButton
+            label={tertiaryAction.label}
+            variant="ghost"
+            onClick={tertiaryAction.onClick}
+            disabled={tertiaryAction.disabled}
+          />
+        ) : null}
+      </div>
+    </div>
   );
 }
 

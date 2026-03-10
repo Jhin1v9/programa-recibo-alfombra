@@ -51,7 +51,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             </div>
           </div>
 
-          <nav className="mt-5 flex flex-col gap-2">
+          <nav className="mt-5 grid grid-cols-2 gap-2 xl:flex xl:grid-cols-1 xl:flex-col">
             {navItems.map((item) => {
               const active = pathname === item.href;
 

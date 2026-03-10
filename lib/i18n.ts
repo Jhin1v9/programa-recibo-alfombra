@@ -107,7 +107,21 @@ Object.assign(translations.es, {
   "company.responsible": "Responsable",
   "company.responsiblePlaceholder": "Nombre del responsable",
   "company.stamp": "Sello / carimbo",
-  "company.stampPlaceholder": "Ej.: Sello oficial"
+  "company.stampPlaceholder": "Ej.: Sello oficial",
+  "company.identityTools": "Identidad visual",
+  "company.signatureTitle": "Firma y sello de empresa",
+  "company.signatureText":
+    "Guarda una firma reutilizable de empresa y revisa el carimbo virtual que saldra en el recibo y en el PDF.",
+  "company.captureSignature": "Capturar firma de empresa",
+  "company.updateSignature": "Actualizar firma",
+  "company.clearSignature": "Borrar firma",
+  "company.noSignature": "Todavia no hay firma guardada.",
+  "company.savedSignature": "Firma guardada",
+  "company.virtualStampTitle": "Carimbo virtual",
+  "company.virtualStampText":
+    "Este sello se genera automaticamente con los datos de empresa y se incrusta en el PDF.",
+  "company.mobileHint":
+    "En movil puedes firmar directamente con el dedo y reutilizar esa firma en nuevos recibos.",
 });
 
 Object.assign(translations.es, {
@@ -219,7 +233,23 @@ Object.assign(translations.es, {
   "receipts.estimatedValuePlaceholder": "Ej.: 85,00 EUR",
   "receipts.serviceNotes": "Observaciones del servicio",
   "receipts.serviceNotesPlaceholder":
-    "Instrucciones adicionales, plazo, detalles de contacto..."
+    "Instrucciones adicionales, plazo, detalles de contacto...",
+  "receipts.validationEyebrow": "Validacion",
+  "receipts.validationTitle": "Firma digital y sello",
+  "receipts.validationText":
+    "Captura las firmas directamente en el movil y deja el recibo listo para enviar al cliente sin imprimir.",
+  "receipts.clientSignature": "Firma del cliente",
+  "receipts.companySignature": "Firma de la empresa",
+  "receipts.captureClientSignature": "Firmar cliente",
+  "receipts.captureCompanySignature": "Firmar empresa",
+  "receipts.useSavedCompanySignature": "Usar firma guardada",
+  "receipts.clearClientSignature": "Borrar firma cliente",
+  "receipts.clearCompanySignature": "Borrar firma empresa",
+  "receipts.signaturePresent": "Firma lista",
+  "receipts.signatureMissing": "Pendiente",
+  "receipts.mobileBarSave": "Guardar",
+  "receipts.mobileBarPdf": "PDF",
+  "receipts.mobileBarSign": "Firmar",
 });
 
 Object.assign(translations.es, {
@@ -279,6 +309,7 @@ Object.assign(translations.es, {
   "preview.signatureCompanyFallback": "Responsable / firma",
   "preview.stamp": "Sello / carimbo",
   "preview.stampFallback": "Espacio reservado para el sello de la empresa",
+  "preview.stampFooter": "Valido como sello visual interno",
   "preview.footer":
     "Este recibo acredita la recogida de la alfombra por el prestador indicado y debe conservarse por el cliente hasta la devolucion del articulo.",
   "preview.footerIssuedBy": "Documento emitido por {company}.",
@@ -321,7 +352,15 @@ Object.assign(translations.es, {
   "feedback.receiptDuplicated": "Nuevo recibo creado a partir de {number}.",
   "feedback.importPickFile": "Selecciona al menos un archivo para importar.",
   "feedback.importSummary": "Importacion completada: {added} nuevos, {updated} actualizados.{failed}",
-  "feedback.importFailed": " {count} archivo(s) fallaron."
+  "feedback.importFailed": " {count} archivo(s) fallaron.",
+  "signature.dialogTitleClient": "Capturar firma del cliente",
+  "signature.dialogTitleCompany": "Capturar firma de la empresa",
+  "signature.dialogDescription":
+    "Dibuja la firma con el dedo o el raton. Quedara incrustada en el recibo y en el PDF final.",
+  "signature.clear": "Limpiar",
+  "signature.cancel": "Cancelar",
+  "signature.save": "Guardar firma",
+  "signature.empty": "Haz la firma dentro del recuadro antes de guardar."
 });
 
 Object.assign(translations.ca, {
@@ -374,7 +413,24 @@ Object.assign(translations.ca, {
   "settings.notesThree": "Castellano es l'idioma inicial per al treball diari a Espanya.",
   "language.es": "Castellano",
   "language.ca": "Catala",
-  "language.en": "English"
+  "language.en": "English",
+  "company.captureSignature": "Capturar firma d'empresa",
+  "company.virtualStampTitle": "Segell virtual",
+  "receipts.validationTitle": "Signatura digital i segell",
+  "receipts.captureClientSignature": "Signar client",
+  "receipts.captureCompanySignature": "Signar empresa",
+  "receipts.useSavedCompanySignature": "Fer servir firma guardada",
+  "receipts.mobileBarSave": "Guardar",
+  "receipts.mobileBarPdf": "PDF",
+  "receipts.mobileBarSign": "Signar",
+  "signature.dialogTitleClient": "Capturar signatura del client",
+  "signature.dialogTitleCompany": "Capturar signatura de l'empresa",
+  "signature.dialogDescription":
+    "Dibuixa la signatura amb el dit o el ratoli. Quedara incrustada al rebut i al PDF final.",
+  "signature.clear": "Netejar",
+  "signature.cancel": "Cancelar",
+  "signature.save": "Guardar signatura",
+  "signature.empty": "Fes la signatura dins del requadre abans de guardar."
 });
 
 Object.assign(translations.en, {
@@ -426,7 +482,24 @@ Object.assign(translations.en, {
   "settings.notesThree": "Spanish is the default language for daily work in Spain.",
   "language.es": "Castellano",
   "language.ca": "Catala",
-  "language.en": "English"
+  "language.en": "English",
+  "company.captureSignature": "Capture company signature",
+  "company.virtualStampTitle": "Virtual stamp",
+  "receipts.validationTitle": "Digital signature and stamp",
+  "receipts.captureClientSignature": "Sign as client",
+  "receipts.captureCompanySignature": "Sign as company",
+  "receipts.useSavedCompanySignature": "Use saved signature",
+  "receipts.mobileBarSave": "Save",
+  "receipts.mobileBarPdf": "PDF",
+  "receipts.mobileBarSign": "Sign",
+  "signature.dialogTitleClient": "Capture client signature",
+  "signature.dialogTitleCompany": "Capture company signature",
+  "signature.dialogDescription":
+    "Draw the signature with your finger or mouse. It will be embedded in the receipt and final PDF.",
+  "signature.clear": "Clear",
+  "signature.cancel": "Cancel",
+  "signature.save": "Save signature",
+  "signature.empty": "Draw the signature inside the box before saving."
 });
 
 export const DEFAULT_LANGUAGE: AppLanguage = "es";

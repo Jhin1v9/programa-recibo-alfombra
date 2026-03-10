@@ -23,7 +23,8 @@ export const COMPANY_FIELDS = [
   "companyEmail",
   "companyAddress",
   "companyResponsible",
-  "companyStamp"
+  "companyStamp",
+  "companySignatureDataUrl"
 ] as const;
 
 export const CLIENT_FIELDS = [
@@ -79,7 +80,9 @@ export const RECEIPT_FIELDS = [
   "serviceNotes",
   "receiptNumber",
   "pickupDate",
-  "deliveryDate"
+  "deliveryDate",
+  "clientSignatureDataUrl",
+  "companySignatureDataUrl"
 ] as const;
 
 export const DEFAULT_COMPANY: CompanyProfile = {
@@ -89,7 +92,8 @@ export const DEFAULT_COMPANY: CompanyProfile = {
   companyEmail: "Email",
   companyAddress: "Direccion de la empresa",
   companyResponsible: "Responsable",
-  companyStamp: "Sello oficial"
+  companyStamp: "Sello oficial",
+  companySignatureDataUrl: ""
 };
 
 function cleanString(value: unknown) {

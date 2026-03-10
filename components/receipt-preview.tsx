@@ -1,7 +1,10 @@
 "use client";
 
+import Image from "next/image";
+
 import { BrandMark } from "@/components/brand-mark";
 import { useReceiptApp } from "@/components/receipt-app-provider";
+import { VirtualCompanyStamp } from "@/components/virtual-company-stamp";
 import {
   DEFAULT_COMPANY,
   formatClientName,
@@ -27,6 +30,8 @@ export function ReceiptPreview({
   const previewCompany = normalizeCompany(company || DEFAULT_COMPANY);
   const previewReceipt = normalizeReceiptDraft(receipt);
   const clientName = formatClientName(previewReceipt) || t("preview.clientNameFallback");
+  const companySignatureDataUrl =
+    previewReceipt.companySignatureDataUrl || previewCompany.companySignatureDataUrl;
   const locationValue =
     joinNonEmpty([previewReceipt.clientCity, previewReceipt.clientPostalCode], " / ") ||
     t("preview.cityPostalFallback");
@@ -147,17 +152,23 @@ export function ReceiptPreview({
               <SignatureBox
                 title={t("preview.clientSignature")}
                 caption={clientName || t("preview.signatureClientFallback")}
+                imageDataUrl={previewReceipt.clientSignatureDataUrl}
               />
               <SignatureBox
                 title={t("preview.companySignature")}
                 caption={previewCompany.companyResponsible || t("preview.signatureCompanyFallback")}
+                imageDataUrl={companySignatureDataUrl}
               />
             </div>
 
             <div className="mt-3 rounded-[18px] border border-dashed border-slate-400 px-4 py-3">
               <p className="text-[0.8rem] font-semibold text-slate-700">{t("preview.stamp")}</p>
-              <div className="mt-3 min-h-[54px] text-[0.76rem] leading-5 text-slate-500">
-                {previewCompany.companyStamp || t("preview.stampFallback")}
+              <div className="mt-3 flex items-center gap-4">
+                <VirtualCompanyStamp company={previewCompany} compact />
+                <div className="text-[0.76rem] leading-5 text-slate-500">
+                  <p>{previewCompany.companyStamp || t("preview.stampFallback")}</p>
+                  <p className="mt-2">{t("preview.stampFooter")}</p>
+                </div>
               </div>
             </div>
           </PreviewSection>
@@ -240,15 +251,28 @@ function MetaLine({
 
 function SignatureBox({
   title,
-  caption
+  caption,
+  imageDataUrl
 }: Readonly<{
   title: string;
   caption: string;
+  imageDataUrl?: string;
 }>) {
   return (
     <div className="flex min-h-[120px] flex-col rounded-[18px] border-2 border-slate-300 px-4 py-3">
       <p className="text-center text-[0.78rem] font-semibold text-slate-700">{title}</p>
-      <div className="flex-1" />
+      <div className="flex flex-1 items-center justify-center py-3">
+        {imageDataUrl ? (
+          <Image
+            src={imageDataUrl}
+            alt={title}
+            width={220}
+            height={62}
+            unoptimized
+            className="max-h-[62px] max-w-full object-contain"
+          />
+        ) : null}
+      </div>
       <div className="border-t border-slate-400 pt-2 text-center text-[0.7rem] leading-5 text-slate-500">
         {caption}
       </div>
