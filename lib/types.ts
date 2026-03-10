@@ -54,6 +54,12 @@ export type ReceiptRecord = ReceiptDraft & {
   company: CompanyProfile;
 };
 
+export type AppLanguage = "es" | "ca" | "en";
+
+export type AppPreferences = {
+  language: AppLanguage;
+};
+
 export type FeedbackState =
   | {
       kind: "success" | "error";

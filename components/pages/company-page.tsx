@@ -9,41 +9,62 @@ import {
 } from "@/components/workspace-ui";
 import type { CompanyProfile } from "@/lib/types";
 
-const COMPANY_INPUTS = [
-  { name: "companyName", label: "Nome da empresa", placeholder: "Ex.: Alfombra Premium" },
-  { name: "companyTaxId", label: "NIF / Identificacao", placeholder: "Ex.: 123456789" },
-  { name: "companyPhone", label: "Telefone", placeholder: "+34 600 000 000" },
-  { name: "companyEmail", label: "Email", placeholder: "contato@empresa.com", type: "email" },
-  {
-    name: "companyAddress",
-    label: "Morada / Endereco",
-    placeholder: "Rua, numero, cidade",
-    full: true
-  },
-  {
-    name: "companyResponsible",
-    label: "Responsavel",
-    placeholder: "Nome do responsavel"
-  },
-  { name: "companyStamp", label: "Carimbo / selo", placeholder: "Ex.: Carimbo oficial" }
-] as const;
-
 export function CompanyPage() {
-  const { companyForm, saveCompanyProfile, updateCompanyField, previewCompany } = useReceiptApp();
+  const { companyForm, saveCompanyProfile, updateCompanyField, previewCompany, t } =
+    useReceiptApp();
+  const companyInputs = [
+    {
+      name: "companyName",
+      label: t("company.name"),
+      placeholder: t("company.namePlaceholder")
+    },
+    {
+      name: "companyTaxId",
+      label: t("company.taxId"),
+      placeholder: t("company.taxIdPlaceholder")
+    },
+    {
+      name: "companyPhone",
+      label: t("company.phone"),
+      placeholder: "+34 600 000 000"
+    },
+    {
+      name: "companyEmail",
+      label: t("company.email"),
+      placeholder: "contacto@empresa.com",
+      type: "email" as const
+    },
+    {
+      name: "companyAddress",
+      label: t("company.address"),
+      placeholder: t("company.addressPlaceholder"),
+      full: true
+    },
+    {
+      name: "companyResponsible",
+      label: t("company.responsible"),
+      placeholder: t("company.responsiblePlaceholder")
+    },
+    {
+      name: "companyStamp",
+      label: t("company.stamp"),
+      placeholder: t("company.stampPlaceholder")
+    }
+  ] as const;
 
   return (
     <>
       <PageIntro
-        eyebrow="Empresa"
-        title="Identidade da empresa em pagina propria"
-        description="Aqui ficam todos os dados institucionais usados nos recibos: contacto, morada, responsavel e carimbo."
-        actions={<ActionButton label="Guardar empresa" variant="primary" onClick={saveCompanyProfile} />}
+        eyebrow={t("company.eyebrow")}
+        title={t("company.title")}
+        description={t("company.description")}
+        actions={<ActionButton label={t("company.save")} variant="primary" onClick={saveCompanyProfile} />}
       />
 
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">
-        <SectionCard eyebrow="Formulario" title="Dados oficiais">
+        <SectionCard eyebrow={t("company.form")} title={t("company.officialData")}>
           <div className="grid gap-4 md:grid-cols-2">
-            {COMPANY_INPUTS.map((field) => (
+            {companyInputs.map((field) => (
               <EditableField
                 key={field.name}
                 config={field}
@@ -54,15 +75,15 @@ export function CompanyPage() {
           </div>
         </SectionCard>
 
-        <SectionCard eyebrow="Resumo" title="Vista rapida" chip="Atual">
+        <SectionCard eyebrow={t("company.summary")} title={t("company.quickView")} chip={t("company.current")}>
           <div className="space-y-4 text-sm leading-7 text-[color:var(--ink-soft)]">
-            <SummaryItem label="Empresa" value={previewCompany.companyName} />
-            <SummaryItem label="NIF" value={previewCompany.companyTaxId} />
-            <SummaryItem label="Telefone" value={previewCompany.companyPhone} />
-            <SummaryItem label="Email" value={previewCompany.companyEmail} />
-            <SummaryItem label="Morada" value={previewCompany.companyAddress} />
-            <SummaryItem label="Responsavel" value={previewCompany.companyResponsible} />
-            <SummaryItem label="Carimbo" value={previewCompany.companyStamp} />
+            <SummaryItem label={t("company.name")} value={previewCompany.companyName} />
+            <SummaryItem label={t("company.taxId")} value={previewCompany.companyTaxId} />
+            <SummaryItem label={t("company.phone")} value={previewCompany.companyPhone} />
+            <SummaryItem label={t("company.email")} value={previewCompany.companyEmail} />
+            <SummaryItem label={t("company.address")} value={previewCompany.companyAddress} />
+            <SummaryItem label={t("company.responsible")} value={previewCompany.companyResponsible} />
+            <SummaryItem label={t("company.stamp")} value={previewCompany.companyStamp} />
           </div>
         </SectionCard>
       </div>

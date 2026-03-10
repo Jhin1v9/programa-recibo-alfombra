@@ -1,21 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 
 import { useReceiptApp } from "@/components/receipt-app-provider";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Inicio", note: "Painel geral" },
-  { href: "/empresa", label: "Empresa", note: "Dados da marca" },
-  { href: "/clientes", label: "Clientes", note: "Agenda e importacao" },
-  { href: "/recibos", label: "Recibos", note: "Servico e preview" }
-] as const;
-
 export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
-  const { clients, receipts, selectionLabel, nextReceiptSuggestion, feedback, dismissFeedback } =
-    useReceiptApp();
+  const {
+    clients,
+    receipts,
+    selectionLabel,
+    nextReceiptSuggestion,
+    feedback,
+    dismissFeedback,
+    t
+  } = useReceiptApp();
+  const navItems: ReadonlyArray<{ href: Route; label: string; note: string }> = [
+    { href: "/", label: t("nav.home"), note: t("nav.homeNote") },
+    { href: "/empresa", label: t("nav.company"), note: t("nav.companyNote") },
+    { href: "/clientes", label: t("nav.clients"), note: t("nav.clientsNote") },
+    { href: "/recibos", label: t("nav.receipts"), note: t("nav.receiptsNote") },
+    { href: "/configuracion", label: t("nav.settings"), note: t("nav.settingsNote") }
+  ];
 
   return (
     <div className="app-root min-h-screen overflow-x-clip px-4 py-4 md:px-6 md:py-6">
@@ -23,16 +31,16 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         <aside className="app-sidebar panel-card h-fit overflow-hidden rounded-[30px] p-5 xl:sticky xl:top-6">
           <div className="hero-card rounded-[26px] p-5 text-white">
             <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.28em] text-amber-200/80">
-              Workspace
+              {t("sidebar.workspace")}
             </p>
             <h1 className="mt-3 max-w-[10ch] text-3xl leading-none">Recibos Alfombra Studio</h1>
             <p className="mt-3 text-sm leading-7 text-white/76">
-              Navegacao limpa por contexto: empresa, clientes e recibos.
+              {t("sidebar.description")}
             </p>
           </div>
 
           <nav className="mt-5 flex flex-col gap-2">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const active = pathname === item.href;
 
               return (
@@ -54,15 +62,16 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
           <div className="mt-5 rounded-[24px] border border-[color:var(--line)] bg-white/72 p-4">
             <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.22em] text-[color:var(--brand)]">
-              Estado
+              {t("sidebar.state")}
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-              <SidebarMetric label="clientes" value={String(clients.length)} />
-              <SidebarMetric label="recibos" value={String(receipts.length)} />
-              <SidebarMetric label="selecionado" value={selectionLabel} />
+              <SidebarMetric label={t("sidebar.clients")} value={String(clients.length)} />
+              <SidebarMetric label={t("sidebar.receipts")} value={String(receipts.length)} />
+              <SidebarMetric label={t("sidebar.selected")} value={selectionLabel} />
             </div>
             <div className="mt-4 rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-strong)] px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-              Proximo numero: <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
+              {t("sidebar.nextNumber")}:{" "}
+              <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
             </div>
           </div>
         </aside>
@@ -82,7 +91,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             aria-live="polite"
             onClick={() => dismissFeedback()}
           >
-            {feedback?.message || "estado ocioso"}
+            {feedback?.message || t("sidebar.idle")}
           </div>
         </div>
       </div>

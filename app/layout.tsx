@@ -19,17 +19,9 @@ const displayFont = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Recibos Alfombra Studio",
   description:
-    "Workspace moderno para importar contatos, guardar clientes e gerar recibos de recolha em A4.",
+    "Aplicacion para importar contactos, guardar clientes y generar recibos de recogida en A4.",
   applicationName: "Recibos Alfombra Studio",
-  keywords: [
-    "recibos",
-    "alfombra",
-    "tapetes",
-    "clientes",
-    "pdf",
-    "next.js",
-    "vercel"
-  ],
+  keywords: ["recibos", "alfombra", "tapetes", "clientes", "pdf", "next.js", "vercel"],
   authors: [
     {
       name: "Jhin1v9"
@@ -48,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="es">
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>
         <ReceiptAppProvider>
           <AppShell>{children}</AppShell>

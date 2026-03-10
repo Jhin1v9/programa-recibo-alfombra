@@ -13,40 +13,6 @@ import {
 import { formatClientName, formatDate } from "@/lib/receipt-core";
 import type { ReceiptDraft, ServicePreset } from "@/lib/types";
 
-const RUG_INPUTS = [
-  { name: "rugType", label: "Tipo", placeholder: "Persa, moderno, la, etc." },
-  { name: "rugSize", label: "Tamanho", placeholder: "Ex.: 200 x 300 cm" },
-  { name: "rugColor", label: "Cor / descricao", placeholder: "Bege, azul, estampado..." },
-  {
-    name: "rugCondition",
-    label: "Estado ao recolher",
-    placeholder: "Bom estado, manchas, odor, etc."
-  },
-  {
-    name: "rugNotes",
-    label: "Observacoes do artigo",
-    placeholder: "Franja solta, marcas, pontos de atencao...",
-    multiline: true,
-    rows: 4,
-    full: true
-  }
-] as const;
-
-const SERVICE_INPUTS = [
-  { name: "receiptNumber", label: "Recibo n.o", placeholder: "Automatico" },
-  { name: "pickupDate", label: "Data de recolha", type: "date" },
-  { name: "deliveryDate", label: "Entrega prevista", type: "date" },
-  { name: "estimatedValue", label: "Valor estimado", placeholder: "Ex.: 85,00 EUR" },
-  {
-    name: "serviceNotes",
-    label: "Observacoes do servico",
-    placeholder: "Instrucoes adicionais, prazo, detalhes de contacto...",
-    multiline: true,
-    rows: 5,
-    full: true
-  }
-] as const;
-
 export function ReceiptsPage() {
   const {
     previewCompany,
@@ -61,8 +27,53 @@ export function ReceiptsPage() {
     assignNextReceiptNumber,
     prepareFreshReceipt,
     loadReceipt,
-    duplicateReceipt
+    duplicateReceipt,
+    t
   } = useReceiptApp();
+  const rugInputs = [
+    { name: "rugType", label: t("receipts.rugType"), placeholder: t("receipts.rugTypePlaceholder") },
+    { name: "rugSize", label: t("receipts.rugSize"), placeholder: t("receipts.rugSizePlaceholder") },
+    {
+      name: "rugColor",
+      label: t("receipts.rugColor"),
+      placeholder: t("receipts.rugColorPlaceholder")
+    },
+    {
+      name: "rugCondition",
+      label: t("receipts.rugCondition"),
+      placeholder: t("receipts.rugConditionPlaceholder")
+    },
+    {
+      name: "rugNotes",
+      label: t("receipts.rugNotes"),
+      placeholder: t("receipts.rugNotesPlaceholder"),
+      multiline: true,
+      rows: 4,
+      full: true
+    }
+  ] as const;
+  const serviceInputs = [
+    {
+      name: "receiptNumber",
+      label: t("receipts.receiptNumber"),
+      placeholder: t("receipts.receiptNumberPlaceholder")
+    },
+    { name: "pickupDate", label: t("receipts.pickupDate"), type: "date" as const },
+    { name: "deliveryDate", label: t("receipts.deliveryDate"), type: "date" as const },
+    {
+      name: "estimatedValue",
+      label: t("receipts.estimatedValue"),
+      placeholder: t("receipts.estimatedValuePlaceholder")
+    },
+    {
+      name: "serviceNotes",
+      label: t("receipts.serviceNotes"),
+      placeholder: t("receipts.serviceNotesPlaceholder"),
+      multiline: true,
+      rows: 5,
+      full: true
+    }
+  ] as const;
 
   const sortedReceipts = [...receipts].sort(
     (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
@@ -71,35 +82,35 @@ export function ReceiptsPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Recibos"
-        title="Edicao do servico, historico e preview A4"
-        description="A pagina de recibos ficou dedicada ao trabalho operacional: artigo, datas, valor, duplicacao e impressao."
+        eyebrow={t("receipts.eyebrow")}
+        title={t("receipts.title")}
+        description={t("receipts.description")}
         actions={
           <div className="flex flex-wrap gap-3">
-            <ActionButton label="Guardar recibo" variant="primary" onClick={saveReceipt} />
-            <ActionButton label="Imprimir / PDF" variant="secondary" onClick={() => window.print()} />
+            <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
+            <ActionButton label={t("receipts.print")} variant="secondary" onClick={() => window.print()} />
           </div>
         }
       />
 
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="workspace-panel min-w-0 grid gap-6">
-          <SectionCard eyebrow="Contexto" title="Cliente ligado ao recibo" chip="Atual">
+          <SectionCard eyebrow={t("receipts.context")} title={t("receipts.linkedClient")} chip={t("receipts.current")}>
             {selectedClient ? (
               <div className="grid gap-3 md:grid-cols-2">
-                <SummaryItem label="Nome" value={formatClientName(selectedClient) || "Cliente sem nome"} />
-                <SummaryItem label="Telefone" value={selectedClient.clientPhone || "Sem telefone"} />
-                <SummaryItem label="Email" value={selectedClient.clientEmail || "Sem email"} />
-                <SummaryItem label="Endereco" value={selectedClient.clientAddress || "Sem endereco"} />
+                <SummaryItem label={t("clients.firstName")} value={formatClientName(selectedClient) || t("dashboard.clientNoName")} />
+                <SummaryItem label={t("clients.phone")} value={selectedClient.clientPhone || t("dashboard.noPhone")} />
+                <SummaryItem label={t("clients.email")} value={selectedClient.clientEmail || t("dashboard.noEmail")} />
+                <SummaryItem label={t("clients.address")} value={selectedClient.clientAddress || t("clients.noAddress")} />
               </div>
             ) : (
-              <EmptyState message="Nenhum cliente selecionado. Abra um cliente na pagina de clientes ou carregue um recibo do historico." />
+              <EmptyState message={t("receipts.noClientMessage")} />
             )}
           </SectionCard>
 
-          <SectionCard eyebrow="Detalhes do artigo" title="Alfombra / tapete" chip="Servico">
+          <SectionCard eyebrow={t("receipts.rugDetails")} title={t("receipts.rugTitle")} chip={t("receipts.serviceChip")}>
             <div className="grid gap-4 md:grid-cols-2">
-              {RUG_INPUTS.map((field) => (
+              {rugInputs.map((field) => (
                 <EditableField
                   key={field.name}
                   config={field}
@@ -110,9 +121,9 @@ export function ReceiptsPage() {
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow="Controlo interno" title="Servico e recibo">
+          <SectionCard eyebrow={t("receipts.internal")} title={t("receipts.serviceReceipt")}>
             <div className="grid gap-4 md:grid-cols-2">
-              {SERVICE_INPUTS.map((field) => (
+              {serviceInputs.map((field) => (
                 <EditableField
                   key={field.name}
                   config={field}
@@ -123,11 +134,11 @@ export function ReceiptsPage() {
             </div>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <ActionButton label="Guardar recibo" variant="primary" onClick={saveReceipt} />
-              <ActionButton label="Novo numero" variant="secondary" onClick={assignNextReceiptNumber} />
-              <ActionButton label="Novo recibo em branco" variant="ghost" onClick={() => prepareFreshReceipt()} />
+              <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
+              <ActionButton label={t("receipts.newNumber")} variant="secondary" onClick={assignNextReceiptNumber} />
+              <ActionButton label={t("receipts.newBlank")} variant="ghost" onClick={() => prepareFreshReceipt()} />
               <ActionButton
-                label="Remover selecionado"
+                label={t("clients.removeSelected")}
                 variant="danger"
                 onClick={deleteSelectedReceipt}
                 disabled={!selectedReceiptId}
@@ -135,37 +146,38 @@ export function ReceiptsPage() {
             </div>
 
             <div className="mt-4 rounded-[22px] border border-[color:var(--line)] bg-white/72 px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-              Numero sugerido neste momento: <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
+              {t("receipts.suggestedNumber")}:{" "}
+              <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow="Historico" title="Recibos guardados">
+          <SectionCard eyebrow={t("receipts.history")} title={t("receipts.savedTitle")}>
             <div className="flex flex-col gap-3">
               {sortedReceipts.length === 0 ? (
-                <EmptyState message="Nenhum recibo guardado ainda." />
+                <EmptyState message={t("receipts.empty")} />
               ) : (
                 sortedReceipts.map((receipt) => (
                   <RegistryCard
                     key={receipt.id}
                     active={receipt.id === selectedReceiptId}
-                    title={receipt.receiptNumber || "Sem numero"}
+                    title={receipt.receiptNumber || t("dashboard.noNumber")}
                     chips={[receipt.rugType, receipt.estimatedValue].filter(Boolean)}
                     body={
                       <>
-                        <p>{formatClientName(receipt) || "Cliente nao definido"}</p>
-                        <p>Recolha: {formatDate(receipt.pickupDate) || "--/--/----"}</p>
-                        <p>{receipt.rugSize || "Sem medida definida"}</p>
+                        <p>{formatClientName(receipt) || t("dashboard.clientUndefined")}</p>
+                        <p>{t("receipts.pickup")}: {formatDate(receipt.pickupDate) || "--/--/----"}</p>
+                        <p>{receipt.rugSize || t("receipts.noMeasure")}</p>
                       </>
                     }
                     onOpen={() => loadReceipt(receipt.id)}
                     actions={[
                       {
-                        label: "Abrir",
+                        label: t("receipts.open"),
                         variant: "primary",
                         onClick: () => loadReceipt(receipt.id)
                       },
                       {
-                        label: "Duplicar",
+                        label: t("receipts.duplicate"),
                         variant: "secondary",
                         onClick: () => duplicateReceipt(receipt.id)
                       }
@@ -179,7 +191,7 @@ export function ReceiptsPage() {
 
         <div className="preview-panel min-w-0 flex flex-col gap-4 2xl:sticky 2xl:top-6 2xl:self-start">
           <div className="print-note panel-card rounded-[24px] px-5 py-4 text-sm font-extrabold text-[color:var(--ink)]">
-            Pagina preparada em formato A4 para imprimir ou guardar como PDF.
+            {t("receipts.printNote")}
           </div>
 
           <ReceiptPreview company={previewCompany} receipt={previewDraft} />

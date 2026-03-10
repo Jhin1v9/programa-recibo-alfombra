@@ -1,32 +1,33 @@
 # Recibos Alfombra Studio
 
-Aplicacao moderna com `Next.js 16`, `React 19`, `TypeScript` e `Tailwind CSS 4` para:
+Aplicacion moderna con `Next.js 16`, `React 19`, `TypeScript` y `Tailwind CSS 4` para:
 
-- importar contatos em `VCF`, `CSV` e `TSV`;
-- guardar empresa, clientes e recibos no `localStorage`;
-- reutilizar modelos por cliente;
-- repetir o ultimo servico sem preencher tudo outra vez;
-- gerar recibos prontos para imprimir em `A4` ou guardar como PDF;
-- navegar por paginas separadas para `Inicio`, `Empresa`, `Clientes` e `Recibos`.
+- importar contactos en `VCF`, `CSV` y `TSV`;
+- guardar empresa, clientes y recibos en `localStorage`;
+- reutilizar plantillas por cliente;
+- repetir el ultimo servicio sin rellenarlo todo otra vez;
+- generar recibos listos para imprimir en `A4` o guardar como PDF;
+- trabajar por secciones separadas: `Inicio`, `Empresa`, `Clientes`, `Recibos` y `Configuracion`.
 
-## Funcionalidades
+## Funciones
 
-- importacao de contatos em `VCF`, `CSV` e `TSV`;
-- cadastro e pesquisa de clientes;
-- modelos por cliente para repetir servicos recorrentes;
-- historico de recibos com duplicacao rapida;
-- preview pronto para impressao em `A4`;
-- deploy simples na `Vercel`.
+- importacion de contactos en `VCF`, `CSV` y `TSV`;
+- alta manual y busqueda de clientes;
+- plantillas por cliente para servicios recurrentes;
+- historial de recibos con duplicacion rapida;
+- vista previa lista para impresion en `A4`;
+- configuracion de idioma con `Castellano`, `Catala` y `English`;
+- despliegue simple en `Vercel`.
 
 ## Stack
 
-- `Next.js 16` com App Router
+- `Next.js 16` con App Router
 - `React 19`
 - `TypeScript`
 - `Tailwind CSS 4`
 - `React Compiler` ativado em `next.config.ts`
 
-## Como executar
+## Como ejecutar
 
 ```bash
 npm install
@@ -47,26 +48,26 @@ npm run start
 npm run check
 ```
 
-## Deploy na Vercel
+## Deploy en Vercel
 
-- A app ja esta em `Next.js`, entao a Vercel detecta o projeto automaticamente.
-- Nao precisa de `vercel.json` para o fluxo atual.
-- Antes de subir, rode:
+- La app ya esta en `Next.js`, asi que Vercel detecta el proyecto automaticamente.
+- No hace falta `vercel.json` para el flujo actual.
+- Antes de publicar, ejecuta:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Dados
+## Datos
 
-- Os mesmos `localStorage keys` da versao antiga foram preservados.
-- Se ja existirem clientes e recibos guardados no navegador, a nova interface reutiliza esses dados.
-- Na Vercel os dados continuam locais no browser do utilizador; para partilhar entre dispositivos sera preciso backend ou base de dados.
+- Se conservan las `localStorage keys` principales de la version anterior.
+- Si ya existen clientes y recibos guardados en el navegador, la nueva interfaz reutiliza esos datos.
+- En Vercel los datos siguen siendo locales al navegador del usuario; para compartir entre dispositivos hara falta backend o base de datos.
 
 ## Notas
 
-- A app agora usa menu lateral com paginas dedicadas para organizar o fluxo.
-- O preview da pagina de recibos foi mantido em formato de recibo imprimivel.
-- O botao `Gerar PDF / imprimir` usa a dialog nativa do navegador.
-- `npm run check` executa a validacao principal antes de publicar ou subir para a Vercel.
+- La app usa menu lateral con paginas dedicadas para ordenar el flujo.
+- La vista previa del recibo mantiene formato imprimible.
+- El boton `Imprimir / PDF` usa el dialogo nativo del navegador.
+- `npm run check` ejecuta la validacion principal antes de publicar o subir a Vercel.

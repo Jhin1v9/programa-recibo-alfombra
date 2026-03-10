@@ -2,7 +2,7 @@
   "name": "programa-recibo-alfombra",
   "version": "1.0.0",
   "private": true,
-  "description": "Aplicacao moderna para recibos de recolha de alfombra com Next.js, React, TypeScript e Tailwind CSS.",
+  "description": "Aplicacion moderna para recibos de recogida de alfombras con Next.js, React, TypeScript y Tailwind CSS.",
   "license": "MIT",
   "author": {
     "name": "Jhin1v9",

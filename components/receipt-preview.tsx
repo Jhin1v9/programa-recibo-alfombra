@@ -1,3 +1,6 @@
+"use client";
+
+import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
   DEFAULT_COMPANY,
   formatClientName,
@@ -14,9 +17,10 @@ type ReceiptPreviewProps = {
 };
 
 export function ReceiptPreview({ company, receipt }: ReceiptPreviewProps) {
+  const { t } = useReceiptApp();
   const previewCompany = normalizeCompany(company || DEFAULT_COMPANY);
   const previewReceipt = normalizeReceiptDraft(receipt);
-  const clientName = formatClientName(previewReceipt) || "Nome do cliente";
+  const clientName = formatClientName(previewReceipt) || t("preview.clientNameFallback");
 
   return (
     <section className="receipt-sheet mx-auto w-full max-w-[860px] rounded-[28px] border border-[color:var(--line)] p-5 md:p-[22mm]">
@@ -24,25 +28,25 @@ export function ReceiptPreview({ company, receipt }: ReceiptPreviewProps) {
         <div className="space-y-4">
           <div className="space-y-2">
             <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.28em] text-amber-200/80">
-              Recibo de recolha e custodia
+              {t("preview.headerEyebrow")}
             </p>
             <h2 className="text-3xl leading-none md:text-[2.2rem]">{previewCompany.companyName}</h2>
             <p className="max-w-[48ch] text-sm leading-6 text-white/76">
-              Limpeza profissional de alfombras, tapetes e recolhas com custodia.
+              {t("preview.headerText")}
             </p>
           </div>
 
           <p className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4 text-sm leading-6 text-white/82">
-            Pelo presente documento, <strong>{previewCompany.companyName}</strong> confirma que a
-            alfombra descrita neste recibo foi recolhida nas instalacoes do cliente e permanece sob
-            custodia temporaria para limpeza, tratamento e manuseamento profissional.
+            {t("preview.confirmation", {
+              company: previewCompany.companyName
+            })}
           </p>
         </div>
 
         <div className="rounded-[24px] border border-white/10 bg-white/8 p-4">
           <div className="grid gap-3 text-sm">
-            <MetaRow label="Recibo n.o" value={previewReceipt.receiptNumber || "RC-0000"} />
-            <MetaRow label="Data" value={formatDate(previewReceipt.pickupDate) || "--/--/----"} />
+            <MetaRow label={t("preview.metaReceipt")} value={previewReceipt.receiptNumber || "RC-0000"} />
+            <MetaRow label={t("preview.metaDate")} value={formatDate(previewReceipt.pickupDate) || "--/--/----"} />
             <div className="space-y-2 border-t border-white/12 pt-3 text-white/82">
               <p>{previewCompany.companyPhone}</p>
               <p>{previewCompany.companyAddress}</p>
@@ -54,75 +58,74 @@ export function ReceiptPreview({ company, receipt }: ReceiptPreviewProps) {
       </header>
 
       <div className="relative z-10 mt-5 space-y-5">
-        <PreviewBlock title="Dados do cliente" chip="Identificacao">
+        <PreviewBlock title={t("preview.clientBlock")} chip={t("preview.clientChip")}>
           <InfoGrid
             rows={[
-              ["Nome completo", clientName],
-              ["Telefone", previewReceipt.clientPhone || "Telefone"],
-              ["Email", previewReceipt.clientEmail || "Email"],
-              ["Endereco", previewReceipt.clientAddress || "Endereco do cliente"],
+              [t("preview.fullName"), clientName],
+              [t("clients.phone"), previewReceipt.clientPhone || t("preview.phoneFallback")],
+              [t("clients.email"), previewReceipt.clientEmail || t("preview.emailFallback")],
+              [t("clients.address"), previewReceipt.clientAddress || t("preview.addressFallback")],
               [
-                "Cidade / C.P.",
+                t("preview.cityPostal"),
                 joinNonEmpty([previewReceipt.clientCity, previewReceipt.clientPostalCode], " / ") ||
-                  "Cidade / Codigo postal"
+                  t("preview.cityPostalFallback")
               ]
             ]}
           />
         </PreviewBlock>
 
-        <PreviewBlock title="Informacao da alfombra" chip="Artigo recolhido">
+        <PreviewBlock title={t("preview.rugBlock")} chip={t("preview.rugChip")}>
           <InfoGrid
             rows={[
-              ["Tipo", previewReceipt.rugType || "Tipo da alfombra"],
-              ["Tamanho", previewReceipt.rugSize || "Medidas do artigo"],
-              ["Cor / descricao", previewReceipt.rugColor || "Descricao visual"],
-              ["Estado ao recolher", previewReceipt.rugCondition || "Estado observado"],
-              ["Observacoes do artigo", previewReceipt.rugNotes || "Sem observacoes adicionais."]
+              [t("receipts.rugType"), previewReceipt.rugType || t("preview.rugTypeFallback")],
+              [t("receipts.rugSize"), previewReceipt.rugSize || t("preview.rugSizeFallback")],
+              [t("receipts.rugColor"), previewReceipt.rugColor || t("preview.rugColorFallback")],
+              [t("receipts.rugCondition"), previewReceipt.rugCondition || t("preview.rugConditionFallback")],
+              [t("receipts.rugNotes"), previewReceipt.rugNotes || t("preview.noExtraNotes")]
             ]}
           />
         </PreviewBlock>
 
-        <PreviewBlock title="Controlo do servico" chip="Acompanhamento">
+        <PreviewBlock title={t("preview.serviceBlock")} chip={t("preview.serviceChip")}>
           <InfoGrid
             rows={[
-              ["Data de recolha", formatDate(previewReceipt.pickupDate) || "--/--/----"],
-              ["Entrega prevista", formatDate(previewReceipt.deliveryDate) || "--/--/----"],
-              ["Valor estimado", previewReceipt.estimatedValue || "A definir"],
+              [t("receipts.pickupDate"), formatDate(previewReceipt.pickupDate) || "--/--/----"],
+              [t("receipts.deliveryDate"), formatDate(previewReceipt.deliveryDate) || "--/--/----"],
+              [t("receipts.estimatedValue"), previewReceipt.estimatedValue || t("preview.valueFallback")],
               [
-                "Observacoes do servico",
-                previewReceipt.serviceNotes || "Sem observacoes adicionais."
+                t("receipts.serviceNotes"),
+                previewReceipt.serviceNotes || t("preview.noExtraNotes")
               ]
             ]}
           />
         </PreviewBlock>
 
-        <PreviewBlock title="Confirmacao e assinaturas" chip="Validacao">
+        <PreviewBlock title={t("preview.signatures")} chip={t("preview.signaturesChip")}>
           <div className="grid gap-4 md:grid-cols-2">
             <SignatureCard
-              label="Assinatura do cliente"
-              value={clientName || "Nome e assinatura"}
+              label={t("preview.clientSignature")}
+              value={clientName || t("preview.signatureClientFallback")}
             />
             <SignatureCard
-              label="Assinatura da empresa"
-              value={previewCompany.companyResponsible || "Responsavel / assinatura"}
+              label={t("preview.companySignature")}
+              value={previewCompany.companyResponsible || t("preview.signatureCompanyFallback")}
             />
           </div>
 
           <div className="mt-4 rounded-[22px] border border-[color:var(--line)] bg-white/80 p-5">
-            <p className="text-sm font-semibold text-[color:var(--ink-soft)]">Carimbo / selo</p>
+            <p className="text-sm font-semibold text-[color:var(--ink-soft)]">{t("preview.stamp")}</p>
             <div className="mt-3 min-h-[96px] rounded-[18px] border-2 border-dashed border-[color:var(--line-strong)] px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-              {previewCompany.companyStamp || "Espaco reservado para carimbo da empresa"}
+              {previewCompany.companyStamp || t("preview.stampFallback")}
             </div>
           </div>
         </PreviewBlock>
 
         <footer className="rounded-[24px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] px-5 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
-          <p>
-            Este recibo comprova a recolha da alfombra pelo prestador indicado e deve ser
-            conservado pelo cliente ate a devolucao do artigo.
-          </p>
+          <p>{t("preview.footer")}</p>
           <p className="mt-2">
-            Documento emitido por <strong>{previewCompany.companyName}</strong>.
+            {t("preview.footerIssuedBy", {
+              company: previewCompany.companyName
+            })}
           </p>
         </footer>
       </div>

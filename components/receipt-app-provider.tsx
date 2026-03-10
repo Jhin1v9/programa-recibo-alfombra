@@ -11,10 +11,10 @@ import {
 
 import {
   buildEmptyPreset,
-  buildSelectionLabel,
   CLIENT_FIELDS,
   CLIENT_PRESET_FIELDS,
   consumeNextReceiptNumber,
+  createId,
   createEmptyClientData,
   createEmptyReceiptDraft,
   DEFAULT_COMPANY,
@@ -37,9 +37,19 @@ import {
   peekNextReceiptNumber,
   pickFields,
   STORAGE_KEYS,
-  syncSequenceWithNumber
+  syncSequenceWithNumber,
+  truncateLabel
 } from "@/lib/receipt-core";
+import {
+  DEFAULT_LANGUAGE,
+  getDocumentLanguage,
+  isSupportedLanguage,
+  LANGUAGE_OPTIONS,
+  translate
+} from "@/lib/i18n";
 import type {
+  AppLanguage,
+  AppPreferences,
   ClientRecord,
   CompanyProfile,
   FeedbackState,
@@ -55,7 +65,11 @@ type PrepareOptions = {
 type ReceiptAppContextValue = {
   hasBootstrapped: boolean;
   feedback: FeedbackState;
+  language: AppLanguage;
+  languageOptions: typeof LANGUAGE_OPTIONS;
   dismissFeedback: () => void;
+  setLanguage: (language: AppLanguage) => void;
+  t: (key: string, params?: Record<string, string | number>) => string;
   companyForm: CompanyProfile;
   draft: ReceiptDraft;
   previewCompany: CompanyProfile;
@@ -107,6 +121,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
   const [draft, setDraft] = useState<ReceiptDraft>(createEmptyReceiptDraft());
   const [clients, setClients] = useState<ClientRecord[]>([]);
   const [receipts, setReceipts] = useState<ReceiptRecord[]>([]);
+  const [language, setLanguage] = useState<AppLanguage>(DEFAULT_LANGUAGE);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [selectedReceiptId, setSelectedReceiptId] = useState<string | null>(null);
   const [sequence, setSequence] = useState(0);
@@ -122,12 +137,21 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     const storedCompany = normalizeCompany(loadJSON(STORAGE_KEYS.company, DEFAULT_COMPANY, storage));
     const storedClients = normalizeClients(loadJSON(STORAGE_KEYS.clients, [], storage));
     const storedReceipts = normalizeReceipts(loadJSON(STORAGE_KEYS.receipts, [], storage));
+    const storedPreferences = loadJSON<AppPreferences>(
+      STORAGE_KEYS.preferences,
+      { language: DEFAULT_LANGUAGE },
+      storage
+    );
     const storedSequence = loadSequence(storage);
+    const storedLanguage = isSupportedLanguage(storedPreferences.language)
+      ? storedPreferences.language
+      : DEFAULT_LANGUAGE;
 
     startTransition(() => {
       setCompanyForm(storedCompany);
       setClients(storedClients);
       setReceipts(storedReceipts);
+      setLanguage(storedLanguage);
       setSequence(storedSequence);
       setDraft(createFreshDraft(storedSequence));
       setHasBootstrapped(true);
@@ -159,6 +183,23 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
   }, [sequence, hasBootstrapped]);
 
   useEffect(() => {
+    if (!hasBootstrapped) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      STORAGE_KEYS.preferences,
+      JSON.stringify({
+        language
+      } satisfies AppPreferences)
+    );
+  }, [language, hasBootstrapped]);
+
+  useEffect(() => {
+    document.documentElement.lang = getDocumentLanguage(language);
+  }, [language]);
+
+  useEffect(() => {
     if (!feedback) {
       return;
     }
@@ -174,12 +215,21 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
   const previewDraft = normalizeReceiptDraft(draft);
   const selectedClient = clients.find((client) => client.id === selectedClientId) || null;
   const selectedReceipt = receipts.find((receipt) => receipt.id === selectedReceiptId) || null;
-  const selectionLabel = buildSelectionLabel({
-    selectedReceiptId,
-    selectedClientId,
-    clients,
-    receipts
-  });
+  const t = (key: string, params?: Record<string, string | number>) =>
+    translate(language, key, params);
+  const selectionLabel = selectedReceiptId
+    ? truncateLabel(
+        receipts.find((item) => item.id === selectedReceiptId)?.receiptNumber ||
+          t("selection.activeReceipt"),
+        18
+      )
+    : selectedClientId
+      ? truncateLabel(
+          formatClientName(clients.find((item) => item.id === selectedClientId) || {}) ||
+            t("selection.activeClient"),
+          18
+        )
+      : t("selection.none");
 
   function flash(message: string, kind: "success" | "error" = "success") {
     setFeedback({ kind, message });
@@ -207,14 +257,14 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     const nextCompany = normalizeCompany(companyForm);
     setCompanyForm(nextCompany);
     window.localStorage.setItem(STORAGE_KEYS.company, JSON.stringify(nextCompany));
-    flash("Dados da empresa guardados.");
+    flash(t("feedback.companySaved"));
   }
 
   function saveClient() {
     const clientData = pickFields(previewDraft, CLIENT_FIELDS);
 
     if (!hasClientIdentity(clientData)) {
-      flash("Preencha pelo menos nome, telefone ou email para guardar o cliente.", "error");
+      flash(t("feedback.clientRequired"), "error");
       return;
     }
 
@@ -227,7 +277,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     const nextClient: ClientRecord = {
       ...pickFields(existingClient || {}, CLIENT_FIELDS),
       ...clientData,
-      id: existingClient?.id || crypto.randomUUID(),
+      id: existingClient?.id || createId(),
       createdAt: existingClient?.createdAt || now,
       updatedAt: now,
       servicePreset: existingClient?.servicePreset || buildEmptyPreset()
@@ -245,18 +295,18 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     setSelectedClientId(nextClient.id);
     setSelectedReceiptId(null);
-    flash(targetIndex >= 0 ? "Cliente atualizado." : "Cliente guardado.");
+    flash(t(targetIndex >= 0 ? "feedback.clientUpdated" : "feedback.clientSaved"));
   }
 
   function deleteSelectedClient() {
     if (!selectedClientId) {
-      flash("Selecione um cliente para remover.", "error");
+      flash(t("feedback.selectClientDelete"), "error");
       return;
     }
 
     setClients((current) => current.filter((client) => client.id !== selectedClientId));
     setSelectedClientId(null);
-    flash("Cliente removido.");
+    flash(t("feedback.clientDeleted"));
   }
 
   function clearClientFields() {
@@ -265,7 +315,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       ...current,
       ...createEmptyClientData()
     }));
-    flash("Campos do cliente limpos.");
+    flash(t("feedback.clientCleared"));
   }
 
   function prepareFreshReceipt(options?: PrepareOptions) {
@@ -277,7 +327,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setDraft((current) => createFreshDraft(sequence, current, keepClient));
 
     if (showMessage) {
-      flash("Novo recibo em branco preparado.");
+      flash(t("feedback.newReceiptPrepared"));
     }
   }
 
@@ -297,7 +347,11 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     );
 
     if (!silent) {
-      flash(`Cliente carregado: ${formatClientName(client)}.`);
+      flash(
+        t("feedback.clientLoaded", {
+          name: formatClientName(client) || t("selection.activeClient")
+        })
+      );
     }
   }
 
@@ -318,13 +372,13 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
   function startNewReceiptForClient(clientId = selectedClientId) {
     if (!clientId) {
-      flash("Selecione um cliente para iniciar um novo recibo.", "error");
+      flash(t("feedback.selectClientNewReceipt"), "error");
       return;
     }
 
     const client = clients.find((item) => item.id === clientId);
     if (!client) {
-      flash("Selecione um cliente para iniciar um novo recibo.", "error");
+      flash(t("feedback.selectClientNewReceipt"), "error");
       return;
     }
 
@@ -339,29 +393,41 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setDraft(nextDraft);
 
     if (hasAnyField(client.servicePreset)) {
-      flash(`Novo recibo preparado para ${formatClientName(client)} com modelo guardado.`);
+      flash(
+        t("feedback.newReceiptWithTemplate", {
+          name: formatClientName(client) || t("selection.activeClient")
+        })
+      );
       return;
     }
 
-    flash(`Novo recibo preparado para ${formatClientName(client)}.`);
+    flash(
+      t("feedback.newReceiptForClient", {
+        name: formatClientName(client) || t("selection.activeClient")
+      })
+    );
   }
 
   function repeatLastServiceForClient(clientId = selectedClientId) {
     if (!clientId) {
-      flash("Selecione um cliente para repetir o servico.", "error");
+      flash(t("feedback.selectClientRepeat"), "error");
       return;
     }
 
     const client = clients.find((item) => item.id === clientId);
     if (!client) {
-      flash("Selecione um cliente para repetir o servico.", "error");
+      flash(t("feedback.selectClientRepeat"), "error");
       return;
     }
 
     const latestReceipt = findLatestReceiptForClient(receipts, client);
     if (latestReceipt) {
       createReceiptDraftFromSource(latestReceipt, client);
-      flash(`Ultimo servico repetido para ${formatClientName(client)}.`);
+      flash(
+        t("feedback.latestServiceRepeated", {
+          name: formatClientName(client) || t("selection.activeClient")
+        })
+      );
       return;
     }
 
@@ -375,22 +441,26 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       setSelectedClientId(client.id);
       setSelectedReceiptId(null);
       setDraft(nextDraft);
-      flash(`Cliente sem historico. Modelo guardado aplicado para ${formatClientName(client)}.`);
+      flash(
+        t("feedback.templateAppliedFromHistory", {
+          name: formatClientName(client) || t("selection.activeClient")
+        })
+      );
       return;
     }
 
-    flash("Este cliente ainda nao tem historico nem modelo guardado.", "error");
+    flash(t("feedback.noHistoryNoTemplate"), "error");
   }
 
   function saveClientTemplate() {
     if (!selectedClientId) {
-      flash("Selecione um cliente para guardar o modelo.", "error");
+      flash(t("feedback.selectClientSaveTemplate"), "error");
       return;
     }
 
     const preset = pickFields(previewDraft, CLIENT_PRESET_FIELDS);
     if (!hasAnyField(preset)) {
-      flash("Preencha pelo menos um campo do artigo ou do servico antes de guardar o modelo.", "error");
+      flash(t("feedback.templateNeedFields"), "error");
       return;
     }
 
@@ -409,23 +479,27 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       )
     );
 
-    flash(`Modelo guardado para ${formatClientName(selectedClient || {})}.`);
+    flash(
+      t("feedback.templateSaved", {
+        name: formatClientName(selectedClient || {}) || t("selection.activeClient")
+      })
+    );
   }
 
   function applyClientTemplate(clientId = selectedClientId, silent = false) {
     if (!clientId) {
-      flash("Selecione um cliente para aplicar o modelo.", "error");
+      flash(t("feedback.selectClientApplyTemplate"), "error");
       return;
     }
 
     const client = clients.find((item) => item.id === clientId);
     if (!client) {
-      flash("Selecione um cliente para aplicar o modelo.", "error");
+      flash(t("feedback.selectClientApplyTemplate"), "error");
       return;
     }
 
     if (!hasAnyField(client.servicePreset)) {
-      flash("Este cliente ainda nao tem modelo guardado.", "error");
+      flash(t("feedback.clientNoTemplate"), "error");
       return;
     }
 
@@ -435,7 +509,11 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     }));
 
     if (!silent) {
-      flash(`Modelo aplicado para ${formatClientName(client)}.`);
+      flash(
+        t("feedback.templateApplied", {
+          name: formatClientName(client) || t("selection.activeClient")
+        })
+      );
     }
   }
 
@@ -443,7 +521,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     const receiptDraft = normalizeReceiptDraft(draft);
 
     if (!hasClientIdentity(receiptDraft)) {
-      flash("O recibo precisa de um cliente identificado.", "error");
+      flash(t("feedback.receiptNeedClient"), "error");
       return;
     }
 
@@ -461,7 +539,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     const now = new Date().toISOString();
     const record = normalizeReceiptRecord({
-      id: selectedReceiptId || crypto.randomUUID(),
+      id: selectedReceiptId || createId(),
       updatedAt: now,
       company: normalizeCompany(companyForm),
       ...receiptDraft,
@@ -496,12 +574,12 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     setSelectedReceiptId(record.id);
     setSequence(nextSequence);
-    flash(isEditing ? "Recibo atualizado." : "Recibo guardado.");
+    flash(t(isEditing ? "feedback.receiptUpdated" : "feedback.receiptSaved"));
   }
 
   function deleteSelectedReceipt() {
     if (!selectedReceiptId) {
-      flash("Selecione um recibo para remover.", "error");
+      flash(t("feedback.selectReceiptDelete"), "error");
       return;
     }
 
@@ -509,7 +587,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setSelectedReceiptId(null);
     setSelectedClientId(null);
     setDraft(createFreshDraft(sequence));
-    flash("Recibo removido.");
+    flash(t("feedback.receiptDeleted"));
   }
 
   function assignNextReceiptNumber() {
@@ -517,7 +595,7 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       ...current,
       receiptNumber: peekNextReceiptNumber(sequence)
     }));
-    flash("Numero sugerido atualizado.");
+    flash(t("feedback.receiptNumberUpdated"));
   }
 
   function loadReceipt(receiptId: string) {
@@ -535,7 +613,11 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     setDraft(normalizeReceiptDraft(receipt));
     window.localStorage.setItem(STORAGE_KEYS.company, JSON.stringify(receiptCompany));
 
-    flash(`Recibo carregado: ${receipt.receiptNumber || "sem numero"}.`);
+    flash(
+      t("feedback.receiptLoaded", {
+        number: receipt.receiptNumber || t("dashboard.noNumber")
+      })
+    );
   }
 
   function duplicateReceipt(receiptId: string) {
@@ -546,12 +628,16 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
 
     const matchingClient = findMatchingClient(clients, receipt);
     createReceiptDraftFromSource(receipt, matchingClient);
-    flash(`Novo recibo criado a partir de ${receipt.receiptNumber || "um recibo anterior"}.`);
+    flash(
+      t("feedback.receiptDuplicated", {
+        number: receipt.receiptNumber || t("selection.activeReceipt")
+      })
+    );
   }
 
   async function importContacts(files: File[]) {
     if (!files.length) {
-      flash("Selecione pelo menos um ficheiro para importar.", "error");
+      flash(t("feedback.importPickFile"), "error");
       return;
     }
 
@@ -568,12 +654,20 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
     }
 
     const summary = mergeImportedClients(clients, importedContacts);
-    const failureNote = failedFiles ? ` ${failedFiles} ficheiro(s) falharam.` : "";
+    const failureNote = failedFiles
+      ? t("feedback.importFailed", {
+          count: failedFiles
+        })
+      : "";
 
     startTransition(() => {
       setClients(summary.clients);
       flash(
-        `Importacao concluida: ${summary.added} novos, ${summary.updated} atualizados.${failureNote}`,
+        t("feedback.importSummary", {
+          added: summary.added,
+          updated: summary.updated,
+          failed: failureNote
+        }),
         summary.added === 0 && summary.updated === 0 ? "error" : "success"
       );
     });
@@ -584,7 +678,11 @@ export function ReceiptAppProvider({ children }: Readonly<{ children: React.Reac
       value={{
         hasBootstrapped,
         feedback,
+        language,
+        languageOptions: LANGUAGE_OPTIONS,
         dismissFeedback,
+        setLanguage,
+        t,
         companyForm,
         draft,
         previewCompany,

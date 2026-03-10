@@ -12,7 +12,8 @@ export const STORAGE_KEYS = {
   company: "alfombra_company_profile",
   clients: "alfombra_client_registry",
   receipts: "alfombra_receipt_registry",
-  sequence: "alfombra_receipt_sequence"
+  sequence: "alfombra_receipt_sequence",
+  preferences: "alfombra_app_preferences"
 } as const;
 
 export const COMPANY_FIELDS = [
@@ -82,13 +83,13 @@ export const RECEIPT_FIELDS = [
 ] as const;
 
 export const DEFAULT_COMPANY: CompanyProfile = {
-  companyName: "Sua empresa",
-  companyTaxId: "NIF / identificacao",
-  companyPhone: "Telefone",
+  companyName: "Su empresa",
+  companyTaxId: "NIF / identificacion",
+  companyPhone: "Telefono",
   companyEmail: "Email",
-  companyAddress: "Morada da empresa",
-  companyResponsible: "Responsavel",
-  companyStamp: "Carimbo oficial"
+  companyAddress: "Direccion de la empresa",
+  companyResponsible: "Responsable",
+  companyStamp: "Sello oficial"
 };
 
 function cleanString(value: unknown) {
@@ -330,7 +331,7 @@ export function normalizePhone(value: string | undefined) {
 export function truncateLabel(value: string | undefined, maxLength: number) {
   const text = cleanString(value);
   if (text.length <= maxLength) {
-    return text || "sem selecao";
+    return text || "sin seleccion";
   }
 
   return `${text.slice(0, maxLength - 1)}...`;
@@ -458,15 +459,15 @@ export function buildSelectionLabel(options: {
 }) {
   if (options.selectedReceiptId) {
     const receipt = options.receipts.find((item) => item.id === options.selectedReceiptId);
-    return truncateLabel(receipt?.receiptNumber || "recibo ativo", 18);
+    return truncateLabel(receipt?.receiptNumber || "recibo activo", 18);
   }
 
   if (options.selectedClientId) {
     const client = options.clients.find((item) => item.id === options.selectedClientId);
-    return truncateLabel(formatClientName(client || {}) || "cliente ativo", 18);
+    return truncateLabel(formatClientName(client || {}) || "cliente activo", 18);
   }
 
-  return "sem selecao";
+  return "sin seleccion";
 }
 
 type DelimitedEntry = {

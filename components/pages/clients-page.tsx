@@ -22,16 +22,6 @@ import {
 } from "@/lib/receipt-core";
 import type { ClientFields, ReceiptDraft } from "@/lib/types";
 
-const CLIENT_INPUTS = [
-  { name: "clientFirstName", label: "Nome", placeholder: "Nome" },
-  { name: "clientLastName", label: "Sobrenome", placeholder: "Sobrenome" },
-  { name: "clientPhone", label: "Telefone", placeholder: "+34 600 000 000" },
-  { name: "clientEmail", label: "Email", placeholder: "cliente@email.com", type: "email" },
-  { name: "clientAddress", label: "Endereco", placeholder: "Rua, numero, cidade", full: true },
-  { name: "clientCity", label: "Cidade", placeholder: "Cidade" },
-  { name: "clientPostalCode", label: "Codigo postal", placeholder: "0000-000" }
-] as const;
-
 export function ClientsPage() {
   const {
     clients,
@@ -48,14 +38,36 @@ export function ClientsPage() {
     saveClientTemplate,
     applyClientTemplate,
     loadClient,
-    importContacts
+    importContacts,
+    t
   } = useReceiptApp();
 
   const [clientSearch, setClientSearch] = useState("");
   const [importFiles, setImportFiles] = useState<File[]>([]);
-  const [importStatus, setImportStatus] = useState("Aguardando importacao.");
+  const [importStatusKey, setImportStatusKey] = useState<
+    "clients.importWaiting" | "clients.importPick" | "clients.importing" | "clients.importDone"
+  >("clients.importWaiting");
   const [isImporting, setIsImporting] = useState(false);
   const deferredClientSearch = useDeferredValue(clientSearch);
+  const clientInputs = [
+    { name: "clientFirstName", label: t("clients.firstName"), placeholder: t("clients.firstName") },
+    { name: "clientLastName", label: t("clients.lastName"), placeholder: t("clients.lastName") },
+    { name: "clientPhone", label: t("clients.phone"), placeholder: "+34 600 000 000" },
+    {
+      name: "clientEmail",
+      label: t("clients.email"),
+      placeholder: "cliente@email.com",
+      type: "email" as const
+    },
+    {
+      name: "clientAddress",
+      label: t("clients.address"),
+      placeholder: "Calle, numero, ciudad",
+      full: true
+    },
+    { name: "clientCity", label: t("clients.city"), placeholder: t("clients.city") },
+    { name: "clientPostalCode", label: t("clients.postalCode"), placeholder: "08001" }
+  ] as const;
 
   const filteredClients = [...clients]
     .sort((first, second) => +new Date(second.updatedAt || second.createdAt) - +new Date(first.updatedAt || first.createdAt))
@@ -63,38 +75,38 @@ export function ClientsPage() {
 
   const importFilesLabel =
     importFiles.length === 0
-      ? "Nenhum ficheiro selecionado."
+      ? t("clients.noFiles")
       : importFiles.length === 1
         ? importFiles[0].name
-        : `${importFiles.length} ficheiros selecionados`;
+        : t("clients.filesSelected", { count: importFiles.length });
 
   async function handleImport() {
     if (!importFiles.length) {
-      setImportStatus("Selecione pelo menos um ficheiro.");
+      setImportStatusKey("clients.importPick");
       return;
     }
 
     setIsImporting(true);
-    setImportStatus("Importando contatos...");
+    setImportStatusKey("clients.importing");
     await importContacts(importFiles);
     setImportFiles([]);
-    setImportStatus("Importacao concluida.");
+    setImportStatusKey("clients.importDone");
     setIsImporting(false);
   }
 
   return (
     <>
       <PageIntro
-        eyebrow="Clientes"
-        title="Agenda organizada e pronta para recorrencia"
-        description="A pagina de clientes centraliza importacao, cadastro, pesquisa, modelos guardados e repeticao do ultimo servico."
+        eyebrow={t("clients.eyebrow")}
+        title={t("clients.title")}
+        description={t("clients.description")}
       />
 
       <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 grid gap-6">
-          <SectionCard eyebrow="Importacao" title="Contatos do celular" chip="VCF / CSV / TSV">
+          <SectionCard eyebrow={t("clients.import")} title={t("clients.importTitle")} chip={t("clients.importChip")}>
             <p className="mb-4 text-sm leading-7 text-[color:var(--ink-soft)]">
-              Suporta exportacoes de iPhone, Android, Google Contacts e tabelas comuns.
+              {t("clients.importText")}
             </p>
 
             <div className="rounded-[24px] border border-dashed border-[color:var(--line-strong)] bg-[rgba(191,95,52,0.05)] p-4">
@@ -111,14 +123,14 @@ export function ClientsPage() {
                   htmlFor="client-import"
                   className="inline-flex cursor-pointer items-center justify-center rounded-full bg-[color:var(--ink)] px-4 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5"
                 >
-                  Selecionar ficheiros
+                  {t("clients.selectFiles")}
                 </label>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold text-[color:var(--ink)]">{importFilesLabel}</p>
-                  <p className="mt-1 text-sm text-[color:var(--ink-soft)]">{importStatus}</p>
+                  <p className="mt-1 text-sm text-[color:var(--ink-soft)]">{t(importStatusKey)}</p>
                 </div>
                 <ActionButton
-                  label={isImporting ? "Importando..." : "Importar contatos"}
+                  label={isImporting ? t("clients.importingAction") : t("clients.importAction")}
                   variant="secondary"
                   onClick={handleImport}
                   disabled={isImporting}
@@ -128,17 +140,17 @@ export function ClientsPage() {
           </SectionCard>
 
           <SectionCard
-            eyebrow="Edicao"
-            title="Cliente selecionado"
+            eyebrow={t("clients.edit")}
+            title={t("clients.selectedTitle")}
             actions={
               <div className="flex flex-wrap gap-3">
-                <ActionButton label="Guardar cliente" variant="primary" onClick={saveClient} />
-                <ActionButton label="Limpar cliente" variant="ghost" onClick={clearClientFields} />
+                <ActionButton label={t("clients.saveClient")} variant="primary" onClick={saveClient} />
+                <ActionButton label={t("clients.clearClient")} variant="ghost" onClick={clearClientFields} />
               </div>
             }
           >
             <div className="grid gap-4 md:grid-cols-2">
-              {CLIENT_INPUTS.map((field) => (
+              {clientInputs.map((field) => (
                 <EditableField
                   key={field.name}
                   config={field}
@@ -150,25 +162,25 @@ export function ClientsPage() {
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <ActionButton
-                label="Novo recibo deste cliente"
+                label={t("clients.newReceipt")}
                 variant="primary"
                 onClick={() => startNewReceiptForClient()}
                 disabled={!selectedClientId}
               />
               <ActionButton
-                label="Repetir ultimo servico"
+                label={t("clients.repeatService")}
                 variant="secondary"
                 onClick={() => repeatLastServiceForClient()}
                 disabled={!selectedClientId}
               />
               <ActionButton
-                label="Guardar modelo do cliente"
+                label={t("clients.saveTemplate")}
                 variant="ghost"
                 onClick={saveClientTemplate}
                 disabled={!selectedClientId}
               />
               <ActionButton
-                label="Aplicar modelo guardado"
+                label={t("clients.applyTemplate")}
                 variant="ghost"
                 onClick={() => applyClientTemplate()}
                 disabled={!selectedClientId}
@@ -177,11 +189,11 @@ export function ClientsPage() {
           </SectionCard>
 
           <SectionCard
-            eyebrow="Agenda"
-            title="Clientes guardados"
+            eyebrow={t("clients.registry")}
+            title={t("clients.savedTitle")}
             actions={
               <ActionButton
-                label="Remover selecionado"
+                label={t("clients.removeSelected")}
                 variant="danger"
                 onClick={deleteSelectedClient}
                 disabled={!selectedClientId}
@@ -191,8 +203,8 @@ export function ClientsPage() {
             <EditableField
               config={{
                 name: "clientSearch",
-                label: "Pesquisar cliente",
-                placeholder: "Nome, telefone, email ou cidade",
+                label: t("clients.search"),
+                placeholder: t("clients.searchPlaceholder"),
                 type: "search",
                 full: true
               }}
@@ -202,7 +214,7 @@ export function ClientsPage() {
 
             <div className="mt-4 flex flex-col gap-3">
               {filteredClients.length === 0 ? (
-                <EmptyState message="Nenhum cliente guardado para este filtro." />
+                <EmptyState message={t("clients.emptyFilter")} />
               ) : (
                 filteredClients.map((client) => {
                   const receiptCount = countReceiptsForClient(receipts, client);
@@ -212,39 +224,39 @@ export function ClientsPage() {
                     <RegistryCard
                       key={client.id}
                       active={client.id === selectedClientId}
-                      title={formatClientName(client) || "Cliente sem nome"}
+                      title={formatClientName(client) || t("dashboard.clientNoName")}
                       chips={[
                         client.clientCity,
-                        hasAnyField(client.servicePreset) ? "Modelo" : "",
-                        receiptCount ? `${receiptCount} recibos` : ""
+                        hasAnyField(client.servicePreset) ? t("clients.templateChip") : "",
+                        receiptCount ? t("clients.receiptsCount", { count: receiptCount }) : ""
                       ].filter(Boolean)}
                       body={
                         <>
                           <p>
-                            {client.clientPhone || "Sem telefone"}
+                            {client.clientPhone || t("dashboard.noPhone")}
                             {client.clientEmail ? ` / ${client.clientEmail}` : ""}
                           </p>
-                          <p>{client.clientAddress || "Sem endereco"}</p>
+                          <p>{client.clientAddress || t("clients.noAddress")}</p>
                           <p>
-                            Ultimo servico:{" "}
-                            {latestReceipt ? formatDate(latestReceipt.pickupDate) : "Sem historico"}
+                            {t("clients.lastService")}:{" "}
+                            {latestReceipt ? formatDate(latestReceipt.pickupDate) : t("clients.noHistory")}
                           </p>
                         </>
                       }
                       onOpen={() => loadClient(client.id)}
                       actions={[
                         {
-                          label: "Usar",
+                          label: t("clients.use"),
                           variant: "primary",
                           onClick: () => loadClient(client.id)
                         },
                         {
-                          label: "Novo recibo",
+                          label: t("clients.newReceipt"),
                           variant: "ghost",
                           onClick: () => startNewReceiptForClient(client.id)
                         },
                         {
-                          label: "Repetir",
+                          label: t("clients.repeat"),
                           variant: "secondary",
                           onClick: () => repeatLastServiceForClient(client.id)
                         }
@@ -257,22 +269,22 @@ export function ClientsPage() {
           </SectionCard>
         </div>
 
-        <SectionCard eyebrow="Resumo" title="Cliente atual" chip="Ativo">
+        <SectionCard eyebrow={t("clients.summary")} title={t("clients.currentClient")} chip={t("clients.active")}>
           <div className="space-y-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             {selectedClient ? (
               <>
-                <SummaryItem label="Nome" value={formatClientName(selectedClient) || "Cliente sem nome"} />
-                <SummaryItem label="Telefone" value={selectedClient.clientPhone || "Sem telefone"} />
-                <SummaryItem label="Email" value={selectedClient.clientEmail || "Sem email"} />
-                <SummaryItem label="Endereco" value={selectedClient.clientAddress || "Sem endereco"} />
-                <SummaryItem label="Cidade" value={selectedClient.clientCity || "Sem cidade"} />
+                <SummaryItem label={t("clients.firstName")} value={formatClientName(selectedClient) || t("dashboard.clientNoName")} />
+                <SummaryItem label={t("clients.phone")} value={selectedClient.clientPhone || t("dashboard.noPhone")} />
+                <SummaryItem label={t("clients.email")} value={selectedClient.clientEmail || t("dashboard.noEmail")} />
+                <SummaryItem label={t("clients.address")} value={selectedClient.clientAddress || t("clients.noAddress")} />
+                <SummaryItem label={t("clients.city")} value={selectedClient.clientCity || t("dashboard.noCity")} />
                 <SummaryItem
-                  label="Modelo"
-                  value={hasAnyField(selectedClient.servicePreset) ? "Guardado" : "Sem modelo"}
+                  label={t("clients.templateChip")}
+                  value={hasAnyField(selectedClient.servicePreset) ? t("clients.modelSaved") : t("clients.noModel")}
                 />
               </>
             ) : (
-              <EmptyState message="Nenhum cliente selecionado." />
+              <EmptyState message={t("clients.noSelected")} />
             )}
           </div>
         </SectionCard>

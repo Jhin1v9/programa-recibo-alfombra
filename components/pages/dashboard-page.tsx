@@ -21,7 +21,8 @@ export function DashboardPage() {
     selectedClient,
     selectedReceipt,
     prepareFreshReceipt,
-    assignNextReceiptNumber
+    assignNextReceiptNumber,
+    t
   } = useReceiptApp();
 
   const latestClients = [...clients]
@@ -34,136 +35,147 @@ export function DashboardPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Painel principal"
-        title="Centro de contexto e proximas acoes"
-        description="A home fica leve: mostra onde voce esta, o que falta fazer e os atalhos principais. A operacao detalhada fica nas paginas especificas."
+        eyebrow={t("dashboard.eyebrow")}
+        title={t("dashboard.title")}
+        description={t("dashboard.description")}
         actions={
           <>
-            <LinkButton href="/clientes" label="Gerir clientes" variant="secondary" />
-            <LinkButton href="/recibos" label="Abrir recibos" variant="primary" />
+            <LinkButton href="/clientes" label={t("dashboard.manageClients")} variant="secondary" />
+            <LinkButton href="/recibos" label={t("dashboard.openReceipts")} variant="primary" />
           </>
         }
       />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="clientes guardados" value={String(clients.length)} />
-        <StatCard label="recibos guardados" value={String(receipts.length)} />
-        <StatCard label="estado atual" value={selectionLabel} />
-        <StatCard label="proximo numero" value={nextReceiptSuggestion} />
+        <StatCard label={t("dashboard.clientsSaved")} value={String(clients.length)} />
+        <StatCard label={t("dashboard.receiptsSaved")} value={String(receipts.length)} />
+        <StatCard label={t("dashboard.currentState")} value={selectionLabel} />
+        <StatCard label={t("dashboard.nextNumber")} value={nextReceiptSuggestion} />
       </section>
 
       <div className="grid gap-6">
         <SectionCard
-          eyebrow="Acesso rapido"
-          title="Fluxos principais"
+          eyebrow={t("dashboard.quickAccess")}
+          title={t("dashboard.mainFlows")}
           actions={
             <div className="flex flex-wrap gap-3">
-              <ActionButton label="Novo recibo em branco" variant="primary" onClick={() => prepareFreshReceipt()} />
-              <ActionButton label="Sugerir novo numero" variant="ghost" onClick={assignNextReceiptNumber} />
+              <ActionButton
+                label={t("dashboard.newBlankReceipt")}
+                variant="primary"
+                onClick={() => prepareFreshReceipt()}
+              />
+              <ActionButton
+                label={t("dashboard.suggestNumber")}
+                variant="ghost"
+                onClick={assignNextReceiptNumber}
+              />
             </div>
           }
         >
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <ShortcutCard
-              title="Empresa"
-              text="Atualiza identidade, contacto e dados usados em novos recibos."
+              title={t("dashboard.companyTitle")}
+              text={t("dashboard.companyText")}
               href="/empresa"
-              label="Abrir empresa"
+              label={t("dashboard.companyAction")}
             />
             <ShortcutCard
-              title="Clientes"
-              text="Importa agenda, edita clientes e prepara repeticoes por historico."
+              title={t("dashboard.clientsTitle")}
+              text={t("dashboard.clientsText")}
               href="/clientes"
-              label="Abrir clientes"
+              label={t("dashboard.clientsAction")}
             />
             <ShortcutCard
-              title="Recibos"
-              text="Gere o servico, o numero e o PDF sem sair do fluxo operacional."
+              title={t("dashboard.receiptsTitle")}
+              text={t("dashboard.receiptsText")}
               href="/recibos"
-              label="Abrir recibos"
+              label={t("dashboard.receiptsAction")}
             />
           </div>
         </SectionCard>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-          <SectionCard eyebrow="Contexto" title="Selecao atual">
+          <SectionCard eyebrow={t("dashboard.context")} title={t("dashboard.currentSelection")}>
             <div className="grid gap-4 lg:grid-cols-2">
               <SummaryCard
-                title="Cliente ativo"
+                title={t("dashboard.activeClient")}
                 lines={
                   selectedClient
                     ? [
-                        formatClientName(selectedClient) || "Cliente sem nome",
-                        selectedClient.clientPhone || "Sem telefone",
-                        selectedClient.clientEmail || "Sem email"
+                        formatClientName(selectedClient) || t("dashboard.clientNoName"),
+                        selectedClient.clientPhone || t("dashboard.noPhone"),
+                        selectedClient.clientEmail || t("dashboard.noEmail")
                       ]
-                    : ["Nenhum cliente selecionado", "Escolha um cliente na pagina de clientes."]
+                    : [t("dashboard.noClientSelected"), t("dashboard.pickClient")]
                 }
               />
               <SummaryCard
-                title="Recibo ativo"
+                title={t("dashboard.activeReceipt")}
                 lines={
                   selectedReceipt
                     ? [
-                        selectedReceipt.receiptNumber || "Sem numero",
+                        selectedReceipt.receiptNumber || t("dashboard.noNumber"),
                         formatDate(selectedReceipt.pickupDate) || "--/--/----",
-                        selectedReceipt.rugType || "Tipo nao definido"
+                        selectedReceipt.rugType || t("dashboard.noType")
                       ]
-                    : ["Nenhum recibo selecionado", "Abra um recibo ou crie um novo na pagina de recibos."]
+                    : [t("dashboard.noReceiptSelected"), t("dashboard.pickReceipt")]
                 }
               />
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow="Utilidade" title="O que fazer agora">
+          <SectionCard eyebrow={t("dashboard.utility")} title={t("dashboard.whatNext")}>
             <div className="grid gap-3">
               <UtilityRow
-                title="Se ainda nao configurou a marca"
-                text="Passe em Empresa para guardar nome, contacto e responsavel usados em todos os recibos."
+                title={t("dashboard.setupBrand")}
+                text={t("dashboard.setupBrandText")}
               />
               <UtilityRow
-                title="Se o cliente e novo"
-                text="Importe a agenda ou cadastre manualmente em Clientes antes de abrir um recibo."
+                title={t("dashboard.newClient")}
+                text={t("dashboard.newClientText")}
               />
               <UtilityRow
-                title="Se o servico e recorrente"
-                text="Use modelos e repeticao do ultimo servico para evitar preencher tudo novamente."
+                title={t("dashboard.recurringService")}
+                text={t("dashboard.recurringServiceText")}
               />
             </div>
           </SectionCard>
         </div>
 
         <div className="grid gap-6 xl:grid-cols-2">
-          <SectionCard eyebrow="Atividade recente" title="Ultimos clientes">
+          <SectionCard eyebrow={t("dashboard.recent")} title={t("dashboard.latestClients")}>
             <div className="grid gap-3">
               {latestClients.length === 0 ? (
-                <SummaryCard title="Agenda vazia" lines={["Ainda nao ha clientes guardados."]} />
+                <SummaryCard
+                  title={t("dashboard.emptyClientsTitle")}
+                  lines={[t("dashboard.emptyClientsText")]}
+                />
               ) : (
                 latestClients.map((client) => (
                   <SummaryCard
                     key={client.id}
-                    title={formatClientName(client) || "Cliente sem nome"}
-                    lines={[
-                      client.clientPhone || "Sem telefone",
-                      client.clientCity || "Sem cidade"
-                    ]}
+                    title={formatClientName(client) || t("dashboard.clientNoName")}
+                    lines={[client.clientPhone || t("dashboard.noPhone"), client.clientCity || t("dashboard.noCity")]}
                   />
                 ))
               )}
             </div>
           </SectionCard>
 
-          <SectionCard eyebrow="Atividade recente" title="Ultimos recibos">
+          <SectionCard eyebrow={t("dashboard.recent")} title={t("dashboard.latestReceipts")}>
             <div className="grid gap-3">
               {latestReceipts.length === 0 ? (
-                <SummaryCard title="Historico vazio" lines={["Ainda nao ha recibos guardados."]} />
+                <SummaryCard
+                  title={t("dashboard.emptyReceiptsTitle")}
+                  lines={[t("dashboard.emptyReceiptsText")]}
+                />
               ) : (
                 latestReceipts.map((receipt) => (
                   <SummaryCard
                     key={receipt.id}
-                    title={receipt.receiptNumber || "Sem numero"}
+                    title={receipt.receiptNumber || t("dashboard.noNumber")}
                     lines={[
-                      formatClientName(receipt) || "Cliente nao definido",
+                      formatClientName(receipt) || t("dashboard.clientUndefined"),
                       formatDate(receipt.pickupDate) || "--/--/----"
                     ]}
                   />
