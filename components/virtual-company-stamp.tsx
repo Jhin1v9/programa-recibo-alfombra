@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { normalizeCompany } from "@/lib/receipt-core";
 import type { CompanyProfile } from "@/lib/types";
 
@@ -23,8 +25,9 @@ export function VirtualCompanyStamp({
   const dashedRing = "rgba(75, 148, 216, 0.34)";
   const textMain = "#0b3768";
   const textSoft = "#24588f";
-  const accent = "#1d7ad9";
-  const accentSoft = "#e9f5ff";
+  const logoSrc = data.companyLogoDataUrl || "/superclim-logo.png";
+  const logoWidth = compact ? 58 : 72;
+  const logoHeight = compact ? 46 : 56;
 
   return (
     <div
@@ -54,31 +57,23 @@ export function VirtualCompanyStamp({
         }}
       />
       <div
-        className="absolute left-1/2 top-[14px] flex -translate-x-1/2 items-center justify-center rounded-full"
+        className="absolute left-1/2 top-[10px] -translate-x-1/2"
         style={{
-          width: compact ? "26px" : "30px",
-          height: compact ? "26px" : "30px",
-          background: accentSoft,
-          border: `1px solid ${innerRing}`
+          width: `${logoWidth}px`,
+          height: `${logoHeight}px`
         }}
-        aria-hidden="true"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className={compact ? "h-[14px] w-[14px]" : "h-[16px] w-[16px]"}
-          fill="none"
-          stroke={accent}
-          strokeWidth="1.9"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 3c2.4 3.5 4.8 6 4.8 9A4.8 4.8 0 1 1 7.2 12c0-3 2.4-5.5 4.8-9Z" />
-          <path d="M16.8 5.6h2.2" />
-          <path d="M17.9 4.5v2.2" />
-        </svg>
+        <Image
+          src={logoSrc}
+          alt={data.companyName}
+          width={logoWidth}
+          height={logoHeight}
+          unoptimized
+          className="h-full w-full object-contain"
+        />
       </div>
       <div className="relative z-10 flex h-full flex-col items-center justify-center">
-        <div className="pt-4">
+        <div className={compact ? "pt-10" : "pt-12"}>
           {companyLines.map((line) => (
             <p
               key={line}
