@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useReceiptApp } from "@/components/receipt-app-provider";
 import {
@@ -25,6 +26,7 @@ import type { ClientFields, ReceiptDraft } from "@/lib/types";
 const CLIENTS_PER_PAGE = 8;
 
 export function ClientsPage() {
+  const router = useRouter();
   const {
     clients,
     receipts,
@@ -100,6 +102,11 @@ export function ClientsPage() {
     setImportFiles([]);
     setImportStatusKey("clients.importDone");
     setIsImporting(false);
+  }
+
+  function handleUseClient(clientId: string) {
+    startNewReceiptForClient(clientId);
+    router.push("/recibos");
   }
 
   return (
@@ -331,6 +338,7 @@ export function ClientsPage() {
                                 : t("clients.noHistory")
                             }
                             onOpen={() => loadClient(client.id)}
+                            onUse={() => handleUseClient(client.id)}
                             onNewReceipt={() => startNewReceiptForClient(client.id)}
                             onRepeat={() => repeatLastServiceForClient(client.id)}
                             labels={{
@@ -394,6 +402,7 @@ function ClientRegistryRow({
   address,
   latestService,
   onOpen,
+  onUse,
   onNewReceipt,
   onRepeat,
   labels
@@ -406,6 +415,7 @@ function ClientRegistryRow({
   address: string;
   latestService: string;
   onOpen: () => void;
+  onUse: () => void;
   onNewReceipt: () => void;
   onRepeat: () => void;
   labels: {
@@ -455,7 +465,7 @@ function ClientRegistryRow({
             className={buttonClasses("primary")}
             onClick={(event) => {
               event.stopPropagation();
-              onOpen();
+              onUse();
             }}
           >
             {labels.use}
