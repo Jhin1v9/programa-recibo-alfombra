@@ -50,7 +50,17 @@ export const SERVICE_FIELDS = ["estimatedValue", "serviceNotes"] as const;
 export const RECEIPT_META_FIELDS = [
   "receiptNumber",
   "pickupDate",
-  "deliveryDate"
+  "deliveryDate",
+  "handoverDate"
+] as const;
+
+export const DELIVERY_FIELDS = [
+  "handoverDate",
+  "deliveryReceivedBy",
+  "deliveryCondition",
+  "deliveryNotes",
+  "deliveryClientSignatureDataUrl",
+  "deliveryCompanySignatureDataUrl"
 ] as const;
 
 export const CLIENT_PRESET_FIELDS = [
@@ -82,7 +92,13 @@ export const RECEIPT_FIELDS = [
   "pickupDate",
   "deliveryDate",
   "clientSignatureDataUrl",
-  "companySignatureDataUrl"
+  "companySignatureDataUrl",
+  "handoverDate",
+  "deliveryReceivedBy",
+  "deliveryCondition",
+  "deliveryNotes",
+  "deliveryClientSignatureDataUrl",
+  "deliveryCompanySignatureDataUrl"
 ] as const;
 
 export const DEFAULT_COMPANY: CompanyProfile = {

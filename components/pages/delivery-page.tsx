@@ -19,9 +19,9 @@ import {
   SectionCard
 } from "@/components/workspace-ui";
 import { formatClientName, formatDate } from "@/lib/receipt-core";
-import type { ReceiptDraft, ServicePreset } from "@/lib/types";
+import type { ReceiptDraft } from "@/lib/types";
 
-export function ReceiptsPage() {
+export function DeliveryPage() {
   const {
     companyForm,
     draft,
@@ -41,7 +41,19 @@ export function ReceiptsPage() {
   } = useReceiptApp();
   const router = useRouter();
   const [signatureTarget, setSignatureTarget] = useState<"client" | "company" | null>(null);
-  const rugInputs = [
+  const sortedReceipts = [...receipts].sort(
+    (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
+  );
+  const clientSignerName = formatClientName(draft) || draft.deliveryReceivedBy || undefined;
+  const companySignerName = companyForm.companyResponsible || undefined;
+  const referenceInputs = [
+    {
+      name: "receiptNumber",
+      label: t("receipts.receiptNumber"),
+      placeholder: t("receipts.receiptNumberPlaceholder")
+    },
+    { name: "pickupDate", label: t("receipts.pickupDate"), type: "date" as const },
+    { name: "deliveryDate", label: t("receipts.deliveryDate"), type: "date" as const },
     { name: "rugType", label: t("receipts.rugType"), placeholder: t("receipts.rugTypePlaceholder") },
     { name: "rugSize", label: t("receipts.rugSize"), placeholder: t("receipts.rugSizePlaceholder") },
     {
@@ -50,65 +62,53 @@ export function ReceiptsPage() {
       placeholder: t("receipts.rugColorPlaceholder")
     },
     {
-      name: "rugCondition",
-      label: t("receipts.rugCondition"),
-      placeholder: t("receipts.rugConditionPlaceholder")
-    },
-    {
-      name: "rugNotes",
-      label: t("receipts.rugNotes"),
-      placeholder: t("receipts.rugNotesPlaceholder"),
-      multiline: true,
-      rows: 4,
-      full: true
-    }
-  ] as const;
-  const serviceInputs = [
-    {
-      name: "receiptNumber",
-      label: t("receipts.receiptNumber"),
-      placeholder: t("receipts.receiptNumberPlaceholder")
-    },
-    { name: "pickupDate", label: t("receipts.pickupDate"), type: "date" as const },
-    { name: "deliveryDate", label: t("receipts.deliveryDate"), type: "date" as const },
-    {
       name: "estimatedValue",
       label: t("receipts.estimatedValue"),
       placeholder: t("receipts.estimatedValuePlaceholder")
+    }
+  ] as const;
+  const deliveryInputs = [
+    {
+      name: "handoverDate",
+      label: t("delivery.deliveryDateActual"),
+      type: "date" as const
     },
     {
-      name: "serviceNotes",
-      label: t("receipts.serviceNotes"),
-      placeholder: t("receipts.serviceNotesPlaceholder"),
+      name: "deliveryReceivedBy",
+      label: t("delivery.deliveryReceivedBy"),
+      placeholder: t("delivery.deliveryReceivedByPlaceholder")
+    },
+    {
+      name: "deliveryCondition",
+      label: t("delivery.deliveryCondition"),
+      placeholder: t("delivery.deliveryConditionPlaceholder")
+    },
+    {
+      name: "deliveryNotes",
+      label: t("delivery.deliveryNotes"),
+      placeholder: t("delivery.deliveryNotesPlaceholder"),
       multiline: true,
       rows: 5,
       full: true
     }
   ] as const;
 
-  const sortedReceipts = [...receipts].sort(
-    (first, second) => +new Date(second.updatedAt) - +new Date(first.updatedAt)
-  );
-  const clientSignerName = formatClientName(draft) || undefined;
-  const companySignerName = companyForm.companyResponsible || undefined;
-
   return (
     <>
       <PageIntro
-        eyebrow={t("receipts.eyebrow")}
-        title={t("receipts.title")}
-        description={t("receipts.description")}
+        eyebrow={t("delivery.eyebrow")}
+        title={t("delivery.title")}
+        description={t("delivery.description")}
         actions={
           <div className="flex flex-wrap gap-3">
-            <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
-            <LinkButton href={"/recibos/pdf" as Route} label={t("receipts.viewPdf")} variant="secondary" />
-            <LinkButton href={"/entrega" as Route} label={t("receipts.openDelivery")} variant="ghost" />
+            <ActionButton label={t("delivery.save")} variant="primary" onClick={saveReceipt} />
+            <LinkButton href={"/entrega/pdf" as Route} label={t("delivery.viewPdf")} variant="secondary" />
           </div>
         }
       />
 
       <div className="workspace-panel min-w-0 grid gap-6 pb-28 md:pb-0">
-        <SectionCard eyebrow={t("receipts.context")} title={t("receipts.linkedClient")} chip={t("receipts.current")}>
+        <SectionCard eyebrow={t("delivery.context")} title={t("delivery.linkedClient")} chip={t("receipts.current")}>
           {selectedClient ? (
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               <SummaryItem label={t("clients.firstName")} value={formatClientName(selectedClient) || t("dashboard.clientNoName")} />
@@ -117,27 +117,14 @@ export function ReceiptsPage() {
               <SummaryItem label={t("clients.address")} value={selectedClient.clientAddress || t("clients.noAddress")} />
             </div>
           ) : (
-            <EmptyState message={t("receipts.noClientMessage")} />
+            <EmptyState message={t("delivery.noClientMessage")} />
           )}
         </SectionCard>
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <SectionCard eyebrow={t("receipts.rugDetails")} title={t("receipts.rugTitle")} chip={t("receipts.serviceChip")}>
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <SectionCard eyebrow={t("delivery.reference")} title={t("delivery.referenceTitle")}>
             <div className="grid gap-4 md:grid-cols-2">
-              {rugInputs.map((field) => (
-                <EditableField
-                  key={field.name}
-                  config={field}
-                  value={draft[field.name as keyof ServicePreset]}
-                  onChange={(value) => updateDraftField(field.name as keyof ReceiptDraft, value)}
-                />
-              ))}
-            </div>
-          </SectionCard>
-
-          <SectionCard eyebrow={t("receipts.internal")} title={t("receipts.serviceReceipt")}>
-            <div className="grid gap-4 md:grid-cols-2">
-              {serviceInputs.map((field) => (
+              {referenceInputs.map((field) => (
                 <EditableField
                   key={field.name}
                   config={field}
@@ -148,24 +135,17 @@ export function ReceiptsPage() {
             </div>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <ActionButton label={t("receipts.save")} variant="primary" onClick={saveReceipt} />
+              <ActionButton label={t("delivery.save")} variant="primary" onClick={saveReceipt} />
               <ActionButton label={t("receipts.newNumber")} variant="secondary" onClick={assignNextReceiptNumber} />
               <ActionButton
-                label={t("receipts.viewPdf")}
+                label={t("delivery.viewPickup")}
                 variant="ghost"
-                onClick={() => router.push("/recibos/pdf" as Route)}
+                onClick={() => router.push("/recibos" as Route)}
               />
               <ActionButton
-                label={t("receipts.openDelivery")}
+                label={t("receipts.newBlank")}
                 variant="ghost"
-                onClick={() => router.push("/entrega" as Route)}
-              />
-              <ActionButton label={t("receipts.newBlank")} variant="ghost" onClick={() => prepareFreshReceipt()} />
-              <ActionButton
-                label={t("clients.removeSelected")}
-                variant="danger"
-                onClick={deleteSelectedReceipt}
-                disabled={!selectedReceiptId}
+                onClick={() => prepareFreshReceipt()}
               />
             </div>
 
@@ -174,52 +154,84 @@ export function ReceiptsPage() {
               <strong className="text-[color:var(--ink)]">{nextReceiptSuggestion}</strong>
             </div>
           </SectionCard>
+
+          <SectionCard
+            eyebrow={t("delivery.deliveryEyebrow")}
+            title={t("delivery.deliveryTitle")}
+            actions={<ActionButton label={t("delivery.viewPdf")} variant="secondary" onClick={() => router.push("/entrega/pdf" as Route)} />}
+          >
+            <div className="grid gap-4 md:grid-cols-2">
+              {deliveryInputs.map((field) => (
+                <EditableField
+                  key={field.name}
+                  config={field}
+                  value={draft[field.name as keyof ReceiptDraft]}
+                  onChange={(value) => updateDraftField(field.name as keyof ReceiptDraft, value)}
+                />
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-[24px] border border-[color:var(--line)] bg-[rgba(15,23,42,0.04)] p-4">
+              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[color:var(--brand)]">
+                {t("delivery.termsEyebrow")}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{t("delivery.termsText")}</p>
+            </div>
+          </SectionCard>
         </div>
 
-        <SectionCard eyebrow={t("receipts.validationEyebrow")} title={t("receipts.validationTitle")}>
+        <SectionCard eyebrow={t("delivery.validationEyebrow")} title={t("delivery.validationTitle")}>
           <p className="max-w-[72ch] text-sm leading-7 text-[color:var(--ink-soft)]">
-            {t("receipts.validationText")}
+            {t("delivery.validationText")}
           </p>
 
           <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
             <SignatureStatusCard
-              title={t("receipts.clientSignature")}
-              status={draft.clientSignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
-              imageDataUrl={draft.clientSignatureDataUrl}
+              title={t("delivery.clientSignature")}
+              status={
+                draft.deliveryClientSignatureDataUrl
+                  ? t("receipts.signaturePresent")
+                  : t("receipts.signatureMissing")
+              }
+              imageDataUrl={draft.deliveryClientSignatureDataUrl}
               fallbackText={clientSignerName}
               primaryAction={{
-                label: t("receipts.captureClientSignature"),
+                label: t("delivery.captureClientSignature"),
                 onClick: () => setSignatureTarget("client")
               }}
               secondaryAction={{
-                label: t("receipts.clearClientSignature"),
-                onClick: () => updateDraftField("clientSignatureDataUrl", ""),
-                disabled: !draft.clientSignatureDataUrl
+                label: t("delivery.clearClientSignature"),
+                onClick: () => updateDraftField("deliveryClientSignatureDataUrl", ""),
+                disabled: !draft.deliveryClientSignatureDataUrl
               }}
             />
 
             <SignatureStatusCard
-              title={t("receipts.companySignature")}
-              status={draft.companySignatureDataUrl ? t("receipts.signaturePresent") : t("receipts.signatureMissing")}
-              imageDataUrl={draft.companySignatureDataUrl}
+              title={t("delivery.companySignature")}
+              status={
+                draft.deliveryCompanySignatureDataUrl
+                  ? t("receipts.signaturePresent")
+                  : t("receipts.signatureMissing")
+              }
+              imageDataUrl={draft.deliveryCompanySignatureDataUrl}
               fallbackText={companySignerName}
               primaryAction={{
-                label: t("receipts.captureCompanySignature"),
+                label: t("delivery.captureCompanySignature"),
                 onClick: () => setSignatureTarget("company")
               }}
               secondaryAction={{
-                label: t("receipts.useSavedCompanySignature"),
+                label: t("delivery.useSavedCompanySignature"),
                 onClick: () =>
                   updateDraftField(
-                    "companySignatureDataUrl",
-                    companyForm.companySignatureDataUrl || draft.companySignatureDataUrl
+                    "deliveryCompanySignatureDataUrl",
+                    companyForm.companySignatureDataUrl || draft.deliveryCompanySignatureDataUrl
                   ),
                 disabled: !companyForm.companySignatureDataUrl
               }}
               tertiaryAction={{
-                label: t("receipts.clearCompanySignature"),
-                onClick: () => updateDraftField("companySignatureDataUrl", ""),
-                disabled: !draft.companySignatureDataUrl
+                label: t("delivery.clearCompanySignature"),
+                onClick: () => updateDraftField("deliveryCompanySignatureDataUrl", ""),
+                disabled: !draft.deliveryCompanySignatureDataUrl
               }}
             />
 
@@ -234,7 +246,18 @@ export function ReceiptsPage() {
           </div>
         </SectionCard>
 
-        <SectionCard eyebrow={t("receipts.history")} title={t("receipts.savedTitle")}>
+        <SectionCard
+          eyebrow={t("delivery.history")}
+          title={t("delivery.historyTitle")}
+          actions={
+            <ActionButton
+              label={t("delivery.deleteSelected")}
+              variant="danger"
+              onClick={deleteSelectedReceipt}
+              disabled={!selectedReceiptId}
+            />
+          }
+        >
           <div className="flex flex-col gap-3">
             {sortedReceipts.length === 0 ? (
               <EmptyState message={t("receipts.empty")} />
@@ -244,21 +267,24 @@ export function ReceiptsPage() {
                   key={receipt.id}
                   active={receipt.id === selectedReceiptId}
                   title={receipt.receiptNumber || t("dashboard.noNumber")}
-                  chips={[receipt.rugType, receipt.estimatedValue].filter(Boolean)}
+                  chips={[
+                    receipt.rugType,
+                    receipt.handoverDate ? t("delivery.deliveredChip") : "",
+                    receipt.deliveryCondition
+                  ].filter(Boolean)}
                   body={
                     <>
                       <p>{formatClientName(receipt) || t("dashboard.clientUndefined")}</p>
-                      <p>{t("receipts.pickup")}: {formatDate(receipt.pickupDate) || "--/--/----"}</p>
-                      <p>{receipt.rugSize || t("receipts.noMeasure")}</p>
+                      <p>{t("delivery.deliveryDateActual")}: {formatDate(receipt.handoverDate) || "--/--/----"}</p>
+                      <p>{receipt.deliveryReceivedBy || t("delivery.deliveryPending")}</p>
                     </>
                   }
                   onOpen={() => loadReceipt(receipt.id)}
                   actions={[
                     {
-                      label: t("receipts.viewPdf"),
+                      label: t("delivery.viewPdf"),
                       variant: "secondary",
-                      onClick: () =>
-                        router.push(`/recibos/pdf?receiptId=${receipt.id}` as Route)
+                      onClick: () => router.push(`/entrega/pdf?receiptId=${receipt.id}` as Route)
                     },
                     {
                       label: t("receipts.duplicate"),
@@ -281,14 +307,14 @@ export function ReceiptsPage() {
       <div className="pointer-events-none fixed inset-x-4 bottom-4 z-30 md:hidden">
         <div className="pointer-events-auto rounded-[26px] border border-black/6 bg-white/96 p-3 shadow-[0_24px_48px_rgba(15,23,42,0.16)] backdrop-blur">
           <div className="grid grid-cols-3 gap-2">
-            <ActionButton label={t("receipts.mobileBarSave")} variant="primary" onClick={saveReceipt} />
+            <ActionButton label={t("delivery.save")} variant="primary" onClick={saveReceipt} />
             <ActionButton
-              label={t("receipts.mobileBarPdf")}
+              label={t("delivery.mobileBarPdf")}
               variant="secondary"
-              onClick={() => router.push("/recibos/pdf" as Route)}
+              onClick={() => router.push("/entrega/pdf" as Route)}
             />
             <ActionButton
-              label={t("receipts.mobileBarSign")}
+              label={t("delivery.mobileBarSign")}
               variant="ghost"
               onClick={() => setSignatureTarget("client")}
             />
@@ -300,24 +326,24 @@ export function ReceiptsPage() {
         open={signatureTarget !== null}
         title={
           signatureTarget === "company"
-            ? t("signature.dialogTitleCompany")
-            : t("signature.dialogTitleClient")
+            ? t("delivery.dialogTitleCompany")
+            : t("delivery.dialogTitleClient")
         }
-        description={t("signature.dialogDescription")}
+        description={t("delivery.dialogDescription")}
         signerName={signatureTarget === "company" ? companySignerName : clientSignerName}
         initialValue={
           signatureTarget === "company"
-            ? draft.companySignatureDataUrl || companyForm.companySignatureDataUrl
-            : draft.clientSignatureDataUrl
+            ? draft.deliveryCompanySignatureDataUrl || companyForm.companySignatureDataUrl
+            : draft.deliveryClientSignatureDataUrl
         }
         onClose={() => setSignatureTarget(null)}
         onSave={(dataUrl) => {
           if (signatureTarget === "company") {
-            updateDraftField("companySignatureDataUrl", dataUrl);
+            updateDraftField("deliveryCompanySignatureDataUrl", dataUrl);
             return;
           }
 
-          updateDraftField("clientSignatureDataUrl", dataUrl);
+          updateDraftField("deliveryClientSignatureDataUrl", dataUrl);
         }}
         labels={{
           clear: t("signature.clear"),

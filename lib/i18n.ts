@@ -17,6 +17,8 @@ Object.assign(translations.es, {
   "nav.clientsNote": "Agenda e importacion",
   "nav.receipts": "Recibos",
   "nav.receiptsNote": "Servicio y vista previa",
+  "nav.delivery": "Entrega",
+  "nav.deliveryNote": "Entrega y conformidad",
   "nav.settings": "Configuracion",
   "nav.settingsNote": "Idioma y preferencias",
   "sidebar.workspace": "App",
@@ -33,6 +35,7 @@ Object.assign(translations.es, {
     "Resumen del estado, accesos directos y actividad reciente del sistema.",
   "dashboard.manageClients": "Gestionar clientes",
   "dashboard.openReceipts": "Abrir recibos",
+  "dashboard.openDelivery": "Abrir entrega",
   "dashboard.clientsSaved": "clientes guardados",
   "dashboard.receiptsSaved": "recibos guardados",
   "dashboard.currentState": "estado actual",
@@ -53,6 +56,10 @@ Object.assign(translations.es, {
   "dashboard.receiptsText":
     "Gestiona el servicio, el numero y el PDF sin salir del flujo operativo.",
   "dashboard.receiptsAction": "Abrir recibos",
+  "dashboard.deliveryTitle": "Entrega",
+  "dashboard.deliveryText":
+    "Cierra el servicio con firma de recepcion y un comprobante de entrega para proteger a la empresa.",
+  "dashboard.deliveryAction": "Abrir entrega",
   "dashboard.context": "Contexto",
   "dashboard.currentSelection": "Seleccion actual",
   "dashboard.activeClient": "Cliente activo",
@@ -189,6 +196,7 @@ Object.assign(translations.es, {
   "receipts.print": "Imprimir / PDF",
   "receipts.downloadPdf": "Descargar PDF",
   "receipts.openPdf": "Abrir PDF",
+  "receipts.openDelivery": "Abrir entrega",
   "receipts.generatingPdf": "Generando PDF...",
   "receipts.pdfError": "No se pudo generar el PDF. Intentalo de nuevo.",
   "receipts.previewPageEyebrow": "Vista PDF",
@@ -253,6 +261,79 @@ Object.assign(translations.es, {
   "receipts.mobileBarSave": "Guardar",
   "receipts.mobileBarPdf": "PDF",
   "receipts.mobileBarSign": "Firmar",
+});
+
+Object.assign(translations.es, {
+  "delivery.eyebrow": "Entrega",
+  "delivery.title": "Entrega y conformidad",
+  "delivery.description":
+    "Genera la constancia final de entrega, recoge firmas y deja constancia de que el cliente recibe la alfombra en el estado indicado.",
+  "delivery.save": "Guardar entrega",
+  "delivery.viewPdf": "Ver PDF entrega",
+  "delivery.viewPickup": "Abrir recogida",
+  "delivery.downloadPdf": "Descargar PDF",
+  "delivery.openPdf": "Abrir PDF",
+  "delivery.generatingPdf": "Generando PDF...",
+  "delivery.pdfError": "No se pudo generar el PDF de entrega. Intentalo de nuevo.",
+  "delivery.previewPageEyebrow": "Vista PDF entrega",
+  "delivery.previewPageTitle": "Constancia de entrega lista para exportar",
+  "delivery.previewPageDescription":
+    "Aqui revisas la hoja A4 final antes de descargar el comprobante de entrega o abrirlo en una nueva pestana.",
+  "delivery.backToEditor": "Volver a entrega",
+  "delivery.context": "Contexto",
+  "delivery.linkedClient": "Cliente vinculado a la entrega",
+  "delivery.noClientMessage":
+    "Ningun cliente seleccionado. Carga un recibo guardado o vuelve a clientes para iniciar el flujo.",
+  "delivery.reference": "Referencia",
+  "delivery.referenceTitle": "Datos base del servicio",
+  "delivery.deliveryEyebrow": "Entrega",
+  "delivery.deliveryTitle": "Recepcion del articulo",
+  "delivery.deliveryDateActual": "Fecha real de entrega",
+  "delivery.deliveryReceivedBy": "Recibido por",
+  "delivery.deliveryReceivedByPlaceholder": "Nombre completo de quien recibe",
+  "delivery.deliveryCondition": "Estado de entrega",
+  "delivery.deliveryConditionPlaceholder": "Estado en el momento de la devolucion",
+  "delivery.deliveryNotes": "Observaciones de entrega",
+  "delivery.deliveryNotesPlaceholder": "Entrega realizada, detalles visibles, conformidad, reservas...",
+  "delivery.termsEyebrow": "Aceptacion",
+  "delivery.termsText":
+    "La persona que firma este documento declara que recibe la alfombra, revisa su estado visible en el momento de la entrega y acepta que la devolucion se realiza conforme a lo descrito en este comprobante.",
+  "delivery.validationEyebrow": "Validacion",
+  "delivery.validationTitle": "Firmas de recepcion",
+  "delivery.validationText":
+    "Guarda la firma del cliente y la firma de la empresa para dejar trazabilidad completa de la entrega, incluso cuando el cierre del servicio se hace desde el movil.",
+  "delivery.clientSignature": "Firma de quien recibe",
+  "delivery.companySignature": "Firma de la empresa",
+  "delivery.captureClientSignature": "Firmar recepcion",
+  "delivery.captureCompanySignature": "Firmar empresa",
+  "delivery.useSavedCompanySignature": "Usar firma guardada",
+  "delivery.clearClientSignature": "Borrar firma recepcion",
+  "delivery.clearCompanySignature": "Borrar firma empresa",
+  "delivery.history": "Historial",
+  "delivery.historyTitle": "Entregas y recibos guardados",
+  "delivery.deleteSelected": "Eliminar entrega seleccionada",
+  "delivery.deliveredChip": "Entregado",
+  "delivery.deliveryPending": "Entrega pendiente",
+  "delivery.mobileBarPdf": "PDF",
+  "delivery.mobileBarSign": "Firmar",
+  "delivery.dialogTitleClient": "Capturar firma de recepcion",
+  "delivery.dialogTitleCompany": "Capturar firma de entrega",
+  "delivery.dialogDescription":
+    "Dibuja la firma final de entrega. Quedara incrustada en la constancia y en el PDF.",
+  "delivery.printNote": "Hoja A4 preparada para descargar o abrir el comprobante de entrega final.",
+  "deliveryPreview.documentTitle": "CONSTANCIA DE ENTREGA DE ALFOMBRA",
+  "deliveryPreview.documentSubtitle":
+    "Comprobante final de devolucion, recepcion y conformidad del articulo entregado",
+  "deliveryPreview.metaDate": "Fecha de entrega",
+  "deliveryPreview.confirmation":
+    "Por el presente documento, {company} deja constancia de que la alfombra descrita en este servicio ha sido entregada al cliente o a su representante en la fecha indicada, quedando registrada la recepcion y el estado visible del articulo en el momento de la devolucion.",
+  "deliveryPreview.conditionFallback": "Estado segun revision de entrega",
+  "deliveryPreview.termsTitle": "Declaracion de recepcion y conformidad",
+  "deliveryPreview.termsBody":
+    "La persona receptora declara que recibe la alfombra identificada en este documento, que ha podido revisar su estado visible en el momento de la entrega y que acepta la devolucion conforme a los datos y observaciones aqui reflejados, salvo las reservas expresamente anotadas en este comprobante.",
+  "deliveryPreview.footer":
+    "Este documento acredita la entrega de la alfombra y la recepcion por parte del cliente o su representante. Debe conservarse como constancia de cierre del servicio.",
+  "deliveryPreview.footerIssuedBy": "Constancia emitida por {company}."
 });
 
 Object.assign(translations.es, {

@@ -42,6 +42,7 @@ export function DashboardPage() {
           <>
             <LinkButton href="/clientes" label={t("dashboard.manageClients")} variant="secondary" />
             <LinkButton href="/recibos" label={t("dashboard.openReceipts")} variant="primary" />
+            <LinkButton href={"/entrega" as Route} label={t("dashboard.openDelivery")} variant="ghost" />
           </>
         }
       />
@@ -72,7 +73,7 @@ export function DashboardPage() {
             </div>
           }
         >
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <ShortcutCard
               title={t("dashboard.companyTitle")}
               text={t("dashboard.companyText")}
@@ -90,6 +91,12 @@ export function DashboardPage() {
               text={t("dashboard.receiptsText")}
               href="/recibos"
               label={t("dashboard.receiptsAction")}
+            />
+            <ShortcutCard
+              title={t("dashboard.deliveryTitle")}
+              text={t("dashboard.deliveryText")}
+              href={"/entrega" as Route}
+              label={t("dashboard.deliveryAction")}
             />
           </div>
         </SectionCard>

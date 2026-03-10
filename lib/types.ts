@@ -40,9 +40,18 @@ export type ReceiptMeta = {
   companySignatureDataUrl: string;
 };
 
+export type DeliveryMeta = {
+  handoverDate: string;
+  deliveryReceivedBy: string;
+  deliveryCondition: string;
+  deliveryNotes: string;
+  deliveryClientSignatureDataUrl: string;
+  deliveryCompanySignatureDataUrl: string;
+};
+
 export type ServicePreset = RugFields & ServiceFields;
 
-export type ReceiptDraft = ClientFields & ServicePreset & ReceiptMeta;
+export type ReceiptDraft = ClientFields & ServicePreset & ReceiptMeta & DeliveryMeta;
 
 export type ClientRecord = ClientFields & {
   id: string;

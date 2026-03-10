@@ -23,10 +23,16 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
     { href: "/empresa" as Route, label: t("nav.company"), note: t("nav.companyNote"), tag: "02" },
     { href: "/clientes" as Route, label: t("nav.clients"), note: t("nav.clientsNote"), tag: "03" },
     { href: "/recibos" as Route, label: t("nav.receipts"), note: t("nav.receiptsNote"), tag: "04" },
-    { href: "/configuracion" as Route, label: t("nav.settings"), note: t("nav.settingsNote"), tag: "05" }
+    { href: "/entrega" as Route, label: t("nav.delivery"), note: t("nav.deliveryNote"), tag: "05" },
+    { href: "/configuracion" as Route, label: t("nav.settings"), note: t("nav.settingsNote"), tag: "06" }
   ];
-  const isActiveRoute = (href: Route) =>
-    pathname === href || (href === ("/recibos" as Route) && pathname.startsWith("/recibos"));
+  const isActiveRoute = (href: Route) => {
+    if (href === ("/" as Route)) {
+      return pathname === href;
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
   const activeNavItem = navItems.find((item) => isActiveRoute(item.href)) || navItems[0];
 
   return (
