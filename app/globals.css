@@ -248,12 +248,22 @@ h4,
 
 .receipt-header-bottom {
   background: #f8fafc;
+  align-items: start;
 }
 
 .receipt-header-meta-box {
   border: 1px solid #94a3b8;
   background: #ffffff;
   overflow: hidden;
+}
+
+.receipt-header-meta-box .receipt-meta-line {
+  margin-bottom: 0;
+  padding: 10px 12px;
+}
+
+.receipt-header-meta-box .receipt-meta-line:last-child {
+  border-bottom: 0;
 }
 
 .receipt-brand-band-surface {
@@ -356,7 +366,7 @@ h4,
 }
 
 .receipt-sheet-export .receipt-header-bottom {
-  padding: 10px 14px !important;
+  padding: 12px 14px !important;
   gap: 10px !important;
 }
 
@@ -385,6 +395,10 @@ h4,
 .receipt-sheet-export .receipt-header-contact-value {
   font-size: 0.66rem !important;
   line-height: 1.35 !important;
+}
+
+.receipt-sheet-export .receipt-header-meta-box .receipt-meta-line {
+  padding: 9px 10px !important;
 }
 
 .receipt-sheet-export .receipt-section-title {
