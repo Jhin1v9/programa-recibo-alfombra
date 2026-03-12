@@ -84,41 +84,56 @@ export function ReceiptPreview({
         } flex min-h-full flex-col gap-3 p-4 sm:gap-4 sm:p-6`}
       >
         <section className="receipt-surface receipt-surface-strong overflow-hidden rounded-[24px]">
-          <div className="grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_250px] sm:items-start">
+          <div className="receipt-header-top grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_320px] sm:items-start">
             <div className="min-w-0">
               <div className="flex items-start gap-3">
                 <BrandMark compact light imageDataUrl={previewCompany.companyLogoDataUrl} />
                 <div className="min-w-0">
-                  <p className="receipt-company-title text-[1.18rem] font-extrabold tracking-[0.03em]">
+                  <p className="receipt-header-company-name text-[1.2rem] font-extrabold tracking-[0.03em]">
                     {previewCompany.companyName}
                   </p>
-                  <h1 className="receipt-heading-primary mt-2 text-[1.42rem] font-extrabold leading-tight tracking-[0.01em]">
-                    {previewCopy.title}
-                  </h1>
-                  <p className="receipt-brand-overline mt-2 text-[0.68rem] font-bold uppercase tracking-[0.22em]">
+                  <p className="receipt-header-company-ribbon mt-2 text-[0.72rem] font-bold uppercase tracking-[0.24em]">
                     {t("preview.brandRibbon")}
+                  </p>
+                  <p className="receipt-header-company-note mt-3 text-[0.78rem] leading-5">
+                    {t("preview.headerText")}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="receipt-meta-box rounded-[18px] p-4">
-              <HeaderMetaItem label={t("preview.metaReceipt")} value={fallbackReceiptNumber} />
-              <HeaderMetaItem label={previewCopy.dateLabel} value={previewCopy.dateValue} />
-              <HeaderMetaItem label={t("company.phone")} value={previewCompany.companyPhone} />
-              <HeaderMetaItem
+            <div className="receipt-header-contacts rounded-[16px] px-4 py-3">
+              <HeaderContactItem label={t("company.phone")} value={previewCompany.companyPhone} />
+              <HeaderContactItem
                 label={t("company.address")}
                 value={headerAddressLines[0]}
                 extraLine={headerAddressLines[1]}
+              />
+              <HeaderContactItem label={t("company.email")} value={previewCompany.companyEmail} />
+              <HeaderContactItem
+                label={t("company.taxId")}
+                value={previewCompany.companyTaxId}
                 withBorder={false}
               />
             </div>
           </div>
 
-          <div className="receipt-document-divider px-5 py-3">
-            <p className="receipt-copy-muted text-[0.78rem] leading-5">
-              {previewCopy.subtitle}
-            </p>
+          <div className="receipt-header-bottom grid gap-4 border-t border-[rgba(148,163,184,0.35)] px-5 py-4 sm:grid-cols-[minmax(0,1fr)_280px] sm:items-center">
+            <div className="min-w-0">
+              <h1 className="receipt-heading-primary text-[1.5rem] font-extrabold leading-tight tracking-[0.01em]">
+                {previewCopy.title}
+              </h1>
+              <p className="receipt-copy-muted mt-2 text-[0.82rem] leading-5">{previewCopy.subtitle}</p>
+            </div>
+
+            <div className="receipt-header-meta-box rounded-[18px]">
+              <HeaderMetaItem label={t("preview.metaReceipt")} value={fallbackReceiptNumber} />
+              <HeaderMetaItem
+                label={previewCopy.dateLabel}
+                value={previewCopy.dateValue}
+                withBorder={false}
+              />
+            </div>
           </div>
         </section>
 
@@ -368,6 +383,26 @@ function HeaderMetaItem({
   );
 }
 
+function HeaderContactItem({
+  label,
+  value,
+  extraLine,
+  withBorder = true
+}: Readonly<{
+  label: string;
+  value: string;
+  extraLine?: string;
+  withBorder?: boolean;
+}>) {
+  return (
+    <div className={`receipt-header-contact-item ${withBorder ? "mb-2 pb-2" : ""}`}>
+      <p className="receipt-header-contact-label text-[0.72rem] font-semibold">{label}:</p>
+      <p className="receipt-header-contact-value mt-1 text-[0.82rem] leading-5">{value}</p>
+      {extraLine ? <p className="receipt-header-contact-value text-[0.82rem] leading-5">{extraLine}</p> : null}
+    </div>
+  );
+}
+
 function SignatureBox({
   title,
   signerName,
@@ -393,7 +428,7 @@ function SignatureBox({
             className="max-h-[62px] max-w-full object-contain"
           />
         ) : signerName ? (
-          <p className="signature-script receipt-signature-fallback max-w-full truncate px-2 text-center">
+          <p className="signature-script receipt-signature-fallback max-w-full px-2 text-center">
             {signerName}
           </p>
         ) : null}

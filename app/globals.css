@@ -212,6 +212,50 @@ h4,
   border: 2px solid #0f172a;
 }
 
+.receipt-header-top {
+  background: linear-gradient(145deg, #0f172a 0%, #13203a 45%, #182a4a 100%);
+  color: #ffffff;
+}
+
+.receipt-header-contacts {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.34);
+}
+
+.receipt-header-company-name {
+  color: #f8fafc;
+}
+
+.receipt-header-company-ribbon {
+  color: rgba(226, 232, 240, 0.88);
+}
+
+.receipt-header-company-note {
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.receipt-header-contact-item {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.32);
+}
+
+.receipt-header-contact-label {
+  color: rgba(203, 213, 225, 0.94);
+}
+
+.receipt-header-contact-value {
+  color: #f8fafc;
+}
+
+.receipt-header-bottom {
+  background: #f8fafc;
+}
+
+.receipt-header-meta-box {
+  border: 1px solid #94a3b8;
+  background: #ffffff;
+  overflow: hidden;
+}
+
 .receipt-brand-band-surface {
   background: #0f172a;
   color: #ffffff;
@@ -285,7 +329,9 @@ h4,
 
 .receipt-signature-fallback {
   font-size: 1.85rem;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: anywhere;
   color: #111827;
 }
 
@@ -304,6 +350,16 @@ h4,
   padding: 12px 16px !important;
 }
 
+.receipt-sheet-export .receipt-header-top {
+  padding: 12px 14px !important;
+  gap: 10px !important;
+}
+
+.receipt-sheet-export .receipt-header-bottom {
+  padding: 10px 14px !important;
+  gap: 10px !important;
+}
+
 .receipt-sheet-export .receipt-document-head {
   gap: 12px !important;
   padding: 12px 16px !important;
@@ -317,6 +373,18 @@ h4,
 .receipt-sheet-export .receipt-heading-primary {
   font-size: 1.16rem !important;
   line-height: 1.05 !important;
+}
+
+.receipt-sheet-export .receipt-header-company-name {
+  font-size: 1.1rem !important;
+  line-height: 1.05 !important;
+}
+
+.receipt-sheet-export .receipt-header-company-ribbon,
+.receipt-sheet-export .receipt-header-contact-label,
+.receipt-sheet-export .receipt-header-contact-value {
+  font-size: 0.66rem !important;
+  line-height: 1.35 !important;
 }
 
 .receipt-sheet-export .receipt-section-title {
@@ -352,6 +420,7 @@ h4,
 
 .receipt-sheet-export .receipt-signature-fallback {
   font-size: 1.45rem !important;
+  line-height: 1.2 !important;
 }
 
 .receipt-sheet-export .receipt-table-label,
