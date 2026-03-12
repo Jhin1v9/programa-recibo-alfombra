@@ -279,8 +279,8 @@ function buildPreviewCopy({
   }
 
   return {
-    title: t("preview.documentTitle"),
-    subtitle: t("preview.documentSubtitle"),
+    title: "RECIBO DE RECOGIDA DE ALFOMBRA",
+    subtitle: "Comprobante de custodia temporal para servicio de limpieza profesional",
     dateLabel: t("preview.metaDate"),
     dateValue: dateFallback,
     intro: t("preview.confirmation", {
