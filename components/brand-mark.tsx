@@ -7,13 +7,15 @@ type BrandMarkProps = {
   light?: boolean;
   imageDataUrl?: string;
   logoFit?: "contain" | "cover";
+  emphasizeLogo?: boolean;
 };
 
 export function BrandMark({
   compact = false,
   light = false,
   imageDataUrl,
-  logoFit = "contain"
+  logoFit = "contain",
+  emphasizeLogo = false
 }: Readonly<BrandMarkProps>) {
   const frameBorder = light ? "rgba(255, 255, 255, 0.2)" : "rgba(15, 23, 42, 0.08)";
   const frameFill = light ? "rgba(255, 255, 255, 0.08)" : "#ffffff";
@@ -26,7 +28,9 @@ export function BrandMark({
   return (
     <div className={`flex items-center ${compact ? "gap-3" : "gap-3.5"}`}>
       <div
-        className={`relative isolate overflow-hidden rounded-[18px] ${compact ? "h-12 w-12" : "h-14 w-14"}`}
+        className={`relative isolate overflow-hidden rounded-[18px] ${
+          compact ? (emphasizeLogo ? "h-14 w-14" : "h-12 w-12") : "h-14 w-14"
+        }`}
         style={{
           border: `1px solid ${frameBorder}`,
           background: frameFill
@@ -34,7 +38,9 @@ export function BrandMark({
       >
         {imageDataUrl ? (
           <div
-            className="flex h-full w-full items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.12)] bg-white p-1.5"
+            className={`flex h-full w-full items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.12)] bg-white ${
+              emphasizeLogo ? "p-0.5" : "p-1.5"
+            }`}
           >
             <Image
               src={imageDataUrl}

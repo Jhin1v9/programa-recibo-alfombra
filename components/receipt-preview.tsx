@@ -92,6 +92,7 @@ export function ReceiptPreview({
                   light
                   imageDataUrl={previewCompany.companyLogoDataUrl}
                   logoFit="cover"
+                  emphasizeLogo
                 />
                 <div className="min-w-0">
                   <p className="receipt-header-company-name text-[1.2rem] font-extrabold tracking-[0.03em]">
