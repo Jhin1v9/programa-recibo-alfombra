@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
 
 type BrandMarkProps = {
@@ -17,6 +19,111 @@ export function BrandMark({
   logoFit = "contain",
   emphasizeLogo = false
 }: Readonly<BrandMarkProps>) {
+  const [logoCrop, setLogoCrop] = useState<{ source: string; cropped: string } | null>(null);
+
+  useEffect(() => {
+    if (!imageDataUrl) {
+      return;
+    }
+
+    let cancelled = false;
+    const image = new window.Image();
+    image.crossOrigin = "anonymous";
+    image.src = imageDataUrl;
+
+    image.onload = () => {
+      if (cancelled) {
+        return;
+      }
+
+      const width = image.naturalWidth;
+      const height = image.naturalHeight;
+
+      if (!width || !height) {
+        setLogoCrop({ source: imageDataUrl, cropped: imageDataUrl });
+        return;
+      }
+
+      const sourceCanvas = document.createElement("canvas");
+      sourceCanvas.width = width;
+      sourceCanvas.height = height;
+      const sourceContext = sourceCanvas.getContext("2d");
+
+      if (!sourceContext) {
+        setLogoCrop({ source: imageDataUrl, cropped: imageDataUrl });
+        return;
+      }
+
+      sourceContext.drawImage(image, 0, 0, width, height);
+      const { data } = sourceContext.getImageData(0, 0, width, height);
+
+      let minX = width;
+      let minY = height;
+      let maxX = 0;
+      let maxY = 0;
+      let hasVisiblePixel = false;
+
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const alpha = data[(y * width + x) * 4 + 3];
+          if (alpha <= 8) {
+            continue;
+          }
+
+          hasVisiblePixel = true;
+          if (x < minX) minX = x;
+          if (y < minY) minY = y;
+          if (x > maxX) maxX = x;
+          if (y > maxY) maxY = y;
+        }
+      }
+
+      if (!hasVisiblePixel) {
+        setLogoCrop({ source: imageDataUrl, cropped: imageDataUrl });
+        return;
+      }
+
+      const cropWidth = Math.max(1, maxX - minX + 1);
+      const cropHeight = Math.max(1, maxY - minY + 1);
+      const targetCanvas = document.createElement("canvas");
+      targetCanvas.width = cropWidth;
+      targetCanvas.height = cropHeight;
+
+      const targetContext = targetCanvas.getContext("2d");
+      if (!targetContext) {
+        setLogoCrop({ source: imageDataUrl, cropped: imageDataUrl });
+        return;
+      }
+
+      targetContext.drawImage(
+        sourceCanvas,
+        minX,
+        minY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropWidth,
+        cropHeight
+      );
+
+      setLogoCrop({ source: imageDataUrl, cropped: targetCanvas.toDataURL("image/png") });
+    };
+
+    image.onerror = () => {
+      if (!cancelled) {
+        setLogoCrop({ source: imageDataUrl, cropped: imageDataUrl });
+      }
+    };
+
+    return () => {
+      cancelled = true;
+    };
+  }, [imageDataUrl]);
+
+  const processedLogoDataUrl =
+    imageDataUrl && logoCrop?.source === imageDataUrl ? logoCrop.cropped : imageDataUrl || "";
+
   const frameBorder = light ? "rgba(255, 255, 255, 0.2)" : "rgba(15, 23, 42, 0.08)";
   const frameFill = light ? "rgba(255, 255, 255, 0.08)" : "#ffffff";
   const iconInk = light ? "#ffffff" : "#0f172a";
@@ -36,14 +143,14 @@ export function BrandMark({
           background: frameFill
         }}
       >
-        {imageDataUrl ? (
+        {processedLogoDataUrl ? (
           <div
             className={`flex h-full w-full items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.12)] bg-white ${
               emphasizeLogo ? "p-0.5" : "p-1.5"
             }`}
           >
             <Image
-              src={imageDataUrl}
+              src={processedLogoDataUrl}
               alt="Logo de la empresa"
               width={80}
               height={80}
