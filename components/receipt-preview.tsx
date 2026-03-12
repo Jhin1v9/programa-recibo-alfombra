@@ -108,23 +108,22 @@ export function ReceiptPreview({
               </div>
             </div>
 
-            <div className="receipt-header-contacts rounded-[16px] px-4 py-3">
-              <HeaderContactItem label={t("company.phone")} value={previewCompany.companyPhone} />
-              <HeaderContactItem
+            <div className="receipt-header-contacts px-1 py-1">
+              <HeaderContactLine label={t("company.phone")} value={previewCompany.companyPhone} />
+              <HeaderContactLine
                 label={t("company.address")}
                 value={headerAddressLines[0]}
                 extraLine={headerAddressLines[1]}
               />
-              <HeaderContactItem label={t("company.email")} value={previewCompany.companyEmail} />
-              <HeaderContactItem
+              <HeaderContactLine label={t("company.email")} value={previewCompany.companyEmail} />
+              <HeaderContactLine
                 label={t("company.taxId")}
                 value={previewCompany.companyTaxId}
-                withBorder={false}
               />
             </div>
           </div>
 
-          <div className="receipt-header-bottom grid gap-4 border-t border-[rgba(148,163,184,0.35)] px-5 py-4 sm:grid-cols-[minmax(0,1fr)_280px] sm:items-center">
+          <div className="receipt-header-bottom grid gap-4 border-t border-[rgba(148,163,184,0.35)] px-5 py-4 sm:grid-cols-[minmax(0,1fr)_280px] sm:items-end">
             <div className="min-w-0">
               <h1 className="receipt-heading-primary text-[1.5rem] font-extrabold leading-tight tracking-[0.01em]">
                 {previewCopy.title}
@@ -133,12 +132,14 @@ export function ReceiptPreview({
             </div>
 
             <div className="receipt-header-meta-box rounded-[18px]">
-              <HeaderMetaItem label={t("preview.metaReceipt")} value={fallbackReceiptNumber} />
-              <HeaderMetaItem
-                label={previewCopy.dateLabel}
-                value={previewCopy.dateValue}
-                withBorder={false}
-              />
+              <div className="receipt-header-meta-row">
+                <span className="receipt-header-meta-label">{t("preview.metaReceipt")}</span>
+                <strong className="receipt-header-meta-value">{fallbackReceiptNumber}</strong>
+              </div>
+              <div className="receipt-header-meta-row">
+                <span className="receipt-header-meta-label">{previewCopy.dateLabel}</span>
+                <strong className="receipt-header-meta-value">{previewCopy.dateValue}</strong>
+              </div>
             </div>
           </div>
         </section>
@@ -361,50 +362,22 @@ function PreviewTable({
   );
 }
 
-function HeaderMetaItem({
+function HeaderContactLine({
   label,
   value,
-  extraLine,
-  withBorder = true
+  extraLine
 }: Readonly<{
   label: string;
   value: string;
   extraLine?: string;
-  withBorder?: boolean;
 }>) {
   return (
-    <div
-      className={`receipt-meta-line ${withBorder ? "mb-2 pb-2" : ""}`}
-    >
-      <p className="receipt-copy-strong text-[0.68rem] font-semibold uppercase tracking-[0.14em]">
-        {label}
+    <div className="receipt-header-contact-line">
+      <p className="receipt-header-contact-inline text-[0.8rem] leading-6">
+        <span className="receipt-header-contact-key">{label}:</span>{" "}
+        <span className="receipt-header-contact-val">{value}</span>
       </p>
-      <p className="receipt-heading-secondary mt-1 text-[0.82rem] font-bold leading-5">
-        {value}
-      </p>
-      {extraLine ? (
-        <p className="receipt-copy-muted mt-1 text-[0.72rem] leading-5">{extraLine}</p>
-      ) : null}
-    </div>
-  );
-}
-
-function HeaderContactItem({
-  label,
-  value,
-  extraLine,
-  withBorder = true
-}: Readonly<{
-  label: string;
-  value: string;
-  extraLine?: string;
-  withBorder?: boolean;
-}>) {
-  return (
-    <div className={`receipt-header-contact-item ${withBorder ? "mb-2 pb-2" : ""}`}>
-      <p className="receipt-header-contact-label text-[0.72rem] font-semibold">{label}:</p>
-      <p className="receipt-header-contact-value mt-1 text-[0.82rem] leading-5">{value}</p>
-      {extraLine ? <p className="receipt-header-contact-value text-[0.82rem] leading-5">{extraLine}</p> : null}
+      {extraLine ? <p className="receipt-header-contact-inline text-[0.8rem] leading-6">{extraLine}</p> : null}
     </div>
   );
 }

@@ -218,8 +218,7 @@ h4,
 }
 
 .receipt-header-contacts {
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  background: rgba(15, 23, 42, 0.34);
+  background: transparent;
 }
 
 .receipt-header-company-name {
@@ -234,36 +233,57 @@ h4,
   color: rgba(226, 232, 240, 0.9);
 }
 
-.receipt-header-contact-item {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.32);
+.receipt-header-contact-line + .receipt-header-contact-line {
+  margin-top: 8px;
 }
 
-.receipt-header-contact-label {
+.receipt-header-contact-inline {
+  color: #f8fafc;
+}
+
+.receipt-header-contact-key {
   color: rgba(203, 213, 225, 0.94);
+  font-weight: 600;
 }
 
-.receipt-header-contact-value {
+.receipt-header-contact-val {
   color: #f8fafc;
 }
 
 .receipt-header-bottom {
   background: #f8fafc;
-  align-items: start;
+  align-items: end;
 }
 
 .receipt-header-meta-box {
-  border: 1px solid #94a3b8;
+  border: 2px solid #9aaec8;
   background: #ffffff;
   overflow: hidden;
 }
 
-.receipt-header-meta-box .receipt-meta-line {
-  margin-bottom: 0;
-  padding: 10px 12px;
+.receipt-header-meta-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid #c9d5e3;
 }
 
-.receipt-header-meta-box .receipt-meta-line:last-child {
+.receipt-header-meta-row:last-child {
   border-bottom: 0;
+}
+
+.receipt-header-meta-label {
+  color: #26374d;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.receipt-header-meta-value {
+  color: #0f172a;
+  font-size: 1.08rem;
+  font-weight: 800;
 }
 
 .receipt-brand-band-surface {
@@ -391,14 +411,21 @@ h4,
 }
 
 .receipt-sheet-export .receipt-header-company-ribbon,
-.receipt-sheet-export .receipt-header-contact-label,
-.receipt-sheet-export .receipt-header-contact-value {
+.receipt-sheet-export .receipt-header-contact-inline {
   font-size: 0.66rem !important;
   line-height: 1.35 !important;
 }
 
-.receipt-sheet-export .receipt-header-meta-box .receipt-meta-line {
-  padding: 9px 10px !important;
+.receipt-sheet-export .receipt-header-meta-row {
+  padding: 9px 11px !important;
+}
+
+.receipt-sheet-export .receipt-header-meta-label {
+  font-size: 0.72rem !important;
+}
+
+.receipt-sheet-export .receipt-header-meta-value {
+  font-size: 0.9rem !important;
 }
 
 .receipt-sheet-export .receipt-section-title {
