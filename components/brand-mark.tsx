@@ -6,12 +6,14 @@ type BrandMarkProps = {
   compact?: boolean;
   light?: boolean;
   imageDataUrl?: string;
+  logoFit?: "contain" | "cover";
 };
 
 export function BrandMark({
   compact = false,
   light = false,
-  imageDataUrl
+  imageDataUrl,
+  logoFit = "contain"
 }: Readonly<BrandMarkProps>) {
   const frameBorder = light ? "rgba(255, 255, 255, 0.2)" : "rgba(15, 23, 42, 0.08)";
   const frameFill = light ? "rgba(255, 255, 255, 0.08)" : "#ffffff";
@@ -31,14 +33,16 @@ export function BrandMark({
         }}
       >
         {imageDataUrl ? (
-          <div className="flex h-full w-full items-center justify-center p-2.5">
+          <div
+            className="flex h-full w-full items-center justify-center rounded-[14px] border border-[rgba(15,23,42,0.12)] bg-white p-1.5"
+          >
             <Image
               src={imageDataUrl}
               alt="Logo de la empresa"
               width={80}
               height={80}
               unoptimized
-              className="max-h-full max-w-full object-contain"
+              className={`h-full w-full ${logoFit === "cover" ? "object-cover" : "object-contain"}`}
             />
           </div>
         ) : (

@@ -87,7 +87,12 @@ export function ReceiptPreview({
           <div className="receipt-header-top grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_320px] sm:items-start">
             <div className="min-w-0">
               <div className="flex items-start gap-3">
-                <BrandMark compact light imageDataUrl={previewCompany.companyLogoDataUrl} />
+                <BrandMark
+                  compact
+                  light
+                  imageDataUrl={previewCompany.companyLogoDataUrl}
+                  logoFit="cover"
+                />
                 <div className="min-w-0">
                   <p className="receipt-header-company-name text-[1.2rem] font-extrabold tracking-[0.03em]">
                     {previewCompany.companyName}
