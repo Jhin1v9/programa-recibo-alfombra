@@ -64,14 +64,18 @@ export function CompanyPage() {
   ] as const;
 
   function openSignatureUpload() {
+    showFeedback(t("feedback.signaturePickerOpened"));
     signatureUploadRef.current?.click();
   }
 
   function openLogoUpload() {
+    showFeedback(t("feedback.logoPickerOpened"));
     logoUploadRef.current?.click();
   }
 
   function openStampUpload() {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    showFeedback(t("feedback.stampPickerOpened"));
     stampUploadRef.current?.click();
   }
 

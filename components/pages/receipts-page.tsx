@@ -60,6 +60,7 @@ export function ReceiptsPage() {
     repeatLastServiceForClient,
     saveClientTemplate,
     applyClientTemplate,
+    showFeedback,
     t
   } = useReceiptApp();
   const router = useRouter();
@@ -136,6 +137,24 @@ export function ReceiptsPage() {
 
     const nextNotes = [...normalizedEntries, note].join("\n");
     updateDraftField("rugNotes", nextNotes);
+  }
+
+  function openSignatureCapture(target: "client" | "company") {
+    showFeedback(
+      target === "company"
+        ? t("signature.dialogTitleCompany")
+        : t("feedback.clientSignatureOpened")
+    );
+
+    if (signatureTarget === target) {
+      setSignatureTarget(null);
+      window.setTimeout(() => {
+        setSignatureTarget(target);
+      }, 120);
+      return;
+    }
+
+    setSignatureTarget(target);
   }
 
   return (
@@ -324,7 +343,7 @@ export function ReceiptsPage() {
                   fallbackText={clientSignerName}
                   primaryAction={{
                     label: t("receipts.captureClientSignature"),
-                    onClick: () => setSignatureTarget("client")
+                    onClick: () => openSignatureCapture("client")
                   }}
                   secondaryAction={{
                     label: t("receipts.clearClientSignature"),
@@ -344,7 +363,7 @@ export function ReceiptsPage() {
                   fallbackText={companySignerName}
                   primaryAction={{
                     label: t("receipts.captureCompanySignature"),
-                    onClick: () => setSignatureTarget("company")
+                    onClick: () => openSignatureCapture("company")
                   }}
                   secondaryAction={{
                     label: t("receipts.useSavedCompanySignature"),
@@ -374,7 +393,7 @@ export function ReceiptsPage() {
             </SectionCard>
           </div>
 
-          <div className="min-w-0 2xl:sticky 2xl:top-6 2xl:self-start">
+          <div className="hidden min-w-0 2xl:sticky 2xl:top-6 2xl:block 2xl:self-start">
             <SectionCard
               eyebrow={t("receipts.previewPageEyebrow")}
               title={t("receipts.previewPageTitle")}
@@ -456,7 +475,7 @@ export function ReceiptsPage() {
             <ActionButton
               label={t("receipts.mobileBarSign")}
               variant="ghost"
-              onClick={() => setSignatureTarget("client")}
+              onClick={() => openSignatureCapture("client")}
             />
           </div>
         </div>

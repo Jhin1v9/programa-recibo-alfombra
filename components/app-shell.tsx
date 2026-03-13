@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import type { Route } from "next";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { BrandMark } from "@/components/brand-mark";
 import { useReceiptApp } from "@/components/receipt-app-provider";
 
 export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
+  const router = useRouter();
   const {
     clients,
     receipts,
@@ -16,6 +17,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
     nextReceiptSuggestion,
     feedback,
     dismissFeedback,
+    showFeedback,
     t
   } = useReceiptApp();
   const navItems: ReadonlyArray<{
@@ -40,11 +42,22 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   };
   const activeNavItem = navItems.find((item) => isActiveRoute(item.href)) || navItems[0];
 
+  function openRouteWithFeedback(href: Route, label: string) {
+    router.push(href);
+    window.setTimeout(() => {
+      showFeedback(
+        t("feedback.routeOpening", {
+          section: label
+        })
+      );
+    }, 40);
+  }
+
   return (
-    <div className="app-root min-h-screen overflow-x-clip px-4 py-4 md:px-6 md:py-6">
-      <div className="mx-auto flex max-w-[1680px] flex-col gap-4 xl:grid xl:grid-cols-[292px_minmax(0,1fr)] xl:gap-6">
+    <div className="app-root min-h-screen overflow-x-clip px-4 py-5 md:px-6 md:py-6">
+      <div className="mx-auto flex max-w-[1680px] flex-col gap-7 xl:grid xl:grid-cols-[292px_minmax(0,1fr)] xl:gap-6">
         <section className="xl:hidden">
-          <div className="grid gap-4">
+          <div className="grid gap-6">
             <div className="panel-card rounded-[26px] p-4">
               <div className="flex items-start gap-3">
                 <BrandMark compact />
@@ -79,7 +92,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               </div>
             </div>
 
-            <nav className="grid grid-cols-3 gap-2.5 sm:grid-cols-2 sm:gap-3">
+            <nav className="grid grid-cols-2 gap-3">
               {navItems.map((item) => {
                 const active = isActiveRoute(item.href);
                 const cardClassName = `mobile-nav-card rounded-[20px] border p-3 transition ${
@@ -124,9 +137,14 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
                 }
 
                 return (
-                  <Link key={item.href} href={item.href} className={cardClassName}>
+                  <button
+                    key={item.href}
+                    type="button"
+                    className={`${cardClassName} text-left`}
+                    onClick={() => openRouteWithFeedback(item.href, item.label)}
+                  >
                     {cardContent}
-                  </Link>
+                  </button>
                 );
               })}
             </nav>
@@ -208,7 +226,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           </div>
         </aside>
 
-        <div className="flex min-w-0 flex-col gap-4 md:gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           {children}
         </div>
       </div>
