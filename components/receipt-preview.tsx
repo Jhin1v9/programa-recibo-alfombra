@@ -95,13 +95,13 @@ export function ReceiptPreview({
                   emphasizeLogo
                 />
                 <div className="min-w-0">
-                  <p className="receipt-header-company-name text-[1.2rem] font-extrabold tracking-[0.03em]">
+                  <p className="receipt-header-company-name text-[1.42rem] font-extrabold tracking-[0.02em]">
                     {previewCompany.companyName}
                   </p>
-                  <p className="receipt-header-company-ribbon mt-2 text-[0.72rem] font-bold uppercase tracking-[0.24em]">
+                  <p className="receipt-header-company-ribbon mt-2 text-[0.84rem] font-bold uppercase tracking-[0.2em]">
                     {t("preview.brandRibbon")}
                   </p>
-                  <p className="receipt-header-company-note mt-3 text-[0.78rem] leading-5">
+                  <p className="receipt-header-company-note mt-3 text-[0.95rem] leading-6">
                     {t("preview.headerText")}
                   </p>
                 </div>
@@ -123,12 +123,12 @@ export function ReceiptPreview({
             </div>
           </div>
 
-          <div className="receipt-header-bottom grid gap-4 border-t border-[rgba(148,163,184,0.35)] px-5 py-4 sm:grid-cols-[minmax(0,1fr)_280px] sm:items-end">
+          <div className="receipt-header-bottom grid gap-4 border-t border-[rgba(148,163,184,0.35)] px-5 py-5 sm:grid-cols-[minmax(0,1fr)_300px] sm:items-end">
             <div className="min-w-0">
-              <h1 className="receipt-heading-primary text-[1.5rem] font-extrabold leading-tight tracking-[0.01em]">
+              <h1 className="receipt-heading-primary text-[2.02rem] font-extrabold leading-tight tracking-[0.005em]">
                 {previewCopy.title}
               </h1>
-              <p className="receipt-copy-muted mt-2 text-[0.82rem] leading-5">{previewCopy.subtitle}</p>
+              <p className="receipt-copy-muted mt-2 text-[1rem] leading-6">{previewCopy.subtitle}</p>
             </div>
 
             <div className="receipt-header-meta-box rounded-[18px]">

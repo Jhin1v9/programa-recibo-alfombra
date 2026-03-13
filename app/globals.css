@@ -381,13 +381,13 @@ h4,
 }
 
 .receipt-sheet-export .receipt-header-top {
-  padding: 12px 14px !important;
-  gap: 10px !important;
+  padding: 14px 16px !important;
+  gap: 12px !important;
 }
 
 .receipt-sheet-export .receipt-header-bottom {
-  padding: 12px 14px !important;
-  gap: 10px !important;
+  padding: 14px 16px !important;
+  gap: 12px !important;
 }
 
 .receipt-sheet-export .receipt-document-head {
@@ -401,31 +401,31 @@ h4,
 }
 
 .receipt-sheet-export .receipt-heading-primary {
-  font-size: 1.16rem !important;
-  line-height: 1.05 !important;
+  font-size: 1.62rem !important;
+  line-height: 1.1 !important;
 }
 
 .receipt-sheet-export .receipt-header-company-name {
-  font-size: 1.1rem !important;
-  line-height: 1.05 !important;
+  font-size: 1.34rem !important;
+  line-height: 1.1 !important;
 }
 
 .receipt-sheet-export .receipt-header-company-ribbon,
 .receipt-sheet-export .receipt-header-contact-inline {
-  font-size: 0.66rem !important;
-  line-height: 1.35 !important;
+  font-size: 0.76rem !important;
+  line-height: 1.5 !important;
 }
 
 .receipt-sheet-export .receipt-header-meta-row {
-  padding: 9px 11px !important;
+  padding: 11px 12px !important;
 }
 
 .receipt-sheet-export .receipt-header-meta-label {
-  font-size: 0.72rem !important;
+  font-size: 0.82rem !important;
 }
 
 .receipt-sheet-export .receipt-header-meta-value {
-  font-size: 0.9rem !important;
+  font-size: 1.02rem !important;
 }
 
 .receipt-sheet-export .receipt-section-title {
