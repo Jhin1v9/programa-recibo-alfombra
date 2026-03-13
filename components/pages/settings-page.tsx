@@ -14,13 +14,13 @@ export function SettingsPage() {
         description={t("settings.description")}
       />
 
-      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-7 2xl:grid-cols-[minmax(0,1fr)_320px]">
         <SectionCard eyebrow={t("settings.language")} title={t("settings.languageTitle")}>
           <p className="mb-5 max-w-[62ch] text-sm leading-7 text-[color:var(--ink-soft)]">
             {t("settings.languageText")}
           </p>
 
-          <div className="grid gap-4 lg:grid-cols-3">
+          <div className="grid gap-5 lg:grid-cols-3">
             {languageOptions.map((option) => {
               const active = option.code === language;
 
@@ -64,7 +64,7 @@ export function SettingsPage() {
         </SectionCard>
 
         <SectionCard eyebrow={t("settings.notes")} title={t("settings.notesTitle")}>
-          <div className="space-y-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="space-y-5 text-sm leading-7 text-[color:var(--ink-soft)]">
             <NoteCard text={t("settings.notesOne")} />
             <NoteCard text={t("settings.notesTwo")} />
             <NoteCard text={t("settings.notesThree")} />

@@ -54,10 +54,10 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   }
 
   return (
-    <div className="app-root min-h-screen overflow-x-clip px-4 py-5 md:px-6 md:py-6">
-      <div className="mx-auto flex max-w-[1680px] flex-col gap-7 xl:grid xl:grid-cols-[292px_minmax(0,1fr)] xl:gap-6">
+    <div className="app-root min-h-screen overflow-x-clip px-4 py-6 md:px-6 md:py-6">
+      <div className="mx-auto flex max-w-[1680px] flex-col gap-8 xl:grid xl:grid-cols-[292px_minmax(0,1fr)] xl:gap-6">
         <section className="xl:hidden">
-          <div className="grid gap-6">
+          <div className="grid gap-7">
             <div className="panel-card rounded-[26px] p-4">
               <div className="flex items-start gap-3">
                 <BrandMark compact />
@@ -92,7 +92,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               </div>
             </div>
 
-            <nav className="grid grid-cols-2 gap-3">
+            <nav className="grid grid-cols-2 gap-4">
               {navItems.map((item) => {
                 const active = isActiveRoute(item.href);
                 const cardClassName = `mobile-nav-card rounded-[20px] border p-3 transition ${

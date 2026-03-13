@@ -120,6 +120,7 @@ export function ReceiptsPage() {
 
   function applyConditionPreset(preset: string) {
     updateDraftField("rugCondition", preset);
+    showFeedback(t("feedback.receiptUpdated"));
   }
 
   function appendRugNotePreset(note: string) {
@@ -132,11 +133,13 @@ export function ReceiptsPage() {
       : [];
 
     if (normalizedEntries.includes(note)) {
+      showFeedback(t("feedback.receiptUpdated"));
       return;
     }
 
     const nextNotes = [...normalizedEntries, note].join("\n");
     updateDraftField("rugNotes", nextNotes);
+    showFeedback(t("feedback.receiptUpdated"));
   }
 
   function openSignatureCapture(target: "client" | "company") {
@@ -146,7 +149,7 @@ export function ReceiptsPage() {
         : t("feedback.clientSignatureOpened")
     );
 
-    if (signatureTarget === target) {
+    if (signatureTarget !== null) {
       setSignatureTarget(null);
       window.setTimeout(() => {
         setSignatureTarget(target);
